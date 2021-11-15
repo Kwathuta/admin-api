@@ -19,6 +19,9 @@ class MyAccountManager(BaseUserManager):
         if not email:
             raise ValueError("Users must have and email address")
 
+        if not username:
+            raise ValueError("You must have a username")
+
         user = self.model(
             email=self.normalize_email(email),
             username=username,
@@ -112,6 +115,10 @@ class Profile(models.Model):
     def __str__(self):
         return self.employee.username + "'s " + "profile"
 
+    class Meta:
+        verbose_name = "Profile"
+        verbose_name_plural = "Profiles"
+
 
 class EmploymentInformation(models.Model):
     """This entails the users connection with the company
@@ -126,7 +133,11 @@ class EmploymentInformation(models.Model):
     company_id = models.CharField(max_length=20, null=True)
 
     def __str__(self):
-        return self.employee.username + " employee info"
+        return self.employee.username + "'s employee info"
+
+    class Meta:
+        verbose_name = "Employment Information"
+        verbose_name_plural = "Employment Information"
 
 
 class PaymentInformation(models.Model):
@@ -140,7 +151,11 @@ class PaymentInformation(models.Model):
     net_pay = models.DecimalField(null=True, decimal_places=2, max_digits=9)
 
     def __str__(self):
-        return self.employee.username + " payment_info"
+        return self.employee.username + "'s payment_info"
+
+    class Meta:
+        verbose_name = "Payments Information"
+        verbose_name_plural = "Payment Information"
 
 
 class EmergencyRelationships(models.Model):
@@ -148,6 +163,13 @@ class EmergencyRelationships(models.Model):
     """
     name = models.CharField(
         max_length=20, verbose_name="Name of relationship", null=False)
+
+    class Meta:
+        verbose_name = "Emergency relationship"
+        verbose_name_plural = "Emergency relationships"
+
+    def __str__(self):
+        return self.name
 
 
 class EmergencyInformation(models.Model):
@@ -163,3 +185,7 @@ class EmergencyInformation(models.Model):
 
     def __str__(self):
         return self.employee.username + "'s emergency information"
+
+    class Meta:
+        verbose_name = "Emergency information"
+        verbose_name_plural = "Emergency informations"
