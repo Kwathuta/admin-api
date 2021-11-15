@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group
+from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 
@@ -82,3 +83,31 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def delete_user(self):
         self.delete()
+
+
+MALE = 'male'
+FEMALE = 'female'
+RATHER_NOT_SAY = 'rather_not_say'
+gender_choices = (
+    (MALE, 'male'),
+    (FEMALE, 'female'),
+    (RATHER_NOT_SAY, 'rather_not_say')
+)
+
+
+class Profile(models.Model):
+    """This entails a user's common details
+    """
+    employee = models.OneToOneField(User, on_delete=models.CASCADE)
+    work_email = models.EmailField(
+        verbose_name="work email", unique=True, null=True)
+    personal_email = models.EmailField(
+        verbose_name="personal email", unique=True)
+    mobile_number = PhoneNumberField(region="KE")
+    profile_pic = models.ImageField(upload_to="profile/", null=True)
+    insurance_number = models.CharField(max_length=20, null=True)
+    marital_status = models.BooleanField(null=True)
+    gender = models.CharField(max_length=20, choices=gender_choices)
+
+    def __str__(self):
+        return self.employee.username + "'s " + "profile"

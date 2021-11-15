@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 django = "*"
 python-dotenv = "*"
+django-phonenumber-field = {extras = ["phonenumberslite"], version = "*"}
+pillow = "*"
 
 [dev-packages]
 autopep8 = "*"
