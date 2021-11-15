@@ -49,11 +49,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(verbose_name="email",
                               max_length=100, unique=True)
+
+    username = models.CharField(max_length=30)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     nationality = models.CharField(max_length=30)
-    national_id = models.IntegerField(
-        max_length=10, verbose_name="National Id or passport")
+    national_id = models.IntegerField(verbose_name="National Id or passport")
     date_joined = models.DateTimeField(
         verbose_name="date joined", auto_now_add=True)
     last_login = models.DateTimeField(verbose_name="last login", auto_now=True)
