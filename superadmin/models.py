@@ -14,21 +14,23 @@ class MyAccountManager(BaseUserManager):
         [type]: [description]
     """
 
-    def create_user(self, email, password=None):
+    def create_user(self, email, username, password=None):
         if not email:
             raise ValueError("Users must have and email address")
 
         user = self.model(
             email=self.normalize_email(email),
+            username=username,
             password=password
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, password):
+    def create_superuser(self, email, username, password):
         user = self.create_user(
             email=self.normalize_email(email),
+            username=username,
             password=password,
         )
 
@@ -54,7 +56,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     nationality = models.CharField(max_length=30)
-    national_id = models.IntegerField(verbose_name="National Id or passport")
+    national_id = models.IntegerField(
+        verbose_name="National Id or passport", null=True)
     date_joined = models.DateTimeField(
         verbose_name="date joined", auto_now_add=True)
     last_login = models.DateTimeField(verbose_name="last login", auto_now=True)
