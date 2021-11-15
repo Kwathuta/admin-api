@@ -102,12 +102,64 @@ class Profile(models.Model):
     work_email = models.EmailField(
         verbose_name="work email", unique=True, null=True)
     personal_email = models.EmailField(
-        verbose_name="personal email", unique=True)
-    mobile_number = PhoneNumberField(region="KE")
+        verbose_name="personal email", null=True, unique=True)
+    mobile_number = PhoneNumberField(region="KE", null=True)
     profile_pic = models.ImageField(upload_to="profile/", null=True)
     insurance_number = models.CharField(max_length=20, null=True)
     marital_status = models.BooleanField(null=True)
-    gender = models.CharField(max_length=20, choices=gender_choices)
+    gender = models.CharField(max_length=20, choices=gender_choices, null=True)
 
     def __str__(self):
         return self.employee.username + "'s " + "profile"
+
+
+class EmploymentInformation(models.Model):
+    """This entails the users connection with the company
+    """
+    employee = models.OneToOneField(User, on_delete=models.CASCADE)
+    employment_date = models.DateField(auto_now_add=True)
+    position = models.CharField(max_length=20, null=True)
+    department = models.CharField(max_length=20, null=True)
+    employment_type = models.CharField(max_length=20, null=True)
+    status = models.BooleanField(default=True)
+    country = models.CharField(max_length=20, null=True)
+    company_id = models.CharField(max_length=20, null=True)
+
+    def __str__(self):
+        return self.employee.username + " employee info"
+
+
+class PaymentInformation(models.Model):
+    """This entails a user's payment information
+    """
+    employee = models.OneToOneField(User, on_delete=models.CASCADE)
+    bank = models.CharField(max_length=20, null=True)
+    branch = models.CharField(max_length=20, null=True)
+    account_number = models.CharField(max_length=20, null=True)
+    gross_pay = models.DecimalField(null=True, decimal_places=2, max_digits=9)
+    net_pay = models.DecimalField(null=True, decimal_places=2, max_digits=9)
+
+    def __str__(self):
+        return self.employee.username + " payment_info"
+
+
+class EmergencyRelationships(models.Model):
+    """A list of relationships that can be used to define a user's relationship with the emeregency contact
+    """
+    name = models.CharField(
+        max_length=20, verbose_name="Name of relationship", null=False)
+
+
+class EmergencyInformation(models.Model):
+    """These entail a user's go to information in case of an emergency
+    """
+    employee = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(
+        max_length=20, verbose_name="Emergency contact's name", null=True)
+    phone = PhoneNumberField(
+        null=True, verbose_name="Emergency contact's phone number")
+    relationship = models.ForeignKey(
+        EmergencyRelationships, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.employee.username + "'s emergency information"
