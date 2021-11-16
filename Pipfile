@@ -12,6 +12,7 @@ django-cors-headers = "*"
 django-heroku = "*"
 gunicorn = "*"
 
+
 [dev-packages]
 autopep8 = "*"
 
