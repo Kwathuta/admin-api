@@ -24,5 +24,6 @@ class UserView(APIView):
 
         else:
             data = serializer.errors
+            print(data)
             responseStatus = status.HTTP_400_BAD_REQUEST
             return Response(data,status = responseStatus)
