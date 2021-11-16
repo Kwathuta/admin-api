@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 from superadmin.serializers import *
+from superadmin.permissions import *
 
 class UserView(APIView):
     """This handles user functionality
@@ -14,7 +15,7 @@ class UserView(APIView):
     Args:
         generics ([type]): [description]
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated&CreateUserPermission]
     def post(self,request,format=None):
         data = {}
         serializer = UserCreationSerializer(data=request.data)
