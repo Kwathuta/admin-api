@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'superadmin',
     'phonenumber_field',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
