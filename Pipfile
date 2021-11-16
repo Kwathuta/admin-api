@@ -6,9 +6,16 @@ name = "pypi"
 [packages]
 django = "*"
 python-dotenv = "*"
+pillow = "*"
+djangorestframework = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 autopep8 = "*"
 
 [requires]
 python_version = "3.8"
+
+[packages.django-phonenumber-field]
+extras = [ "phonenumberslite",]
+version = "*"

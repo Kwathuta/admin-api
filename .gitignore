@@ -149,3 +149,5 @@ cython_debu
 
 #Tests
 *.json
+
+images/
