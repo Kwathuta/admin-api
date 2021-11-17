@@ -109,13 +109,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     def delete_user(self):
         self.delete()
 
-    # def change_group(self,group):
-    #     """This will change a user's group
+    def change_group(self,role):
+        """This will change a user's group
 
-    #     Returns:
-    #         [type]: [description]
-    #     """
-    #     group.user_set.remove(self)
+        Returns:
+            [type]: [description]
+        """
+        self.role = role
+        self.save()
 
 MALE = 'male'
 FEMALE = 'female'

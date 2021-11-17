@@ -15,7 +15,7 @@ class UserView(APIView):
     Args:
         generics ([type]): [description]
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated & CreateUserPermission]
     def post(self,request,format=None):
         data = {}
         serializer = UserCreationSerializer(data=request.data)
@@ -30,3 +30,27 @@ class UserView(APIView):
             print(data)
             responseStatus = status.HTTP_400_BAD_REQUEST
             return Response(data,status = responseStatus)
+
+class RoleView(APIView):
+    """[summary]
+
+    Args:
+        APIView ([type]): [description]
+    """
+    permission_classes = [IsAuthenticated & CreateUserPermission]
+
+    def post(self,request,format=None):
+        data = {}
+        serializer = SetRoleSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            data['success'] = "The user's role was successfully updated"
+            responseStatus = status.HTTP_200_OK
+
+
+        else:
+            data = serializer.errors
+            responseStatus = status.HTTP_400_BAD_REQUEST
+
+        return Response(data,status = responseStatus)
+
