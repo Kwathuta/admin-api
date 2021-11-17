@@ -1,5 +1,5 @@
 """
-ASGI config for fuzu_pay project.
+ASGI config for FUZU_PAY project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fuzu_pay.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'FUZU_PAY.settings')
 
 application = get_asgi_application()

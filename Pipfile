@@ -6,12 +6,8 @@ name = "pypi"
 [packages]
 django = "*"
 python-dotenv = "*"
-pillow = "*"
 djangorestframework = "*"
-django-cors-headers = "*"
-django-heroku = "*"
-gunicorn = "*"
-django-rest-swagger = "*"
+pillow = "*"
 drf-yasg = "*"
 
 [dev-packages]
@@ -22,4 +18,3 @@ python_version = "3.8"
 
 [packages.django-phonenumber-field]
 extras = [ "phonenumberslite",]
-version = "*"

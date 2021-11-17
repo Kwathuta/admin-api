@@ -1,6 +1,5 @@
 from django.urls import include,path
 from rest_framework.authtoken import views as token_views
-from rest_framework_swagger.views import get_swagger_view
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
@@ -19,7 +18,7 @@ schema_view = get_schema_view(
    permission_classes=(permissions.AllowAny,),
 )
 
-from superadmin import views
+from apps.superadmin import views
 
 urlpatterns = [
     path("register/",views.UserView.as_view(),name="register"),

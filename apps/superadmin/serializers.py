@@ -1,7 +1,7 @@
 from rest_framework import fields, serializers
 from django.contrib.auth.models import Group
 
-from superadmin.models import *
+from apps.superadmin.models import *
 
 class GroupSerializer(serializers.ModelSerializer):
     """A serializer for the user groups

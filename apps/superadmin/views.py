@@ -6,8 +6,8 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
-from superadmin.serializers import *
-from superadmin.permissions import *
+from apps.superadmin.serializers import *
+from apps.superadmin.permissions import *
 
 class UserView(APIView):
     """This handles user functionality

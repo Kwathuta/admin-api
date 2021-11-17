@@ -1,4 +1,4 @@
-"""fuzu_pay URL Configuration
+"""FUZU_PAY URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -18,6 +18,5 @@ from django.urls import path,include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('account/',include('superadmin.urls')),
-    path('', include('rest_framework.urls'))
+    path('account/',include('apps.superadmin.urls'))
 ]
