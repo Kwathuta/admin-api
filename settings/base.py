@@ -46,7 +46,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.superadmin',
     'drf_yasg',
+    'rest_framework.authtoken',
+    'rest_framework',
 ]
+
+LOGIN_REDIRECT_URL = ''
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,6 +61,14 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
 
 ROOT_URLCONF = 'FUZU_PAY.urls'
 

@@ -120,42 +120,42 @@ class Profile(models.Model):
         verbose_name_plural = "Profiles"
 
 
-class EmploymentInformation(models.Model):
-    """This entails the users connection with the company
-    """
-    employee = models.OneToOneField(User, on_delete=models.CASCADE)
-    employment_date = models.DateField(auto_now_add=True)
-    position = models.CharField(max_length=20, null=True)
-    department = models.CharField(max_length=20, null=True)
-    employment_type = models.CharField(max_length=20, null=True)
-    status = models.BooleanField(default=True)
-    country = models.CharField(max_length=20, null=True)
-    company_id = models.CharField(max_length=20, null=True)
+# class EmploymentInformation(models.Model):
+#     """This entails the users connection with the company
+#     """
+#     employee = models.OneToOneField(User, on_delete=models.CASCADE)
+#     employment_date = models.DateField(auto_now_add=True)
+#     position = models.CharField(max_length=20, null=True)
+#     department = models.CharField(max_length=20, null=True)
+#     employment_type = models.CharField(max_length=20, null=True)
+#     status = models.BooleanField(default=True)
+#     country = models.CharField(max_length=20, null=True)
+#     company_id = models.CharField(max_length=20, null=True)
 
-    def __str__(self):
-        return self.employee.username + "'s employee info"
+#     def __str__(self):
+#         return self.employee.username + "'s employee info"
 
-    class Meta:
-        verbose_name = "Employment Information"
-        verbose_name_plural = "Employment Information"
+#     class Meta:
+#         verbose_name = "Employment Information"
+#         verbose_name_plural = "Employment Information"
 
 
-class PaymentInformation(models.Model):
-    """This entails a user's payment information
-    """
-    employee = models.OneToOneField(User, on_delete=models.CASCADE)
-    bank = models.CharField(max_length=20, null=True)
-    branch = models.CharField(max_length=20, null=True)
-    account_number = models.CharField(max_length=20, null=True)
-    gross_pay = models.DecimalField(null=True, decimal_places=2, max_digits=9)
-    net_pay = models.DecimalField(null=True, decimal_places=2, max_digits=9)
+# class PaymentInformation(models.Model):
+#     """This entails a user's payment information
+#     """
+#     employee = models.OneToOneField(User, on_delete=models.CASCADE)
+#     bank = models.CharField(max_length=20, null=True)
+#     branch = models.CharField(max_length=20, null=True)
+#     account_number = models.CharField(max_length=20, null=True)
+#     gross_pay = models.DecimalField(null=True, decimal_places=2, max_digits=9)
+#     net_pay = models.DecimalField(null=True, decimal_places=2, max_digits=9)
 
-    def __str__(self):
-        return self.employee.username + "'s payment_info"
+#     def __str__(self):
+#         return self.employee.username + "'s payment_info"
 
-    class Meta:
-        verbose_name = "Payments Information"
-        verbose_name_plural = "Payment Information"
+#     class Meta:
+#         verbose_name = "Payments Information"
+#         verbose_name_plural = "Payment Information"
 
 
 class EmergencyRelationships(models.Model):

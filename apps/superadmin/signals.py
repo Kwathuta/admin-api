@@ -12,6 +12,11 @@ from apps.superadmin.models import *
 def create_associate_tables(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(employee=instance)
-        EmploymentInformation.objects.create(employee=instance)
-        PaymentInformation.objects.create(employee=instance)
-        EmergencyInformation.objects.create(employee=instance)
+        # EmploymentInformation.objects.create(employee=instance)
+        # PaymentInformation.objects.create(employee=instance)
+        # EmergencyInformation.objects.create(employee=instance)
+
+if len(Group.objects.all()) < 3:
+    Group.objects.create(name="super_admin")
+    Group.objects.create(name="human_resources")
+    Group.objects.create(name="subordinate_staff")
