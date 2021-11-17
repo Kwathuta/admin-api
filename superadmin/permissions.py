@@ -11,7 +11,5 @@ class CreateUserPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.user.is_superuser:
             return True
-        if request.user.groups.filter(name="humanresource").exists():
-            return True
         else:
             return False

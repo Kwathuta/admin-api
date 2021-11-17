@@ -36,6 +36,8 @@ ALLOWED_HOSTS = ["*"]
 # User model
 AUTH_USER_MODEL = 'superadmin.User'
 
+REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS':'rest_framework.schemas.coreapi.AutoSchema' }
+
 
 # Application definition
 
@@ -51,6 +53,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'rest_framework_swagger',
+    'drf_yasg',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
