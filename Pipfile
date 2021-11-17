@@ -9,6 +9,7 @@ python-dotenv = "*"
 djangorestframework = "*"
 pillow = "*"
 drf-yasg = "*"
+cloudinary = "*"
 
 [dev-packages]
 autopep8 = "*"
@@ -16,5 +17,5 @@ autopep8 = "*"
 [requires]
 python_version = "3.8"
 
-[packages.django-phonenumber-field]
-extras = [ "phonenumberslite",]
+[packages]
+django-phonenumber-field = {extras = [ "phonenumberslite",]}
