@@ -12,6 +12,9 @@ from apps.superadmin.models import *
 def create_associate_tables(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(employee=instance)
+        group = Group.objects.get(name='subordinate_staff') 
+        group.user_set.add(instance)
+        instance.save()
         # EmploymentInformation.objects.create(employee=instance)
         # PaymentInformation.objects.create(employee=instance)
         # EmergencyInformation.objects.create(employee=instance)

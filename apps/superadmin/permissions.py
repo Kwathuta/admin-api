@@ -9,7 +9,7 @@ class CreateUserPermission(permissions.BasePermission):
         permissions ([type]): [description]
     """
     def has_permission(self, request, view):
-        if request.user.is_superuser:
+        if request.user.groups.filter(name="super_admin").exists() or request.user.groups.filter(name="human_resources").exists():
             return True
         else:
             return False
