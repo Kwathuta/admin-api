@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 
 from django.shortcuts import render
 
-from .serializers import EmployeeSerializer
+from .serializers import EmployeeSerializer, CreateEmployeeSerializer
 
 # api
 from django.http import JsonResponse
@@ -18,11 +18,16 @@ from apps.human_resource import serializers
 
 
 # list employees
-class EmployeeViewSet(APIView):
+class EmployeeView(APIView):
     def get(self, request, format=None):  # get all employees
         all_employees = Employee.objects.all()
         serializers = EmployeeSerializer(all_employees, many=True)
         return Response(serializers.data)
-    
-    # def post(self, request, format=None):
-        
+
+    def post(self, request, format=None):  # create employee
+        serializers = CreateEmployeeSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            # data['success'] = "Employee created successfully"
+            return Response({"Employee created successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)

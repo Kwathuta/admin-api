@@ -50,25 +50,26 @@ class Employee(models.Model):
     """
         Employee model
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='employee')
-    employee_id = models.CharField(primary_key=True, unique=True, null=False,max_length=50)
+    # user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='employee')
+    employee_id = models.CharField(primary_key=True, unique=True, null=False,max_length=50) 
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     employment_type = models.ForeignKey(EmploymentType, on_delete=models.CASCADE)
     position = models.CharField(max_length=100)
     surname = models.CharField(max_length=50, null=False)
     other_names = models.CharField(max_length=50, null=False)
     phone_number = models.CharField(max_length=15, null=False)
-    work_email = models.EmailField(max_length=50, null=False, unique=True)
-    personal_email = models.EmailField(max_length=50, null=False, unique=True)
-    id_number = models.CharField(max_length=50, null=False, unique=True)
-    gross_salary = models.DecimalField(max_digits=10, decimal_places=2, null=False)
-    marital_status = models.CharField(max_length=50, null=True)
-    emergency_contact = models.CharField(max_length=50, null=True)
-    emergency_contact_number = models.CharField(max_length=15, null=True)
-    bank_payment_details = models.ForeignKey(BankDetails, on_delete=models.CASCADE, null=True)
-    insurance_number = models.CharField(max_length=50, null=True)
-    tax_pin_number = models.CharField(max_length=200, null=True)
-    contry = models.CharField(max_length=200, null=True)
+    work_email = models.EmailField(max_length=50, null=True, unique=True) 
+    personal_email = models.EmailField(max_length=50, null=True, unique=True) 
+    id_number = models.CharField(max_length=50, null=True, unique=True) 
+    gross_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True) 
+    marital_status = models.CharField(max_length=50, null=True) 
+    emergency_contact = models.CharField(max_length=50, null=True) 
+    emergency_contact_number = models.CharField(max_length=15, null=True) 
+    bank_payment_details = models.ForeignKey(BankDetails, on_delete=models.CASCADE, null=True) 
+    insurance_number = models.CharField(max_length=50, null=True) 
+    tax_pin_number = models.CharField(max_length=200, null=True) 
+    country = models.CharField(max_length=200, null=True) 
+    date_of_birth = models.DateField(null=True, blank=True)
     # document = CloudinaryField('document', null=True)
     employment_date = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=50, null=True,default='active')
@@ -83,7 +84,7 @@ class Employee(models.Model):
         return employee
 
     def __str__(self):
-        return self.employee_id
+        return self.surname + ' - ' + self.other_names + ' - ' + self.employee_id + ' - ' + self.work_email
 
 # =================== Employee Management end tables ===================
 

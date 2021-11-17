@@ -4,5 +4,5 @@ from . import views
 
 
 urlpatterns = [
-    url(r'^api/employees/$', views.EmployeeViewSet.as_view()),  # list of employees
+    path('api/employees/', views.EmployeeView.as_view(),name="employees"),  # list of employees
 ]
