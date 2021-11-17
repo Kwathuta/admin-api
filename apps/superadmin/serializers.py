@@ -26,7 +26,7 @@ class UserCreationSerializer(serializers.ModelSerializer):
     def save(self):
         """This handles saving a user from the request
         """
-        account = User(email = self.validated_data['email'], username = self.validated_data['username'])
+        account = User(email = self.validated_data['email'], username = self.validated_data['username'],role = Role.objects.get(name="subordinate_staff"))
         account.set_password(self.validated_data['password'])
         account.save()
         return account

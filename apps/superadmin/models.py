@@ -1,8 +1,27 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group
 from phonenumber_field.modelfields import PhoneNumberField
+from django.contrib.auth.models import Group
 
 # Create your models here.
+
+class Role(models.Model):
+    """This defines the new roles a user can have
+
+    Args:
+        models ([type]): [description]
+
+    Raises:
+        ValueError: [description]
+        ValueError: [description]
+
+    Returns:
+        [type]: [description]
+    """
+    name = models.CharField(max_length=30,verbose_name="The role of a user in the organisation")
+
+    def __str__(self):
+        return self.name
 
 
 class MyAccountManager(BaseUserManager):
@@ -15,18 +34,21 @@ class MyAccountManager(BaseUserManager):
         [type]: [description]
     """
 
-    def create_user(self, email, username, password=None):
+    def create_user(self, email, username, password=None,role=None):
         if not email:
             raise ValueError("Users must have and email address")
 
         if not username:
             raise ValueError("You must have a username")
 
+
         user = self.model(
             email=self.normalize_email(email),
             username=username,
             password=password
         )
+        print(user)
+        user.role = Role.objects.get(name="subordinate_staff")
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -35,12 +57,12 @@ class MyAccountManager(BaseUserManager):
         user = self.create_user(
             email=self.normalize_email(email),
             username=username,
-            password=password,
+            password=password
         )
-
         user.is_admin = True
         user.is_superuser = True
         user.is_staff = True
+        user.role = Role.objects.get(name="super_admin")
 
         user.save(using=self._db)
         return user
@@ -69,7 +91,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-
+    role = models.ForeignKey(Role,on_delete=models.PROTECT)
     objects = MyAccountManager()
 
     USERNAME_FIELD = 'email'
@@ -87,6 +109,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     def delete_user(self):
         self.delete()
 
+    # def change_group(self,group):
+    #     """This will change a user's group
+
+    #     Returns:
+    #         [type]: [description]
+    #     """
+    #     group.user_set.remove(self)
 
 MALE = 'male'
 FEMALE = 'female'
