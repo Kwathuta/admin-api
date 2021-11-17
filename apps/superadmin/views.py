@@ -15,7 +15,6 @@ class UserView(APIView):
     Args:
         generics ([type]): [description]
     """
-    # permission_classes = [IsAuthenticated&CreateUserPermission]
     def post(self,request,format=None):
         data = {}
         serializer = UserCreationSerializer(data=request.data)
