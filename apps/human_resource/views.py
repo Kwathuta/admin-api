@@ -31,3 +31,31 @@ class EmployeeView(APIView):
             # data['success'] = "Employee created successfully"
             return Response({"Employee created successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+# employee details
+class EmployeeDetail(APIView):  # get employee details
+    def get_object(self, employee_id):
+        try:
+            return Employee.objects.get(employee_id=employee_id)
+        except Employee.DoesNotExist:
+            raise Http404
+
+    def get(self, request, employee_id, format=None): # get employee details
+        employee = self.get_object(employee_id)
+        serializer = EmployeeSerializer(employee)
+        return Response(serializer.data)
+
+    def put(self, request, employee_id, format=None): # update employee details
+        employee = self.get_object(employee_id)
+        serializer = EmployeeSerializer(employee, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, employee_id, format=None):
+        employee = self.get_object(employee_id)
+        employee.delete()
+        return Response({"Employee deleted successfully!"},status=status.HTTP_204_NO_CONTENT)

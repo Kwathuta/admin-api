@@ -18,7 +18,7 @@ class CreateEmployeeSerializer(serializers.ModelSerializer):  # create employee
     class Meta:
         model = Employee
         fields = (
-            'department', 'employment_type', 'surname',
+            'employee_id','department', 'employment_type', 'surname',
             'other_names', 'phone_number', 'work_email', 'id_number',
             'country', 'date_of_birth', 'position', 'department',
             'employment_type', 'employment_date', 'gross_salary',

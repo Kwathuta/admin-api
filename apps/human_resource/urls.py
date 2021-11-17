@@ -5,4 +5,5 @@ from . import views
 
 urlpatterns = [
     path('api/employees/', views.EmployeeView.as_view(),name="employees"),  # list of employees
+    path('api/employees/<str:employee_id>/', views.EmployeeDetail.as_view(),name="employee-detail"), # single employee
 ]
