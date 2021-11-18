@@ -37,7 +37,7 @@ class RoleView(APIView):
     Args:
         APIView ([type]): [description]
     """
-    permission_classes = [IsAuthenticated & CreateUserPermission]
+    permission_classes = [IsAuthenticated & ChangeRolePermission]
 
     def post(self,request,format=None):
         data = {}
