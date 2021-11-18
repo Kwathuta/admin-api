@@ -11,6 +11,10 @@ pillow = "*"
 drf-yasg = "*"
 django-heroku = "*"
 coreapi = "*"
+<<<<<<< HEAD
+=======
+gunicorn = "*"
+>>>>>>> 75364eaaa85fe072f74326087adde98233385d62
 
 [dev-packages]
 
