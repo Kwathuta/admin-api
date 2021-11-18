@@ -21,7 +21,6 @@ class ChangeRolePermission(permissions.BasePermission):
         permissions ([type]): [description]
     """
     def has_permission(self, request, view):
-        print(view.request.data['user'])
         if request.user.role.name == "super_admin":
             if request.user.pk == int(view.request.data['user']):
                 return False
