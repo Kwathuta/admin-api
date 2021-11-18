@@ -12,6 +12,7 @@ drf-yasg = "*"
 django-heroku = "*"
 coreapi = "*"
 gunicorn = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 
