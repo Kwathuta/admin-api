@@ -1,11 +1,17 @@
 [[source]]
-url = "https://pypi.org/simple"
+url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
 [packages]
 django = "*"
 python-dotenv = "*"
+djangorestframework = "*"
+pillow = "*"
+drf-yasg = "*"
+django-heroku = "*"
+coreapi = "*"
+gunicorn = "*"
 cloudinary = "*"
 
 [dev-packages]
