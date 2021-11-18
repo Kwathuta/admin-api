@@ -2,7 +2,7 @@ name: DeployToHerokuServer
 
 on:
   push:
-    branches: [ master ]
+    branches: [ development ]
 
 jobs:
   build:
