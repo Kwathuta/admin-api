@@ -48,13 +48,15 @@ INSTALLED_APPS = [
     'apps.superadmin',
     'apps.human_resource',
     'drf_yasg',
-    'rest_framework.authtoken',
+    # 'rest_framework.authtoken',
     'rest_framework',
+    'corsheaders',
 ]
 
 LOGIN_REDIRECT_URL = ''
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -105,6 +107,9 @@ DATABASES = {
 
 #user model
 AUTH_USER_MODEL = 'superadmin.User'
+
+#CORS Headers configuration
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Password validation

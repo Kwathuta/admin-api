@@ -12,9 +12,14 @@ drf-yasg = "*"
 django-heroku = "*"
 coreapi = "*"
 gunicorn = "*"
+django-cors-headers = "*"
 cloudinary = "*"
+drf-flex-fields = "*"
 
 [dev-packages]
 
 [requires]
 python_version = "3.8"
+
+[packages.django-phonenumber-field]
+extras = [ "phonenumberslite",]
