@@ -12,9 +12,10 @@ jobs:
     - uses: actions/checkout@v2
     - uses: akhileshns/heroku-deploy@v3.4.6
       with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_api_key: 70909716-ca1d-4648-a24d-8e755753cdcc
           heroku_app_name: "machachari"
           heroku_email: "ken.mbira@student.moringa.com"
+          branch: "main"
 
     - name: Successful Message
       run: echo Successfully Deployed!!
