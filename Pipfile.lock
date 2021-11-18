@@ -1,17 +1,19 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "443434bfd8124550f16758aef505fb7fd0d67cad526163fba3aaf807144c6762"
+            "sha256": "8c3f4373d2071d949671a0c884fb9eefd57676f01788decdcf78a60e132fc631"
         },
         "pipfile-spec": 6,
         "requires": {
             "python_version": "3.8"
         },
-        "sources": [{
-            "name": "pypi",
-            "url": "https://pypi.python.org/simple",
-            "verify_ssl": true
-        }]
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.python.org/simple",
+                "verify_ssl": true
+            }
+        ]
     },
     "default": {
         "asgiref": {
@@ -89,6 +91,14 @@
             "index": "pypi",
             "version": "==0.3.1"
         },
+        "django-phonenumber-field": {
+            "hashes": [
+                "sha256:9695d3beda772c503ad4e04a4f7012a8227e9e3e4fd0ea4ffb07c43245bf4a8d",
+                "sha256:bbb9cb2e6fc53c476de40428e1354c313a040e8b2fb69ea8ead4ba41a60f926a"
+            ],
+            "index": "pypi",
+            "version": "==6.0.0"
+        },
         "djangorestframework": {
             "hashes": [
                 "sha256:6d1d59f623a5ad0509fe0d6bfe93cbdfe17b8116ebc8eda86d45f6e16e819aaf",
@@ -96,6 +106,13 @@
             ],
             "index": "pypi",
             "version": "==3.12.4"
+        },
+        "drf-flex-fields": {
+            "hashes": [
+                "sha256:07ef01a6c0b887de3cb97a673465de77ce7019cfd8c3e498ca7cd49ed03cf550"
+            ],
+            "index": "pypi",
+            "version": "==0.9.6"
         },
         "drf-yasg": {
             "hashes": [
@@ -222,6 +239,13 @@
                 "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"
             ],
             "version": "==21.3"
+        },
+        "phonenumberslite": {
+            "hashes": [
+                "sha256:08d0ad1ec5eebd2ba7722ba3c2fb3e10927c294143f7daf6b3503192ecc7e4fb",
+                "sha256:580d0aeee9a48c4d904e5bc8cc7bc519bd97a455cbda081349bce5db1209ae16"
+            ],
+            "version": "==8.12.37"
         },
         "pillow": {
             "hashes": [
