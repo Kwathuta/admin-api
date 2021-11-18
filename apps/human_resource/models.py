@@ -123,6 +123,9 @@ class Leave(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     soft_delete = models.BooleanField(default=False)
     
+    def __str__(self):
+        return self.employee.surname + ' - ' + self.leave_type.name + ' - ' + self.leave_date_from.strftime('%d-%m-%Y') + ' - ' + self.leave_date_to.strftime('%d-%m-%Y')
+    
     
 # =================== Leave Manager end ===============================
 

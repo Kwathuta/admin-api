@@ -7,3 +7,6 @@ from .models import Employee, EmploymentType, Department, BankDetails, LeaveType
 admin.site.register(Employee)
 admin.site.register(EmploymentType)
 admin.site.register(Department)
+admin.site.register(LeaveType)
+admin.site.register(Leave)
+admin.site.register(BankDetails)
