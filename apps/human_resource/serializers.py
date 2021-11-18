@@ -12,6 +12,12 @@ class DepartmentSerializer(serializers.ModelSerializer):
         model = Department
         fields = ['pk', 'name']
         
+# department serializer
+class EmploymentTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmploymentType
+        fields = ['pk', 'name']
+        
 
 # leave type serializer
 class LeaveTypeSerializer(serializers.ModelSerializer):
