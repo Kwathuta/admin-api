@@ -41,5 +41,6 @@ urlpatterns = [
     path('swagger/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path("redoc/", schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path("", schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    # url("human-resource/", include("apps.human_resource.urls")), # Human Resource
+    url("human-resource/", include("apps.human_resource.urls")), # Human Resource
+    url("finance/", include("apps.finance.urls")), # finance
 ]
