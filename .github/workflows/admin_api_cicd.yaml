@@ -10,12 +10,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: /
-        pipenv install
-    - name: Run tests
-      run: /
-        python manage.py test
+      - name: Run tests
+        run: /
+          python manage.py test
 
-    - name: Successful Message
-      run: echo Successfully Deployed!!
+      - name: Successful Message
+        run: echo Successfully Deployed!!
