@@ -28,3 +28,22 @@ class TestViews(TestSetUp):
         token = Token.objects.get(user_id = self.super_user.pk)
         self.assertEqual(token.key,res.data['token'])
         self.assertEqual(res.status_code,status.HTTP_200_OK)
+
+    def authenticate(self):
+        response = self.client.post(self.login_url,self.super_user_data)
+        self.client.credentials(HTTP_AUTHORIZATION = f"Token {response.data['token']}")
+
+    def test_create_user_while_un_authorised(self):
+        """This will tes if a user can be created by an unauthorised user
+        """
+        response = self.client.post(self.create_user_url,self.normal_user_data)
+
+        self.assertEqual(response.status_code,status.HTTP_401_UNAUTHORIZED)
+
+    def test_create_user_while_authorised(self):
+        """This will tes if a user can be created
+        """
+        self.authenticate()
+        response = self.client.post(self.create_user_url,self.normal_user_data)
+
+        self.assertEqual(response.status_code,status.HTTP_201_CREATED)

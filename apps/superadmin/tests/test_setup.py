@@ -16,8 +16,11 @@ class TestSetUp(APITestCase):
         self.super_user = User.objects.create_superuser(email = 'mbiraken17@gmail.com',username = "kenmbira",password = "1234")
 
         self.normal_user_data = {
-            'username':'email@gmail.com',
-            'password':'1234'
+            'email':'email@gmail.com',
+            'username':'email',
+            'password':'1234',
+            'nationality':'Kenyan',
+            'national_id':1234
         }
         self.super_user_data = {
             'username':'mbiraken17@gmail.com',
