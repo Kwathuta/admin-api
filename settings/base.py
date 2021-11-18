@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.superadmin',
+    'apps.finance',
     'apps.human_resource',
     'drf_yasg',
     # 'rest_framework.authtoken',
