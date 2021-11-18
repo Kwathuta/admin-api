@@ -15,7 +15,10 @@ def create_associate_tables(sender, instance, created, **kwargs):
         # PaymentInformation.objects.create(employee=instance)
         # EmergencyInformation.objects.create(employee=instance)
 
-if len(Role.objects.all()) < 3:
-    Role.objects.create(name="super_admin")
-    Role.objects.create(name="human_resources")
-    Role.objects.create(name="subordinate_staff")
+try:
+    if len(Role.objects.all()) < 3:
+        Role.objects.create(name="super_admin")
+        Role.objects.create(name="human_resources")
+        Role.objects.create(name="subordinate_staff")
+except:
+    print("Roles does not exist yet")
