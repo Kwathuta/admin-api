@@ -36,6 +36,8 @@ class GetUserSerializer(serializers.ModelSerializer):
 
     Args:
         serializers ([type]): [description]
+
+    Parameters: username,password
     """
     class Meta:
         model = User
