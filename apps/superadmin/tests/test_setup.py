@@ -19,6 +19,10 @@ class TestSetUp(APITestCase):
             'username':'email@gmail.com',
             'password':'1234'
         }
+        self.super_user_data = {
+            'username':'mbiraken17@gmail.com',
+            'password':'1234'
+        }
         return super().setUp()
 
     def tearDown(self):
