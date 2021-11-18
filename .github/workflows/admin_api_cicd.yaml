@@ -15,7 +15,7 @@ jobs:
         pipenv install
     - name: Run tests
       run: /
-        python manage.py rest
+        python manage.py test
 
     - name: Successful Message
       run: echo Successfully Deployed!!
