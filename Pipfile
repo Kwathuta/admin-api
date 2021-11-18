@@ -14,6 +14,7 @@ coreapi = "*"
 gunicorn = "*"
 django-cors-headers = "*"
 cloudinary = "*"
+drf-flex-fields = "*"
 
 [dev-packages]
 
