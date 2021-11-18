@@ -8,6 +8,7 @@ class TestSetUp(APITestCase):
     def setUp(self):
         self.create_user_url = reverse('register')
         self.login_url = reverse('login')
+        self.change_role = reverse('change_role')
         if len(Role.objects.all()) < 3:
             Role.objects.create(name="super_admin")
             Role.objects.create(name="human_resources")

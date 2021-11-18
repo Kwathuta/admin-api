@@ -1,5 +1,5 @@
 from apps.superadmin.tests.test_setup import TestSetUp
-from apps.superadmin.models import Role
+from apps.superadmin.models import Role,User
 from rest_framework import status
 
 class TestViews(TestSetUp):
@@ -47,3 +47,23 @@ class TestViews(TestSetUp):
         response = self.client.post(self.create_user_url,self.normal_user_data)
 
         self.assertEqual(response.status_code,status.HTTP_201_CREATED)
+
+    def test_change_role(self):
+        """This will test if a user's role can be changed
+        """
+        self.authenticate()
+        self.client.post(self.create_user_url,self.normal_user_data)
+
+        user = User.objects.get(email = self.normal_user_data['email'])
+        role = Role.objects.get(name="human_resources")
+
+        role_changer = {
+            'user':user.pk,
+            'role':role.pk
+        }
+
+        response = self.client.post(self.change_role,role_changer)
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        user_now = User.objects.get(email = self.normal_user_data['email'])
+        self.assertEqual(user_now.role,role)
