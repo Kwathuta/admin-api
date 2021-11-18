@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 
 from django.shortcuts import render
 
-from .serializers import EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer
+from .serializers import EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer, DepartmentSerializer, EmploymentTypeSerializer
 
 # api
 from django.http import JsonResponse
@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-from .models import Employee, Leave
+from .models import Employee, Leave, EmploymentType, Department
 from apps.human_resource import serializers
 
 
@@ -74,3 +74,19 @@ class LeaveView(APIView):
             # data['success'] = "Leave created successfully"
             return Response({"Leave created successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# list departments
+class DepartmentView(APIView):
+    def get(self, request, format=None):  # get all departments
+        all_departments = Department.objects.all()
+        serializers = DepartmentSerializer(all_departments, many=True)
+        return Response(serializers.data)
+
+
+# list employment types
+class EmploymentTypeView(APIView):
+    def get(self, request, format=None):
+        all_employment_types = EmploymentType.objects.all()
+        serializers = EmploymentTypeSerializer(all_employment_types, many=True)
+        return Response(serializers.data)
