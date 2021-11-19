@@ -16,15 +16,11 @@ jobs:
       with:
         python-version: 3.8
     
-    - name: Install dependecies
-      uses: VaultVulp/action-pipenv@v2.0.1
-      with:
-        command: install -d
-    
-    - name: Test
-      uses: VaultVulp/action-pipenv@v2.0.1
-      with:
-        command: run test
+    - name: Initiate virtual environment
+      run: |
+          pipenv install
+          pipenv shell
+          
     - name: Run Tests
       run: |
         python3 manage.py test
