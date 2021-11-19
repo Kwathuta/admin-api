@@ -27,4 +27,4 @@ jobs:
         command: run test
     - name: Run Tests
       run: |
-        python manage.py test
+        python3 manage.py test
