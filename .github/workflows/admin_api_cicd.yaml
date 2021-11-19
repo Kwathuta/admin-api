@@ -18,17 +18,12 @@ jobs:
           target_branch: "development"
           commit_message_template: "[Automated] Merged {source_ref} into target {target_branch}"
 
-      - name: switch to development
-        run: | 
-          git checkout development
-          echo ${{github.ref}}
-
       - uses: actions/checkout@v2
       - name: Merge with main
         uses: everlytic/branch-merge@1.1.2
         with:
           github_token: ${{ github.token }}
-          source_ref: ${{ github.ref }}
+          source_ref: "development"
           target_branch: "main"
           commit_message_template: "[Automated] Merged {source_ref} into target {target_branch}"
 
