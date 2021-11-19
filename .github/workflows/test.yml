@@ -30,7 +30,5 @@ jobs:
   deploy:
     needs: build
 
-    steps:
-      - uses: actions/checkout@v2
-      call-workflow:
-        uses: .github/workflows/admin_api_cicd.yaml
+    call-workflow:
+      uses: .github/workflows/admin_api_cicd.yaml
