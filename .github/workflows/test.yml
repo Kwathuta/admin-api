@@ -25,3 +25,4 @@ jobs:
       run: |
         pipenv -h
         pipenv sync
+        pipenv manage.py test
