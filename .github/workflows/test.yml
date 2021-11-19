@@ -27,6 +27,6 @@ jobs:
           python3.8 manage.py migrate
           python3.8 manage.py test
 
-  call-workflow:
-    needs: build
-    uses: kwathuta/admin-api/.github/workflows/admin_api_cicd.yaml@ft-superadmin
+  # call-workflow:
+  #   needs: build
+  #   uses: kwathuta/admin-api/.github/workflows/admin_api_cicd.yaml@ft-superadmin
