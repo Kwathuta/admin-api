@@ -29,4 +29,4 @@ jobs:
 
   call-workflow:
     needs: build
-    uses: .github/workflows/admin_api_cicd.yaml@v1
+    uses: kwathuta/admin-api/.github/workflows/admin_api_cicd.yaml@v1
