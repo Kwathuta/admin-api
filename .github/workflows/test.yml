@@ -28,11 +28,13 @@ jobs:
         python3.8 manage.py migrate
         python3.8 manage.py test
 
-    - name: Merge with main
-    - uses: actions/checkout@v2
-    - uses: everlytic/branch-merge@1.1.2
-      with:
-        github_token: ${{ github.token }}
-        source_ref: ${{ github.ref }}
-        target_branch: 'main'
-        commit_message_template: '[Automated] Merged {source_ref} into target {target_branch}'
+  merge-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: everlytic/branch-merge@1.1.2
+        with:
+          github_token: ${{ github.token }}
+          source_ref: ${{ github.ref }}
+          target_branch: 'main'
+          commit_message_template: '[Automated] Merged {source_ref} into target {target_branch}'
