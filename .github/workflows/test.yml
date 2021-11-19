@@ -27,8 +27,6 @@ jobs:
           python3.8 manage.py migrate
           python3.8 manage.py test
 
-  deploy:
+  call-workflow:
     needs: build
-
-    call-workflow:
-      uses: .github/workflows/admin_api_cicd.yaml
+    uses: .github/workflows/admin_api_cicd.yaml
