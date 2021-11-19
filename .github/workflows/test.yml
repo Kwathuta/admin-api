@@ -29,6 +29,7 @@ jobs:
         python3.8 manage.py test
 
     - name: Merge with main
+    - uses: actions/checkout@v2
     - uses: everlytic/branch-merge@1.1.2
       with:
         github_token: ${{ github.token }}
