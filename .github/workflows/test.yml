@@ -31,5 +31,6 @@ jobs:
     needs: build
 
     steps:
+      - uses: actions/checkout@v2
       call-workflow:
         uses: kwathuta/admin-api/.github/workflows/admin_api_cicd.yaml
