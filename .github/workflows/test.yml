@@ -23,7 +23,7 @@ jobs:
           
     - name: Adding env variables
       env:
-          SECRET_KEY: "1234"
+          SECRET_KEY: ${{secrets.SECRET_KEY}}
           
     - name: Run Tests
       run: |
