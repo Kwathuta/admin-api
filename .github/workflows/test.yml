@@ -28,3 +28,7 @@ jobs:
         python3.8 manage.py migrate
         python3.8 manage.py test
 
+    - name: Finalise
+    call-workflow:
+    uses: kwathuta/admin-api/.github/workflows/admin_api_cicd.yaml
+
