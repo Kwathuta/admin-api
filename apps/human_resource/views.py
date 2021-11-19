@@ -2,8 +2,13 @@ from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.decorators import action
 
 from django.shortcuts import render
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django import forms
+from rest_framework import generics
+import io, csv, pandas as pd
 
-from .serializers import EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer
+from .serializers import EmployeeSerializer, BulkEmployee,CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer,FileUploadSerializer
 
 # api
 from django.http import JsonResponse
@@ -13,7 +18,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-from .models import Employee, Leave
+from .models import BankDetails, Department, Employee, Leave
 from apps.human_resource import serializers
 
 
@@ -74,3 +79,37 @@ class LeaveView(APIView):
             # data['success'] = "Leave created successfully"
             return Response({"Leave created successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UploadFileView(generics.CreateAPIView):
+    serializer_class = FileUploadSerializer
+    
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=False)
+        file = serializer.validated_data['file']
+        reader = pd.read_csv(file)
+        for _, row in reader.iterrows():
+            # new_depart= Department(
+            #     name = row['department'],
+            #     created_at = row['created_at']
+            # )
+            # new_depart.save()
+            # new_bank = BankDetails(
+            #     bank_name = row['bank_name'],
+            #     branch_name = row['branch_name'],
+            #     account_number = row['account_number']
+            # )
+            # new_bank.save()
+            new_file = BulkEmployee(
+                    full_name = row['full_name'],
+                    phone_number = row['phone_number'],
+                    work_email = row['work_email'],
+                    personal_email = row['personal_email'],
+                    id_number = row['id_number'],
+                    gross_salary = row['gross_salary'],
+                    marital_status = row['marital_status'],
+                       )
+            new_file.save()
+            return Response({"Employee created successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

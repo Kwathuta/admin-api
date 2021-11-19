@@ -86,6 +86,23 @@ class Employee(models.Model):
     def __str__(self):
         return self.surname + ' - ' + self.other_names + ' - ' + self.employee_id + ' - ' + self.work_email
 
+# bulkemployee model
+class BulkEmployee(models.Model): 
+    """
+        Employee model
+    """
+    full_name = models.CharField(max_length=50, null=False)
+    phone_number = models.CharField(max_length=15, null=False)
+    work_email = models.EmailField(max_length=50, null=True, unique=True) 
+    personal_email = models.EmailField(max_length=50, null=True, unique=True) 
+    id_number = models.CharField(max_length=50, null=True, unique=True) 
+    gross_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True) 
+    marital_status = models.CharField(max_length=50, null=True) 
+
+    @classmethod
+    def get_employee_by_id(cls, employee_id):
+        employee = cls.objects.get(employee_id=employee_id)
+        return employee
 # =================== Employee Management end tables ===================
 
 

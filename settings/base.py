@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.superadmin',
     'apps.human_resource',
     'drf_yasg',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [

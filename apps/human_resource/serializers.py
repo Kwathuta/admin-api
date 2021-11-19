@@ -3,7 +3,7 @@ from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import fields, serializers
 
 
-from .models import Employee, EmploymentType, Department, BankDetails, LeaveType, Leave, JobListing, Application, ScheduledInterview, OfferLetter
+from .models import Employee, EmploymentType, Department, BankDetails, LeaveType, Leave, JobListing, Application, ScheduledInterview, OfferLetter,BulkEmployee
 
 
 # department serializer
@@ -68,3 +68,13 @@ class CreateLeaveSerializer(serializers.ModelSerializer):  # create leave
         def create(self, validated_data):
             leave = Leave.objects.create(**validated_data)
             return leave
+
+
+
+class FileUploadSerializer(serializers.Serializer):
+    file = serializers.FileField()
+
+class SaveFileSerializer(serializers.Serializer):
+    class Meta:
+        model = BulkEmployee
+        fields = "__all__"
