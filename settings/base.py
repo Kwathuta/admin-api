@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.superadmin',
-    'apps.finance',
+    # 'apps.finance',
     'apps.human_resource',
     'drf_yasg',
     'rest_framework.authtoken',
@@ -106,10 +106,10 @@ DATABASES = {
     }
 }
 
-#user model
+# user model
 AUTH_USER_MODEL = 'superadmin.User'
 
-#CORS Headers configuration
+# CORS Headers configuration
 CORS_ALLOW_ALL_ORIGINS = True
 
 
