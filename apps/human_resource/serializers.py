@@ -29,6 +29,8 @@ class LeaveTypeSerializer(serializers.ModelSerializer):
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
+    department = serializers.CharField(source='department.name')
+    employment_type = serializers.CharField(source='employment_type.name')
     class Meta:
         model = Employee
         fields = '__all__'
