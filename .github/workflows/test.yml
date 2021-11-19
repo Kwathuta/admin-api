@@ -20,8 +20,7 @@ jobs:
       run: |
           pip install pipenv
           pipenv install --system
-          pipenv shell
           
     - name: Run Tests
       run: |
-        python3 manage.py test
+        pipenv python manage.py test
