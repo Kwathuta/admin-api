@@ -18,6 +18,7 @@ jobs:
     
     - name: Initiate virtual environment
       run: |
+          pip install pipenv
           pipenv install
           pipenv shell
           
