@@ -33,6 +33,7 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "machachari"
           heroku_email: "ken.mbira@student.moringaschool.com"
+          branch: "main"
 
       - name: Successful Message
         run: echo Successfully Deployed!!
