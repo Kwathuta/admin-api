@@ -2,7 +2,7 @@ name: test ci
 
 on:
   pull_request:
-    branches: [ft-superadmin]
+    branches: [development]
 
 jobs:
   build:
