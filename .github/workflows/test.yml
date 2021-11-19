@@ -2,37 +2,31 @@ name: test ci
 
 on:
   pull_request:
-    branches: [ development ]
+    branches: [development]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    
-    - name: Initiate virtual environment
-      run: |
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Initiate virtual environment
+        run: |
           pip install pipenv
           pipenv install --system
-          
-    - name: Run Tests
-      env:
+
+      - name: Run Tests
+        env:
           SECRET_KEY: ${{secrets.SECRET_KEY}}
-      run: |
-        python3.8 manage.py migrate
-        python3.8 manage.py test
+        run: |
+          python3.8 manage.py migrate
+          python3.8 manage.py test
 
-    - name: Merge with main
-      uses: everlytic/branch-merge@1.1.2
-      with:
-        github_token: ${{ github.token }}
-        source_ref: ${{ github.ref }}
-        target_branch: 'main'
-        commit_message_template: '[Automated] Merged {source_ref} into target {target_branch}'
-
+  call-workflow:
+    needs: build
+    uses: kwathuta/admin-api/.github/workflows/admin_api_cicd.yaml@ft-superadmin
