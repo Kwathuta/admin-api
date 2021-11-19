@@ -12,6 +12,7 @@ jobs:
       - name: Merge with development
         uses: everlytic/branch-merge@1.1.2
         with:
+          run: echo ${{github.ref}}
           github_token: ${{ github.token }}
           source_ref: ${{ github.ref }}
           target_branch: "development"
