@@ -30,5 +30,6 @@ jobs:
   deploy:
     needs: build
 
-    call-workflow:
-      uses: kwathuta/admin-api/.github/workflows/admin_api_cicd.yaml
+    steps:
+      call-workflow:
+        uses: kwathuta/admin-api/.github/workflows/admin_api_cicd.yaml
