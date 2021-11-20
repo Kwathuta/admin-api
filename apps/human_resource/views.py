@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 
 from django.shortcuts import render
 
-from .serializers import EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer, DepartmentSerializer, EmploymentTypeSerializer
+from .serializers import ApproveLeaveSerializer, EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer, DepartmentSerializer, EmploymentTypeSerializer, BankDetailsSerializer
 
 # api
 from django.http import JsonResponse
@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-from .models import Employee, Leave, EmploymentType, Department
+from .models import BankDetails, Employee, Leave, EmploymentType, Department
 from apps.human_resource import serializers
 
 
@@ -74,6 +74,25 @@ class LeaveView(APIView):
             # data['success'] = "Leave created successfully"
             return Response({"Leave created successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    
+# approve leave using its id
+class ApproveLeave(APIView):
+    def get_object(self, id):
+        try:
+            return Leave.objects.get(id=id)
+        except Leave.DoesNotExist:
+            raise Http404
+
+    def put(self, request, id, format=None):  # approve leave
+        leave = self.get_object(id)
+        serializer = ApproveLeaveSerializer(leave, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
 
 # list departments
@@ -83,10 +102,39 @@ class DepartmentView(APIView):
         serializers = DepartmentSerializer(all_departments, many=True)
         return Response(serializers.data)
 
+    def post(self, request, format=None):  # create department
+        serializers = DepartmentSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response({"Department created successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # list employment types
 class EmploymentTypeView(APIView):
-    def get(self, request, format=None):
+    def get(self, request, format=None):  # get all employment types
         all_employment_types = EmploymentType.objects.all()
         serializers = EmploymentTypeSerializer(all_employment_types, many=True)
         return Response(serializers.data)
+
+    def post(self, request, format=None):  # create employment type
+        serializers = EmploymentTypeSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response({"Employment type created successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# bank details
+class BankDetailsView(APIView):
+    def get(self, request, format=None):  # get all bank details
+        all_bank_details = BankDetails.objects.all()
+        serializers = BankDetailsSerializer(all_bank_details, many=True)
+        return Response(serializers.data)
+
+    def post(self, request, format=None):  # create bank details
+        serializers = BankDetailsSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response({"Bank details created successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
