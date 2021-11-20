@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 
 from django.shortcuts import render
 
-from .serializers import JobListingSerializer,ApproveLeaveSerializer, EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer, DepartmentSerializer, EmploymentTypeSerializer, BankDetailsSerializer, CreateJobListingSerializer
+from .serializers import ApplicationSerializer, JobListingSerializer,ApproveLeaveSerializer, EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer, DepartmentSerializer, EmploymentTypeSerializer, BankDetailsSerializer, CreateJobListingSerializer,CreateApplicationSerializer
 
 # api
 from django.http import JsonResponse
@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-from .models import BankDetails, Employee, JobListing, Leave, EmploymentType, Department
+from .models import Application, BankDetails, Employee, JobListing, Leave, EmploymentType, Department
 from apps.human_resource import serializers
 
 
@@ -150,4 +150,18 @@ class JobListingView(APIView):
         if serializers.is_valid():
             serializers.save()
             return Response({"Job listing created successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# create application
+class ApplicationView(APIView):
+    def get(self, request, format=None):  # get all applications
+        all_applications = Application.objects.all()
+        serializers = ApplicationSerializer(all_applications, many=True)
+        return Response(serializers.data)
+    def post(self, request, format=None):
+        serializers = CreateApplicationSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response({"Application created successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
