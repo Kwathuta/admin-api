@@ -1,6 +1,5 @@
 from django.db import models
 from django.db.models import fields
-from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import fields, serializers
 
 
@@ -29,17 +28,15 @@ class BankDetailsSerializer(serializers.ModelSerializer):
         model = BankDetails
         fields = ['id', 'account_number', 'bank_name', 'branch_name']
 
+
 # leave type serializer
-
-
 class LeaveTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = LeaveType
         fields = ['id', 'name']
 
+
 # Employee Serializer
-
-
 class EmployeeSerializer(serializers.ModelSerializer):
     department = serializers.CharField(source='department.name')
     employment_type = serializers.CharField(source='employment_type.name')
@@ -115,6 +112,7 @@ class ApproveLeaveSerializer(serializers.ModelSerializer):  # approve leave
 # job listing serializer
 class JobListingSerializer(serializers.ModelSerializer):
     department = serializers.CharField(source='department.name')
+
     class Meta:
         model = JobListing
         fields = '__all__'
@@ -139,3 +137,22 @@ class CreateJobListingSerializer(serializers.ModelSerializer):
         def create(self, validated_data):
             job_listing = JobListing.objects.create(**validated_data)
             return job_listing
+
+
+# create application
+class CreateApplicationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        fields = '__all__'      
+        
+        # create application
+        def create(self, validated_data):
+            application = Application.objects.create(**validated_data)
+            return application
+
+# view application
+class ApplicationSerializer(serializers.ModelSerializer):
+    job_listing = serializers.CharField(source='job_listing.job_title')
+    class Meta:
+        model = Application
+        fields = '__all__'
