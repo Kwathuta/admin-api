@@ -13,4 +13,5 @@ urlpatterns = [
     path('api/leaves/<str:id>/approve/', views.ApproveLeave.as_view(),name="leave-approve"), # approve leave
     path('api/jobs/', views.JobListingView.as_view(),name="jobs"), # list jobs
     path('api/applications/', views.ApplicationView.as_view(),name="applications"), # list applications
+    path('api/applications/<str:application_id>/', views.ApplicationDetail.as_view(),name="application-detail"),
 ]
