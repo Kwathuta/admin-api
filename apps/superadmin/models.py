@@ -47,7 +47,6 @@ class MyAccountManager(BaseUserManager):
             username=username,
             password=password
         )
-        print(user)
         user.role = Role.objects.get(name="subordinate_staff")
         user.set_password(password)
         user.save(using=self._db)

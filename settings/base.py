@@ -47,9 +47,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'apps.superadmin',
+    'apps.finance',
     'apps.human_resource',
     'drf_yasg',
-    # 'rest_framework.authtoken',
+    'rest_framework.authtoken',
     'rest_framework',
     'corsheaders',
 ]
@@ -106,10 +107,10 @@ DATABASES = {
     }
 }
 
-#user model
+# user model
 AUTH_USER_MODEL = 'superadmin.User'
 
-#CORS Headers configuration
+# CORS Headers configuration
 CORS_ALLOW_ALL_ORIGINS = True
 
 
@@ -156,4 +157,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-django_heroku.settings(locals())
+import os
+if '/app' in os.environ['HOME']:
+    import django_heroku
+    django_heroku.settings(locals())
