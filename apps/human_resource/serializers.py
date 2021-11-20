@@ -1,3 +1,4 @@
+from django.db import models
 from django.db.models import fields
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import fields, serializers
@@ -109,3 +110,32 @@ class ApproveLeaveSerializer(serializers.ModelSerializer):  # approve leave
             instance.status = validated_data.get('status', instance.status)
             instance.save()
             return instance
+
+
+# job listing serializer
+class JobListingSerializer(serializers.ModelSerializer):
+    department = serializers.CharField(source='department.name')
+    class Meta:
+        model = JobListing
+        fields = '__all__'
+
+
+# create job listing
+class CreateJobListingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobListing
+        fields = (
+            'job_title',
+            'job_description',
+            'department',
+            'position',
+            'location',
+            'job_type',
+            'experience',
+            'salary',
+            'deadline'
+        )
+
+        def create(self, validated_data):
+            job_listing = JobListing.objects.create(**validated_data)
+            return job_listing

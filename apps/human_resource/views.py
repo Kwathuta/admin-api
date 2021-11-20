@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 
 from django.shortcuts import render
 
-from .serializers import ApproveLeaveSerializer, EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer, DepartmentSerializer, EmploymentTypeSerializer, BankDetailsSerializer
+from .serializers import JobListingSerializer,ApproveLeaveSerializer, EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer, DepartmentSerializer, EmploymentTypeSerializer, BankDetailsSerializer, CreateJobListingSerializer
 
 # api
 from django.http import JsonResponse
@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-from .models import BankDetails, Employee, Leave, EmploymentType, Department
+from .models import BankDetails, Employee, JobListing, Leave, EmploymentType, Department
 from apps.human_resource import serializers
 
 
@@ -74,9 +74,8 @@ class LeaveView(APIView):
             # data['success'] = "Leave created successfully"
             return Response({"Leave created successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    
-    
+
+
 # approve leave using its id
 class ApproveLeave(APIView):
     def get_object(self, id):
@@ -92,7 +91,6 @@ class ApproveLeave(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
 
 # list departments
@@ -137,4 +135,19 @@ class BankDetailsView(APIView):
         if serializers.is_valid():
             serializers.save()
             return Response({"Bank details created successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# create job listing
+class JobListingView(APIView):
+    def get(self, request, format=None):  # get all job listings
+        all_job_listings = JobListing.objects.all()
+        serializers = JobListingSerializer(all_job_listings, many=True)
+        return Response(serializers.data)
+
+    def post(self, request, format=None):
+        serializers = CreateJobListingSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response({"Job listing created successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)

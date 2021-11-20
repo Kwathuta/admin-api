@@ -10,5 +10,6 @@ urlpatterns = [
     path('api/departments/', views.DepartmentView.as_view(),name="departments"), # list departments
     path('api/employment_types/', views.EmploymentTypeView.as_view(),name="employment_types"), # list employment types
     path('api/bank_details/', views.BankDetailsView.as_view(),name="bank_details"), # list bank details
-    path('api/leaves/<str:id>/approve/', views.ApproveLeave.as_view(),name="leave-approve"),
+    path('api/leaves/<str:id>/approve/', views.ApproveLeave.as_view(),name="leave-approve"), # approve leave
+    path('api/jobs/', views.JobListingView.as_view(),name="jobs"), # list jobs
 ]
