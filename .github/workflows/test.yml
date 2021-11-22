@@ -2,6 +2,19 @@ name: test ci
 
 on:
   workflow_call:
+    secrets:
+      SECRET_KEY:
+        required: true
+      EMAIL_USE_TLS: 
+        required: true
+      EMAIL_HOST: 
+        required: true
+      EMAIL_PORT: 
+        required: true
+      EMAIL_HOST_USER: 
+        required: true
+      EMAIL_HOST_PASSWORD: 
+        required: true
 
 jobs:
   build:
@@ -19,14 +32,17 @@ jobs:
           pip install pipenv
           pipenv install --system
 
+      - name: test secrets
+        run: echo "hello ${{ env.SECRET_KEY }}"
+
       - name: Run Tests
+        run: |
+          python3.8 manage.py migrate
+          python3.8 manage.py test
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
           EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
           EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
           EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
-          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
-        run: |
-          python3.8 manage.py migrate
-          python3.8 manage.py test
+          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }} 
