@@ -6,7 +6,6 @@ on:
 
 jobs:
   call-workflow:
-    needs: build
     uses: kwathuta/admin-api/.github/workflows/test.yml@ft-superadmin
 
   deploy:
