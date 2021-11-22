@@ -33,7 +33,9 @@ jobs:
           pipenv install --system
 
       - name: test secrets
-        run: echo "hello ${{ env.SECRET_KEY }}"
+        run: |
+          echo "hello ${{ env.SECRET_KEY }}"
+          echo "hello ${{ env.EMAIL_USE_TLS }}"
 
       - name: Run Tests
         run: |
