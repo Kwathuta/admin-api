@@ -20,6 +20,7 @@ jobs:
           pipenv install --system
 
       - name: Run Tests
+
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
@@ -28,6 +29,6 @@ jobs:
           EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
           EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
         run: |
-          echo ${{ env.SECRET_KEY }}
+          echo " hello ${{ env.SECRET_KEY }}"
           python3.8 manage.py migrate
           python3.8 manage.py test
