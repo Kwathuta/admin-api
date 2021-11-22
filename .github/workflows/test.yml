@@ -4,6 +4,7 @@ on:
   # push:
   #   branches: [ft-superadmin]
   workflow_call:
+    secrets
 
 jobs:
   build:
