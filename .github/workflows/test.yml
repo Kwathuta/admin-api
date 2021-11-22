@@ -1,9 +1,9 @@
 name: test ci
 
 on:
-  push:
-    branches: [ft-superadmin]
-  # workflow_call:
+  # push:
+  #   # branches: [ft-superadmin]
+  workflow_call:
 
 jobs:
   build:
@@ -27,10 +27,10 @@ jobs:
         run: |
           python3.8 manage.py migrate
           python3.8 manage.py test
-        env:
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
-          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
-          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
-          EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
-          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+        with:
+          SECRET_KEY: ${{SECRET_KEY }}
+          EMAIL_USE_TLS: ${{EMAIL_USE_TLS }}
+          EMAIL_HOST: ${{EMAIL_HOST }}
+          EMAIL_PORT: ${{EMAIL_PORT }}
+          EMAIL_HOST_USER: ${{EMAIL_HOST_USER }}
+          EMAIL_HOST_PASSWORD: ${{EMAIL_HOST_PASSWORD }}
