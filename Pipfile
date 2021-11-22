@@ -15,10 +15,14 @@ gunicorn = "*"
 django-cors-headers = "*"
 cloudinary = "*"
 drf-flex-fields = "*"
-django-phonenumber-field = {extras = ["phonenumberslite"], version = "*"}
+django-rest-passwordreset = "*"
 
 [dev-packages]
 autopep8 = "*"
 
 [requires]
 python_version = "3.8"
+
+[packages.django-phonenumber-field]
+extras = [ "phonenumberslite",]
+version = "*"
