@@ -1,7 +1,9 @@
 name: test ci
 
 on:
-  workflow_call:
+  push:
+    branches: [ft-superadmin]
+  # workflow_call:
 
 jobs:
   build:
