@@ -29,8 +29,8 @@ class TestViews(TestSetUp):
         self.assertEqual(token.key,res.data['token'])
         self.assertEqual(res.status_code,status.HTTP_200_OK)
 
-    def authenticate(self):
-        response = self.client.post(self.login_url,self.super_user_data)
+    def authenticate(self,user_data):
+        response = self.client.post(self.login_url,user_data)
         self.client.credentials(HTTP_AUTHORIZATION = f"Token {response.data['token']}")
 
     def test_create_user_while_un_authorised(self):
@@ -43,7 +43,7 @@ class TestViews(TestSetUp):
     def test_create_user_while_authorised(self):
         """This will tes if a user can be created
         """
-        self.authenticate()
+        self.authenticate(self.super_user_data)
         response = self.client.post(self.create_user_url,self.normal_user_data)
 
         self.assertEqual(response.status_code,status.HTTP_201_CREATED)
@@ -51,7 +51,7 @@ class TestViews(TestSetUp):
     def test_change_role(self):
         """This will test if a user's role can be changed
         """
-        self.authenticate()
+        self.authenticate(self.super_user_data)
         self.client.post(self.create_user_url,self.normal_user_data)
 
         user = User.objects.get(email = self.normal_user_data['email'])
@@ -71,7 +71,7 @@ class TestViews(TestSetUp):
     def test_change_role_for_self(self):
         """This will test if a user's role can be changed by the same user
         """
-        self.authenticate()
+        self.authenticate(self.super_user_data)
 
         user = User.objects.get(email = self.super_user_data['email'])
         role = Role.objects.get(name="human_resources")
@@ -84,5 +84,3 @@ class TestViews(TestSetUp):
         response = self.client.post(self.change_role,role_changer)
 
         self.assertTrue(response.status_code == status.HTTP_403_FORBIDDEN)
-
-    
