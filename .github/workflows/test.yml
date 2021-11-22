@@ -36,7 +36,6 @@ jobs:
         run: |
           echo "hello ${{ env.SECRET_KEY }}"
           echo "hello ${{ env.EMAIL_USE_TLS }}"
-          echo "hello ${{ env.EMAIL_USE_TLS }}"
 
       - name: Run Tests
         run: |
