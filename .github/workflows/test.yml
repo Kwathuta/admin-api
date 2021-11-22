@@ -21,12 +21,12 @@ jobs:
 
       - name: Run Tests
         env:
-          SECRET_KEY: ${{ secrets.KEY_KEY }}
-          EMAIL_USE_TLS : True
-          EMAIL_HOST : 'smtp.gmail.com'
-          EMAIL_PORT : 587
-          EMAIL_HOST_USER : 'ken.mbira@student.moringaschool.com'
-          EMAIL_HOST_PASSWORD : '5startrek#'
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          EMAIL_USE_TLS : ${{ secrets.EMAIL_USE_TLS }}
+          EMAIL_HOST : ${{ secrets.EMAIL_HOST }}
+          EMAIL_PORT : ${{ secrets.EMAIL_PORT }}
+          EMAIL_HOST_USER : ${{ secrets.EMAIL_HOST_USER }}
+          EMAIL_HOST_PASSWORD : ${{ secrets.EMAIL_HOST_PASSWORD }}
         run: |
           python3.8 manage.py migrate
           python3.8 manage.py test
