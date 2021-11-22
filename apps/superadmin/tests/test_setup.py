@@ -24,7 +24,7 @@ class TestSetUp(APITestCase):
             'national_id':1234
         }
         self.super_user_data = {
-            'username':'mbiraken17@gmail.com',
+            'email':'mbiraken17@gmail.com',
             'password':'1234'
         }
         return super().setUp()

@@ -73,7 +73,7 @@ class TestViews(TestSetUp):
         """
         self.authenticate()
 
-        user = User.objects.get(email = self.super_user_data['username'])
+        user = User.objects.get(email = self.super_user_data['email'])
         role = Role.objects.get(name="human_resources")
 
         role_changer = {

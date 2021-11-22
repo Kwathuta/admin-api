@@ -1,5 +1,6 @@
 from rest_framework import fields, serializers
 from django.contrib.auth.models import Group
+from django.contrib.auth import authenticate
 
 from apps.superadmin.models import *
 
@@ -31,18 +32,6 @@ class UserCreationSerializer(serializers.ModelSerializer):
         account.save()
         return account
 
-class GetUserSerializer(serializers.ModelSerializer):
-    """This defines getting the user instances
-
-    Args:
-        serializers ([type]): [description]
-
-    Parameters: username,password
-    """
-    class Meta:
-        model = User
-        fields = '__all__'
-
 class RoleSerializer(serializers.ModelSerializer):
     """This defines working with the user roles table
 
@@ -51,7 +40,47 @@ class RoleSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = Role
-        fields = ['pk']
+        fields = '__all__'
+        read_only_fields = ['name']
+
+class GetUserSerializer(serializers.ModelSerializer):
+    """This defines getting the user instances
+
+    Args:
+        serializers ([type]): [description]
+
+    Parameters: username,password
+    """
+    role = RoleSerializer()
+    class Meta:
+        model = User
+        fields = ['pk','email','username','first_name','last_name','nationality','national_id','date_joined','last_login','role']
+
+class LoginSerializer(serializers.Serializer):
+    """This defines the functions in the login function
+
+    Args:
+        serializers ([type]): [description]
+
+    Raises:
+        serializers.ValidationError: [description]
+    """
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(write_only=True,required=True)
+
+    def validate_user(self):
+        """This handles the validation of the user
+
+        Raises:
+            serializers.ValidationError: [description]
+        """
+        user = authenticate(email = self.validated_data['email'],password = self.validated_data['password'])
+
+        if user is not None:
+            return user
+
+        else:
+            raise serializers.ValidationError('The user could not be validated with the provided credentials.')
 
 class SetRoleSerializer(serializers.Serializer):
     """This defines the parameters to be used in assigning roles
