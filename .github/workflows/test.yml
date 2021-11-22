@@ -21,7 +21,7 @@ jobs:
 
       - name: Run Tests
         env:
-          SECRET_KEY: ${{ secret.SECRET_KEY }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
           EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
           EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
           EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
