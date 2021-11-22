@@ -45,13 +45,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'apps.superadmin',
-    'apps.finance',
-    'apps.human_resource',
+    # 'apps.finance',
+    # 'apps.human_resource',
     'drf_yasg',
     'rest_framework.authtoken',
-    'rest_framework',
     'corsheaders',
+    'django_rest_passwordreset',
 ]
 
 LOGIN_REDIRECT_URL = ''
@@ -74,6 +75,12 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ]
 }
+
+EMAIL_USE_TLS = os.environ['EMAIL_USE_TLS']
+EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_PORT = os.environ['EMAIL_PORT']
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 
 ROOT_URLCONF = 'FUZU_PAY.urls'
 
@@ -137,7 +144,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 
 USE_I18N = True
 
@@ -156,7 +163,6 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-import os
 if '/app' in os.environ['HOME']:
     import django_heroku
     django_heroku.settings(locals())
