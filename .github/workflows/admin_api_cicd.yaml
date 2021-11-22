@@ -6,7 +6,7 @@ on:
 
 jobs:
   call-workflow:
-    uses: kwathuta/admin-api/.github/workflows/test.yml@development
+    uses: kwathuta/admin-api/.github/workflows/test.yml@ft-superadmin
     secrets:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
       EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
