@@ -46,7 +46,21 @@ class CreateEmployeeSerializer(serializers.ModelSerializer):  # create employee
         def create(self, validated_data):
             employee = Employee.objects.create(**validated_data)
             return employee
+class ListingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Employee
+        fields = '__all__'
 
+
+# create joblisting
+class CreateListingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobListing
+        fields = "__all__"
+        # create listing
+        def create(self, validated_data):
+            listings = JobListing.objects.create(**validated_data)
+            return listings
 
 # leave serializer
 class LeaveSerializer(serializers.ModelSerializer):

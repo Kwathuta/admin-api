@@ -8,7 +8,7 @@ from django import forms
 from rest_framework import generics
 import io, csv, pandas as pd
 
-from .serializers import EmployeeSerializer, BulkEmployee,CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer,FileUploadSerializer
+from .serializers import ListingSerializer, EmployeeSerializer,CreateListingSerializer, BulkEmployee,CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer,FileUploadSerializer
 
 # api
 from django.http import JsonResponse
@@ -18,7 +18,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 
-from .models import BankDetails, Department, Employee, Leave
+from .models import Application, BankDetails, Department, Employee, JobListing, Leave
 from apps.human_resource import serializers
 
 
@@ -38,6 +38,20 @@ class EmployeeView(APIView):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
+# job listing
+class ListingView(APIView):
+    def get(self, request, format=None):  
+        all_listing = JobListing.objects.all()
+        serializers = ListingSerializer(all_listing, many=True)
+        return Response(serializers.data)
+
+    def post(self, request, format=None):  
+        serializers = CreateListingSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response({"Job listing created successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 # employee details
 class EmployeeDetail(APIView):  # get employee details
     def get_object(self, employee_id):
