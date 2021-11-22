@@ -45,7 +45,7 @@ class LoginView(APIView):
     Returns:
         [type]: [description]
     """
-    @swagger_auto_schema(request_body=LoginSerializer)
+    @swagger_auto_schema(request_body=GetUserSerializer,responses={200: GetUserSerializer()})
     def post(self,request,format=None):
         data = {}
         serializer = LoginSerializer(data=request.data)
