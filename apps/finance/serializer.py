@@ -23,7 +23,7 @@ class PayrollSerializer(serializers.ModelSerializer):
 class ExpensesSerializer(serializers.ModelSerializer):
     class Meta:
         model=Expenses
-        fields=["id","name","merchant","date_processed","amount","status"]
+        fields=["id","name","merchant","date_processed","amount","status","total_amount"]
 class ExpenseApprovalsSerializer(serializers.ModelSerializer):
     class Meta:
         model=Expenses

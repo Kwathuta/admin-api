@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Approve,Support,Staff,Payroll
+from .models import Approve,Support,Staff,Payroll,Expenses
 from rest_framework import status
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializer import ApproveSerializer,SupportSerializer,StaffSerializer,PayrollSerializer
+from .serializer import ApproveSerializer,SupportSerializer,StaffSerializer,PayrollSerializer,ExpensesSerializer
 
 # Create your views here.
 class ApproveDetail(APIView):  # get, update, delete single employee
@@ -146,3 +146,44 @@ class PayList(APIView):  # get all payroll
             serializers.save()
             return Response(serializers.data, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)                 
+
+class ExpensesList(APIView):
+
+
+    def get(self, request, format=None):
+        all_expenses = Expenses.objects.all()
+        serializers = ExpensesSerializer(all_expenses, many=True)
+        return Response(serializers.data)
+
+    def post(self, request, format=None):
+        serializers = ExpensesSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ExpenseDetail(APIView):  # get, update, delete single expense
+   
+    def get_object(self, pk):
+        try:
+            return Expenses.objects.get(pk=pk)
+        except Expenses.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):  # get expense
+        expay = self.get_object(pk)
+        serializers = ExpensesSerializer(expay)
+        return Response(serializers.data)
+
+    def put(self, request, pk, format=None):  # put expense
+        expay = self.get_object(pk)
+        serializers = ExpensesSerializer(expay, data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):  # delete expense
+        expay = self.get_object(pk)
+        expay.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)        
