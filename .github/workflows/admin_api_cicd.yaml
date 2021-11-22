@@ -4,11 +4,11 @@ on:
   pull_request:
     branches: [development]
 
-call-workflow:
-  needs: build
-  uses: kwathuta/admin-api/.github/workflows/test.yml@ft-superadmin
-
 jobs:
+  call-workflow:
+    needs: build
+    uses: kwathuta/admin-api/.github/workflows/test.yml@ft-superadmin
+
   deploy:
     needs: call-workflow
     runs-on: ubuntu-latest
