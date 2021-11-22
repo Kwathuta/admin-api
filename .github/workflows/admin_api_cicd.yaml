@@ -1,43 +1,43 @@
-# name: DeployToHerokuServer
+name: DeployToHerokuServer
 
-# on:
-#   pull_request:
-#     branches: [development]
+on:
+  pull_request:
+    branches: [development]
 
-# jobs:
-#   # call-workflow:
-#   #   uses: kwathuta/admin-api/.github/workflows/test.yml@ft-superadmin
+jobs:
+  call-workflow:
+    uses: kwathuta/admin-api/.github/workflows/test.yml@development
 
-#   deploy:
-#     # needs: call-workflow
-#     runs-on: ubuntu-latest
+  deploy:
+    needs: call-workflow
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - uses: actions/checkout@v2
-#       - name: Merge with development
-#         uses: everlytic/branch-merge@1.1.2
-#         with:
-#           github_token: ${{ github.token }}
-#           source_ref: ${{ github.ref }}
-#           target_branch: "development"
-#           commit_message_template: "[Automated] Merged {source_ref} into target {target_branch}"
+    steps:
+      - uses: actions/checkout@v2
+      - name: Merge with development
+        uses: everlytic/branch-merge@1.1.2
+        with:
+          github_token: ${{ github.token }}
+          source_ref: ${{ github.ref }}
+          target_branch: "development"
+          commit_message_template: "[Automated] Merged {source_ref} into target {target_branch}"
 
-#       - uses: actions/checkout@v2
-#       - name: Merge with main
-#         uses: everlytic/branch-merge@1.1.2
-#         with:
-#           github_token: ${{ github.token }}
-#           source_ref: "development"
-#           target_branch: "main"
-#           commit_message_template: "[Automated] Merged {source_ref} into target {target_branch}"
+      - uses: actions/checkout@v2
+      - name: Merge with main
+        uses: everlytic/branch-merge@1.1.2
+        with:
+          github_token: ${{ github.token }}
+          source_ref: "development"
+          target_branch: "main"
+          commit_message_template: "[Automated] Merged {source_ref} into target {target_branch}"
 
-#       - name: Deployment to heroku
-#         uses: akhileshns/heroku-deploy@v3.4.6
-#         with:
-#           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-#           heroku_app_name: "machachari"
-#           heroku_email: "ken.mbira@student.moringaschool.com"
-#           branch: "main"
+      - name: Deployment to heroku
+        uses: akhileshns/heroku-deploy@v3.4.6
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "machachari"
+          heroku_email: "ken.mbira@student.moringaschool.com"
+          branch: "main"
 
-#       - name: Successful Message
-#         run: echo Successfully Deployed!!
+      - name: Successful Message
+        run: echo Successfully Deployed!!
