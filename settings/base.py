@@ -46,8 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.superadmin',
-    'apps.finance',
-    'apps.human_resource',
+    # 'apps.finance',
+    # 'apps.human_resource',
     'drf_yasg',
     'rest_framework.authtoken',
     'rest_framework',
@@ -163,7 +163,6 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-import os
 if '/app' in os.environ['HOME']:
     import django_heroku
     django_heroku.settings(locals())
