@@ -1,8 +1,7 @@
 name: test ci
 
 on:
-  pull_request:
-    branches: [development]
+  workflow_call:
 
 jobs:
   build:
@@ -26,7 +25,3 @@ jobs:
         run: |
           python3.8 manage.py migrate
           python3.8 manage.py test
-
-  call-workflow:
-    needs: build
-    uses: kwathuta/admin-api/.github/workflows/admin_api_cicd.yaml@ft-superadmin

@@ -1,14 +1,19 @@
 name: DeployToHerokuServer
 
 on:
-  workflow_call:
+  pull_request:
+  branches: [development]
+
+call-workflow:
+  needs: build
+  uses: kwathuta/admin-api/.github/workflows/test.yml@ft-superadmin
 
 jobs:
   deploy:
+    needs: call-workflow
     runs-on: ubuntu-latest
 
     steps:
-
       - uses: actions/checkout@v2
       - name: Merge with development
         uses: everlytic/branch-merge@1.1.2
