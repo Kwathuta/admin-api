@@ -18,4 +18,17 @@ class StaffSerializer(serializers.ModelSerializer):
 class PayrollSerializer(serializers.ModelSerializer):
     class Meta:
         model=Payroll
-        fields=["id","date","full_name","payment_type"]                             
+        fields=["id","date","full_name","payment_type"]          
+
+class ExpensesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Expenses
+        fields=["id","name","merchant","date_processed","amount","status"]
+class ExpenseApprovalsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Expenses
+        fields=["id","name","amount","merchant","date"]
+class ExpensePaymentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Expenses
+        fields=["id","approved_expenses","total_amount","status"]
