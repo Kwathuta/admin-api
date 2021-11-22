@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework',
     'corsheaders',
+    'django_rest_passwordreset',
 ]
 
 LOGIN_REDIRECT_URL = ''
