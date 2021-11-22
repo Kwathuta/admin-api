@@ -76,6 +76,14 @@ REST_FRAMEWORK = {
     ]
 }
 
+DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
+    "CLASS": "django_rest_passwordreset.tokens.RandomStringTokenGenerator",
+    "OPTIONS": {
+        "min_length": 5,
+        "max_length": 5
+    }
+}
+
 EMAIL_USE_TLS = os.environ['EMAIL_USE_TLS']
 EMAIL_HOST = os.environ['EMAIL_HOST']
 EMAIL_PORT = os.environ['EMAIL_PORT']
