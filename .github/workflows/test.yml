@@ -3,20 +3,20 @@ name: test ci
 on:
   # push:
   #   branches: [ft-superadmin]
-  workflow_call:
-    secrets:
-      SECRET_KEY:
-        required: true
-      EMAIL_USE_TLS: 
-        required: true
-      EMAIL_HOST: 
-        required: true
-      EMAIL_PORT: 
-        required: true
-      EMAIL_HOST_USER: 
-        required: true
-      EMAIL_HOST_PASSWORD: 
-        required: true
+  # workflow_call:
+  #   secrets:
+  #     SECRET_KEY:
+  #       required: true
+  #     EMAIL_USE_TLS: 
+  #       required: true
+  #     EMAIL_HOST: 
+  #       required: true
+  #     EMAIL_PORT: 
+  #       required: true
+  #     EMAIL_HOST_USER: 
+  #       required: true
+  #     EMAIL_HOST_PASSWORD: 
+  #       required: true
 
 jobs:
   build:
@@ -36,7 +36,7 @@ jobs:
 
       - name: test secrets
         run: echo "hello ${{ env.SECRET_KEY }}"
-        
+
       - name: Run Tests
         run: |
           python3.8 manage.py migrate
