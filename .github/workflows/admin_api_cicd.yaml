@@ -6,7 +6,7 @@ on:
 
 jobs:
   call-workflow:
-    - uses: kwathuta/admin-api/.github/workflows/test.yml@development
+    uses: kwathuta/admin-api/.github/workflows/test.yml@development
 
   deploy:
     needs: call-workflow
