@@ -23,4 +23,5 @@ jobs:
         env:
           SECRET_KEY: 20212021
         run: |
+          python3.8 manage.py migrate
           python3.8 manage.py test
