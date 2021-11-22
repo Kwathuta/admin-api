@@ -6,16 +6,7 @@ on:
 
 jobs:
   call-workflow:
-    steps:
-
-      - uses: kwathuta/admin-api/.github/workflows/test.yml@development
-        env:
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
-          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
-          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
-          EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
-          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+    - uses: kwathuta/admin-api/.github/workflows/test.yml@development
 
   deploy:
     needs: call-workflow
