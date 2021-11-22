@@ -75,9 +75,9 @@ class Employee(models.Model):
     employment_date = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=50, null=True,default='active')
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    # updated_at = models.DateTimeField(auto_now=True)
     # created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    soft_delete = models.BooleanField(default=False)
+    # soft_delete = models.BooleanField(default=False)
     # get employee details by id
     @classmethod
     def get_employee_by_id(cls, employee_id):
@@ -122,7 +122,7 @@ class Leave(models.Model):
     status = models.CharField(max_length=50, default='pending')
     approved_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    soft_delete = models.BooleanField(default=False)
+    # soft_delete = models.BooleanField(default=False)
     
     def __str__(self):
         return self.employee.surname + ' - ' + self.leave_type.name + ' - ' + self.leave_date_from.strftime('%d-%m-%Y') + ' - ' + self.leave_date_to.strftime('%d-%m-%Y')
@@ -148,10 +148,10 @@ class JobListing(models.Model):
     job_type = models.CharField(max_length=100)
     experience = models.CharField(max_length=100)
     salary = models.DecimalField(max_digits=10, decimal_places=2,default=0)
-    deadline = models.DateField(auto_now=True,null=False)
+    deadline = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    soft_delete = models.BooleanField(default=False)
+    # updated_at = models.DateTimeField(auto_now=True)
+    # soft_delete = models.BooleanField(default=False)
     
     # get job listing details by id
     @classmethod
