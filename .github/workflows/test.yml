@@ -23,7 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Cache node modules
+      - name: Cache dependencies
+        id: cacheStep
         uses: actions/cache@v2
         env:
           cache-name: cache-node-modules
@@ -42,6 +43,7 @@ jobs:
           python-version: 3.8
 
       - name: Initiate virtual environment
+        if: steps.cacheStep.outputs.cache-hit != 'true'
         run: |
           pip install pipenv
           pipenv install --system
