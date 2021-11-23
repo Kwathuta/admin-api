@@ -53,7 +53,7 @@ class Staff(models.Model):
     gross_pay=models.DecimalField(decimal_places=2,max_digits=40,null=True)
     net_pay=models.DecimalField(decimal_places=2,max_digits=40,null=True)
     tax_deducted=models.DecimalField(decimal_places=2,max_digits=40,null=True)
-    insurance=models.DecimalField(decimal_places=2,max_digits=40,null=True)
+    
     pension=models.DecimalField(decimal_places=2,max_digits=40,null=True)
     sacco=models.DecimalField(decimal_places=2,max_digits=40,null=True)
     medical_cover=models.DecimalField(decimal_places=2,max_digits=40,null=True)
