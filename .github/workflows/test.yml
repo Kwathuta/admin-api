@@ -24,7 +24,9 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install pipenv
-        run: pip install pipenv
+        run: |
+          pip install pipenv
+          pipenv shell
 
       - name: Set up Python
         uses: actions/setup-python@v2
