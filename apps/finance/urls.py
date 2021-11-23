@@ -12,8 +12,8 @@ urlpatterns = [
     url(r'^api/staffw/', views.StaffList.as_view()), # list of staff
     url(r'api/pay/(?P<pk>[0-9]+)/$', views.PayDetail.as_view()), # single payroll
     url(r'^api/payw/', views.PayList.as_view()), # list payroll
-    url(r'^api/expensesw/', views.ExpensesList.as_view()), # list of expense
-    url(r'api/expenses/(?P<pk>[0-9]+)/$', views.ExpenseDetail.as_view()), # single expense
+    #url(r'^api/expensesw/', views.ExpensesList.as_view()), # list of expense
+    #url(r'api/expenses/(?P<pk>[0-9]+)/$', views.ExpenseDetail.as_view()), # single expense
 ]
 
 if settings.DEBUG:
