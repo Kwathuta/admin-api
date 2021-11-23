@@ -37,7 +37,7 @@ jobs:
         env:
           cache-name: cache-dependencies
         with:
-          path: ./.venv
+          path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Pipfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -45,9 +45,14 @@ jobs:
             ${{ runner.os }}-
 
       - name: Download dependencies
+        env:
+        PIPENV_NOSPIN: 'true'
+        WORKON_HOME: ~/.local/share/virtualenvs
+        PIPENV_CACHE_DIR: ~/.local/share/pipcache
+
         if: steps.cacheStep.outputs.cache-hit != 'true'
         run: |
-          pipenv install --system
+          pipenv install --dev
 
       - name: test secrets
         run: |
