@@ -36,7 +36,33 @@ class UserView(APIView):
             responseStatus = status.HTTP_400_BAD_REQUEST
             return Response(data,status = responseStatus)
 
-class RoleView(APIView):
+class LoginView(APIView):
+    """This handles a user login request
+
+    Args:
+        APIView ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    @swagger_auto_schema(request_body=LoginSerializer,responses={200: GetUserSerializer()})
+    def post(self,request,format=None):
+        data = {}
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validate_user()
+            data['user'] = GetUserSerializer(user).data
+            token, created = Token.objects.get_or_create(user=user)
+            data['token'] = token.key
+            responseStatus = status.HTTP_200_OK
+            return Response(data,status = responseStatus)
+
+        else:
+            data = serializer.errors
+            return Response(data,status = status.HTTP_400_BAD_REQUEST)
+
+
+class ChangeRole(APIView):
     """[summary]
 
     Args:
@@ -59,4 +85,16 @@ class RoleView(APIView):
             responseStatus = status.HTTP_400_BAD_REQUEST
 
         return Response(data,status = responseStatus)
+
+class RoleView(APIView):
+    """This retrieves a list of roles
+
+    Args:
+        APIView ([type]): [description]
+    """
+
+    def get(self,request,format=None):
+        data = {}
+        data['roles'] = RoleSerializer(Role.objects.all(),many=True).data
+        return Response(data,status = status.HTTP_200_OK)
 
