@@ -86,3 +86,10 @@ class RoleView(APIView):
 
         return Response(data,status = responseStatus)
 
+
+    def get(self,request,format=None):
+        data = {}
+        roles = Role.objects.all()
+        data['roles'] = RoleSerializer(roles).data
+        return Response(data,status = status.HTTP_200_OK)
+
