@@ -23,7 +23,7 @@ from rest_framework import permissions
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="ADMIN API",
+        title="FUZU API",
         default_version='v1',
         description="Test description",
         terms_of_service="https://www.google.com/policies/terms/",
