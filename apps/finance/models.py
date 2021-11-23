@@ -36,6 +36,7 @@ class Staff(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     amount=models.DecimalField(decimal_places=2, max_digits=40)
     
+    
 
 
     def __str__(self):
