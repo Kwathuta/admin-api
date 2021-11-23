@@ -83,4 +83,4 @@ class TestViews(TestSetUp):
 
         response = self.client.post(self.change_role,role_changer)
 
-        self.assertTrue(response.status_code != status.HTTP_403_FORBIDDEN)
+        self.assertTrue(response.status_code == status.HTTP_403_FORBIDDEN)
