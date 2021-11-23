@@ -49,7 +49,6 @@ jobs:
       - name: test secrets
         run: |
           echo "hello ${{ env.SECRET_KEY }}"
-          echo "hello ${{ env.SECRET_KEY }}"
 
       - name: Run Tests
         run: |
