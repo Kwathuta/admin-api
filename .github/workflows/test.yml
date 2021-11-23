@@ -26,6 +26,11 @@ jobs:
       - name: Install pipenv
         run: pip install pipenv
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
       - name: Cache dependencies
         id: cacheStep
         uses: actions/cache@v2
@@ -39,11 +44,6 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-            
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
 
       - name: Download dependencies
         if: steps.cacheStep.outputs.cache-hit != 'true'
