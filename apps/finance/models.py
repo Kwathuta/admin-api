@@ -35,28 +35,7 @@ class Staff(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     amount=models.DecimalField(decimal_places=2, max_digits=40)
-    position = models.CharField(max_length=100,null=True)
-    full_name=models.CharField(max_length=100,null=True)
-    department=models.CharField(max_length=100,null=True)
-    position = models.CharField(max_length=100,null=True)
-    company=models.CharField(max_length=100,null=True)
-    work_email=models.CharField(max_length=100,null=True)
-    personal_email=models.CharField(max_length=100,null=True)
-   
-    employee_id=models.CharField(max_length=100,null=True)
-    location=models.CharField(max_length=100,null=True)
-    date_processed=models.DateTimeField(auto_now_add=True,null=True)
-    employment_date=models.DateTimeField(auto_now_add=True,null=True)
-    insurance_number=models.CharField(max_length=100,null=True)
-    tax_pin_number=models.CharField(max_length=100,null=True)
-    paye=models.DecimalField(decimal_places=2,max_digits=40,null=True)
-    gross_pay=models.DecimalField(decimal_places=2,max_digits=40,null=True)
-    net_pay=models.DecimalField(decimal_places=2,max_digits=40,null=True)
-    tax_deducted=models.DecimalField(decimal_places=2,max_digits=40,null=True)
     
-    pension=models.DecimalField(decimal_places=2,max_digits=40,null=True)
-    sacco=models.DecimalField(decimal_places=2,max_digits=40,null=True)
-    medical_cover=models.DecimalField(decimal_places=2,max_digits=40,null=True)
 
 
     def __str__(self):
