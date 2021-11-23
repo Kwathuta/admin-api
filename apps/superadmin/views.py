@@ -62,7 +62,7 @@ class LoginView(APIView):
             return Response(data,status = status.HTTP_400_BAD_REQUEST)
 
 
-class RoleView(APIView):
+class ChangeRole(APIView):
     """[summary]
 
     Args:
@@ -86,10 +86,15 @@ class RoleView(APIView):
 
         return Response(data,status = responseStatus)
 
+class RoleView(APIView):
+    """This retrieves a list of roles
+
+    Args:
+        APIView ([type]): [description]
+    """
 
     def get(self,request,format=None):
         data = {}
-        roles = Role.objects.all()
-        data['roles'] = RoleSerializer(roles).data
+        data['roles'] = RoleSerializer(Role.objects.all(),many=True).data
         return Response(data,status = status.HTTP_200_OK)
 
