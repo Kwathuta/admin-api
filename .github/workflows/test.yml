@@ -46,8 +46,9 @@ jobs:
 
       - name: Download dependencies
         env:
-        WORKON_HOME: ~/.local/share/virtualenvs
-        PIPENV_CACHE_DIR: ~/.local/share/pipcache
+          PIPENV_NOSPIN: 'true'
+          WORKON_HOME: ~/.local/share/virtualenvs
+          PIPENV_CACHE_DIR: ~/.local/share/pipcache
 
         if: steps.cacheStep.outputs.cache-hit != 'true'
         run: |
