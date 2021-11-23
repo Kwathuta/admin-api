@@ -42,7 +42,7 @@ class Staff(models.Model):
     company=models.CharField(max_length=100,null=True)
     work_email=models.CharField(max_length=100,null=True)
     personal_email=models.CharField(max_length=100,null=True)
-    mobile_number=models.IntegerField(max_length=100,null=True)
+   
     employee_id=models.CharField(max_length=100,null=True)
     location=models.CharField(max_length=100,null=True)
     date_processed=models.DateTimeField(auto_now_add=True,null=True)
