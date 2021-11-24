@@ -4,6 +4,8 @@ from django.dispatch import receiver
 
 from apps.superadmin.models import *
 
+@receiver(post_save,sender = Company)
+
 
 
 

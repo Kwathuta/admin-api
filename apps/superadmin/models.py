@@ -4,6 +4,45 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import Group
 
 # Create your models here.
+class CompanyTypes(models.Model):
+    """This defines the possible options for the company types
+
+    Args:
+        models ([type]): [description]
+
+    Raises:
+        ValueError: [description]
+        ValueError: [description]
+
+    Returns:
+        [type]: [description]
+    """
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+class Company(models.Model):
+    """This defines the fields within the company
+
+    Args:
+        models ([type]): [description]
+
+    Raises:
+        ValueError: [description]
+        ValueError: [description]
+
+    Returns:
+        [type]: [description]
+    """
+    name = models.CharField(max_length=100)
+    number_of_staff = models.CharField(max_length=50)
+    country = models.CharField(max_length=50)
+    headquarters = models.CharField(max_length=50,null=True)
+    contact_email = models.EmailField(null=True)
+    branches = models.IntegerField(null=True)
+    type = models.ForeignKey(CompanyTypes,on_delete=models.PROTECT,null=True)
+    company_logo = models.ImageField(null=True,upload_to="/company_logo")
 
 class Role(models.Model):
     """This defines the new roles a user can have
@@ -147,44 +186,6 @@ class Profile(models.Model):
     class Meta:
         verbose_name = "Profile"
         verbose_name_plural = "Profiles"
-
-
-# class EmploymentInformation(models.Model):
-#     """This entails the users connection with the company
-#     """
-#     employee = models.OneToOneField(User, on_delete=models.CASCADE)
-#     employment_date = models.DateField(auto_now_add=True)
-#     position = models.CharField(max_length=20, null=True)
-#     department = models.CharField(max_length=20, null=True)
-#     employment_type = models.CharField(max_length=20, null=True)
-#     status = models.BooleanField(default=True)
-#     country = models.CharField(max_length=20, null=True)
-#     company_id = models.CharField(max_length=20, null=True)
-
-#     def __str__(self):
-#         return self.employee.username + "'s employee info"
-
-#     class Meta:
-#         verbose_name = "Employment Information"
-#         verbose_name_plural = "Employment Information"
-
-
-# class PaymentInformation(models.Model):
-#     """This entails a user's payment information
-#     """
-#     employee = models.OneToOneField(User, on_delete=models.CASCADE)
-#     bank = models.CharField(max_length=20, null=True)
-#     branch = models.CharField(max_length=20, null=True)
-#     account_number = models.CharField(max_length=20, null=True)
-#     gross_pay = models.DecimalField(null=True, decimal_places=2, max_digits=9)
-#     net_pay = models.DecimalField(null=True, decimal_places=2, max_digits=9)
-
-#     def __str__(self):
-#         return self.employee.username + "'s payment_info"
-
-#     class Meta:
-#         verbose_name = "Payments Information"
-#         verbose_name_plural = "Payment Information"
 
 
 class EmergencyRelationships(models.Model):
