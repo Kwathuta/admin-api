@@ -119,9 +119,26 @@ class CreateEmployeeSerializer(serializers.Serializer):  # create employee
         employee_profile.phone_number = self.validated_data['phone_number']
         employee_profile.save()
 
-        PaymentInformation(employee = employee,bank_name = self.validated_data['bank_name'],branch = self.validated_data['bank_branch'],account_number = self.validated_data['account_number'],gross_pay = self.validated_data['gross_salary']).save()
-        EmergencyInformation(employee = employee,name = self.validated_data['emergency_contact'],phone_number = self.validated_data['emergency_contact_number']).save()
-        EmploymentInformation(employee = employee,position = self.validated_data['position'],department = department,employment_type = employment_type).save()
+        # PaymentInformation(employee = employee,bank_name = self.validated_data['bank_name'],branch = self.validated_data['bank_branch'],account_number = self.validated_data['account_number'],gross_pay = self.validated_data['gross_salary']).save()
+        employee_payment = PaymentInformation.objects.get(employee = employee)
+        employee_payment.bank_name = self.validated_data['bank_name']
+        employee_payment.branch = self.validated_data['bank_branch']
+        employee_payment.account_number = self.validated_data['account_number']
+        employee_payment.gross_pay = self.validated_data['gross_salary']
+        employee_payment.save()
+
+        # EmergencyInformation(employee = employee,name = self.validated_data['emergency_contact'],phone_number = self.validated_data['emergency_contact_number']).save()
+        employee_emergency = EmergencyInformation.objects.get(employee = employee)
+        employee_emergency.name = self.validated_data['emergency_contact']
+        employee_emergency.phone_number = self.validated_data['emergency_contact_number']
+        employee_emergency.save()
+
+        # EmploymentInformation(employee = employee,position = self.validated_data['position'],department = department,employment_type = employment_type).save()
+        employee_employment = EmploymentInformation.objects.get(employee = employee)
+        employee_employment.position = self.validated_data['position']
+        employee_employment.department = department
+        employee_employment.employment_type = employment_type
+        employee_employment.save()
 
         return employee
 
