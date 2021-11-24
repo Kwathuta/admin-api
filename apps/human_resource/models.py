@@ -57,7 +57,7 @@ class EmploymentInformation(models.Model):
     employment_date = models.DateField(auto_now_add=True,editable=True)
     position = models.CharField(max_length=30)
     status = models.BooleanField(default=True)
-    department = models.ForeignKey(Department,on_delete=models.PROTECT)
+    department = models.ForeignKey(Department,on_delete=models.PROTECT,null=True)
     employment_type = models.ForeignKey(EmploymentType,on_delete=models.CASCADE)
 
     def __str__(self):

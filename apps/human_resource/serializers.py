@@ -70,7 +70,7 @@ def required(value):
     if value is None:
         raise serializers.ValidationError('This field is required')
 # create employee
-class CreateEmployeeSerializer(serializers.ModelSerializer):  # create employee
+class CreateEmployeeSerializer(serializers.Serializer):  # create employee
     department = serializers.CharField(validators=[required])
     employment_type = serializers.CharField(validators=[required])
     position = serializers.CharField(validators=[required])
@@ -83,38 +83,45 @@ class CreateEmployeeSerializer(serializers.ModelSerializer):  # create employee
     bank_branch = serializers.CharField(validators=[required])
     account_number = serializers.CharField(validators=[required])
     phone_number = serializers.CharField(validators=[required],max_length=10)
-    class Meta:
-        model = Employee
-        fields = [
-            'employee_id', 'department', 'employment_type', 'surname',
-            'other_names', 'phone_number', 'email', 'national_id',
-            'country', 'date_of_birth', 'position','employment_date', 'gross_salary',
-            'marital_status', 'emergency_contact', 'emergency_contact_number',
-            'bank_name','bank_branch','account_number'
-        ]
+    surname = serializers.CharField(validators=[required])
+    employee_id =  serializers.CharField(validators=[required])
+    date_of_birth = serializers.DateField(validators=[required])
+    country = serializers.CharField(validators=[required])
+    email = serializers.EmailField(validators=[required])
+    other_names = serializers.CharField(validators=[required])
+    national_id = serializers.CharField(validators=[required])
+    
+    # class Meta:
+    # fields = (
+    #     'employee_id', 'department', 'employment_type', 'surname',
+    #     'other_names', 'phone_number', 'email', 'national_id',
+    #     'country', 'date_of_birth', 'position','employment_date', 'gross_salary',
+    #     'marital_status', 'emergency_contact', 'emergency_contact_number',
+    #     'bank_name','bank_branch','account_number'
+    # )
 
-        # create employee
+    # create employee
 
-        def save(self,request):
-            try:
-                department = Department.objects.get(pk=self.validated_data['department'])
-                employment_type = EmploymentType.objects.get(pk=self.validated_data['employment_type'])
-            except:
-                raise serializers.ValidationError("Some of the specified fields from your request were not found")
+    def save(self,request):
+        try:
+            department = Department.objects.get(pk=self.validated_data['department'])
+            employment_type = EmploymentType.objects.get(pk=self.validated_data['employment_type'])
+        except:
+            raise serializers.ValidationError("Some of the specified fields from your request were not found")
 
-            employee = Employee(surname=self.validated_data['surname'],other_names=self.validated_data['other_names'],email = self.validated_data['email'],national_id = self.validated_data['national_id'],date_of_birth = self.validated_data['date_of_birth'],country = self.validated_data['country'])
-            employee.save()
+        employee = Employee(surname=self.validated_data['surname'],other_names=self.validated_data['other_names'],email = self.validated_data['email'],national_id = self.validated_data['national_id'],date_of_birth = self.validated_data['date_of_birth'],country = self.validated_data['country'],role = Role.objects.get(name="subordinate_staff"))
+        employee.save()
 
-            employee_profile = EmployeeProfile.objects.get(employee=employee)
-            employee_profile.marital_status = self.validated_data['marital_status']
-            employee_profile.phone_number = self.validated_data['phone_number']
-            employee_profile.save()
+        employee_profile = EmployeeProfile.objects.get(employee=employee)
+        employee_profile.marital_status = self.validated_data['marital_status']
+        employee_profile.phone_number = self.validated_data['phone_number']
+        employee_profile.save()
 
-            PaymentInformation(employee = employee,bank_name = self.validated_data['bank_name'],branch = self.validated_data['branch'],account_number = self.validated_data['account_number'],gross_pay = self.validated_data['gross_pay']).save()
-            EmergencyInformation(employee = employee,name = self.validated_data['emergency_contact'],phone_number = self.validated_data['emergency_contact_number']).save()
-            EmploymentInformation(employee = employee,company = request.user.employment_information.company,position = self.validated_data['position'],department = department,employment_type = employment_type).save()
+        PaymentInformation(employee = employee,bank_name = self.validated_data['bank_name'],branch = self.validated_data['bank_branch'],account_number = self.validated_data['account_number'],gross_pay = self.validated_data['gross_salary']).save()
+        EmergencyInformation(employee = employee,name = self.validated_data['emergency_contact'],phone_number = self.validated_data['emergency_contact_number']).save()
+        EmploymentInformation(employee = employee,position = self.validated_data['position'],department = department,employment_type = employment_type).save()
 
-            return employee
+        return employee
 
 
 # leave serializer
