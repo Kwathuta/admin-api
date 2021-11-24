@@ -212,6 +212,7 @@ class Employee(AbstractBaseUser):
     role = models.ForeignKey(Role,on_delete=models.PROTECT)
     date_of_birth = models.DateField(null=True)
     country = models.CharField(max_length=100)
+    # phone_number = models.CharField(max_length=100,null=True)
 
     last_login = models.DateTimeField(verbose_name="last login", auto_now=True)
     is_admin = models.BooleanField(default=False)
@@ -245,7 +246,7 @@ class Employee(AbstractBaseUser):
         return employees
 
     def __str__(self):
-        return self.surname + ' - ' + self.other_names + ' - ' + self.employee_id + ' - ' + self.email
+        return self.surname
 
 MARRIED = "married"
 SINGLE = "single"

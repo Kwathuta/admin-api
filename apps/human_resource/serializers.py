@@ -78,11 +78,11 @@ class CreateEmployeeSerializer(serializers.ModelSerializer):  # create employee
     gross_salary = serializers.DecimalField(max_digits=10,decimal_places=2,validators=[required])
     marital_status = serializers.ChoiceField(choices=marital_choices,validators=[required])
     emergency_contact = serializers.CharField(validators=[required])
-    emergency_contact_number = PhoneNumberField(region="KE",validators=[required])
+    emergency_contact_number = serializers.CharField(validators=[required])
     bank_name = serializers.CharField(validators=[required])
     bank_branch = serializers.CharField(validators=[required])
     account_number = serializers.CharField(validators=[required])
-    phone_number = PhoneNumberField(region="KE",validators=[required])
+    phone_number = serializers.CharField(validators=[required],max_length=10)
     class Meta:
         model = Employee
         fields = [
