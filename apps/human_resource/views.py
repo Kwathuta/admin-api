@@ -14,14 +14,14 @@ from rest_framework.views import APIView
 from drf_yasg.utils import swagger_auto_schema
 
 
-from .models import Application, BankDetails, Employee, JobListing, Leave, EmploymentType, Department
+from .models import Application, BankDetails, Employee, EmploymentInformation, JobListing, Leave, EmploymentType, Department
 from apps.human_resource import serializers
 
 
 # list employees
 class EmployeeView(APIView):
     def get(self, request, format=None):  # get all employees
-        all_employees = Employee.objects.all()
+        all_employees = EmploymentInformation.objects.all()
         serializers = EmployeeSerializer(all_employees, many=True)
         return Response(serializers.data)
 
@@ -38,8 +38,8 @@ class EmployeeView(APIView):
 class EmployeeDetail(APIView):  # get employee details
     def get_object(self, employee_id):
         try:
-            return Employee.objects.get(employee_id=employee_id)
-        except Employee.DoesNotExist:
+            return EmploymentInformation.objects.get(employee_id=employee_id)
+        except EmploymentInformation.DoesNotExist:
             raise Http404
 
     def get(self, request, employee_id, format=None):  # get employee details
@@ -124,7 +124,6 @@ class EmploymentTypeView(APIView):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 # bank details
 class BankDetailsView(APIView):
     def get(self, request, format=None):  # get all bank details
@@ -155,8 +154,6 @@ class JobListingView(APIView):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
 # create application
 class ApplicationView(APIView):
     def get(self, request, format=None):  # get all applications
@@ -170,8 +167,6 @@ class ApplicationView(APIView):
             serializers.save()
             return Response({"Application created successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 #  get a particular application
