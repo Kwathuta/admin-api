@@ -11,6 +11,7 @@ from rest_framework import status
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from drf_yasg.utils import swagger_auto_schema
 
 
 from .models import Application, BankDetails, Employee, JobListing, Leave, EmploymentType, Department
@@ -24,11 +25,11 @@ class EmployeeView(APIView):
         serializers = EmployeeSerializer(all_employees, many=True)
         return Response(serializers.data)
 
+    @swagger_auto_schema(request_body=CreateEmployeeSerializer)
     def post(self, request, format=None):  # create employee
         serializers = CreateEmployeeSerializer(data=request.data)
         if serializers.is_valid():
             serializers.save()
-            # data['success'] = "Employee created successfully"
             return Response({"Employee created successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 

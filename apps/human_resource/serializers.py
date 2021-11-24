@@ -1,10 +1,11 @@
 from django.db import models
 from django.db.models import fields
-from rest_framework import fields, serializers
+from rest_framework import fields, serializers, validators
+from phonenumber_field.modelfields import PhoneNumberField
 
 
-from .models import Employee, EmploymentType, Department, BankDetails, LeaveType, Leave, JobListing, Application, ScheduledInterview, OfferLetter
-
+from .models import Employee, EmploymentInformation, EmploymentType, Department, BankDetails, LeaveType, Leave, JobListing, Application, ScheduledInterview, OfferLetter
+from apps.superadmin.models import *
 
 # department serializer
 class DepartmentSerializer(serializers.ModelSerializer):
@@ -46,23 +47,73 @@ class EmployeeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+# # create employee
+# class CreateEmployeeSerializer(serializers.ModelSerializer):  # create employee
+#     class Meta:
+#         model = Employee
+#         fields = (
+#             'employee_id', 'department', 'employment_type', 'surname',
+#             'other_names', 'phone_number', 'work_email', 'id_number',
+#             'country', 'date_of_birth', 'position', 'department',
+#             'employment_type', 'employment_date', 'gross_salary',
+#             'marital_status', 'emergency_contact', 'emergency_contact_number',
+#             'bank_payment_details'
+#         )
+
+#         # create employee
+
+#         def create(self, validated_data):
+#             employee = Employee.objects.create(**validated_data)
+#             return employee
+
+def required(value):
+    if value is None:
+        raise serializers.ValidationError('This field is required')
 # create employee
 class CreateEmployeeSerializer(serializers.ModelSerializer):  # create employee
+    department = serializers.CharField(validators=[required])
+    employment_type = serializers.CharField(validators=[required])
+    position = serializers.CharField(validators=[required])
+    employment_date = serializers.DateField(validators=[required])
+    gross_salary = serializers.DecimalField(max_digits=10,decimal_places=2,validators=[required])
+    marital_status = serializers.ChoiceField(choices=marital_choices,validators=[required])
+    emergency_contact = serializers.CharField(validators=[required])
+    emergency_contact_number = PhoneNumberField(region="KE",validators=[required])
+    bank_name = serializers.CharField(validators=[required])
+    bank_branch = serializers.CharField(validators=[required])
+    account_number = serializers.CharField(validators=[required])
+    phone_number = PhoneNumberField(region="KE",validators=[required])
     class Meta:
         model = Employee
-        fields = (
+        fields = [
             'employee_id', 'department', 'employment_type', 'surname',
-            'other_names', 'phone_number', 'work_email', 'id_number',
-            'country', 'date_of_birth', 'position', 'department',
-            'employment_type', 'employment_date', 'gross_salary',
+            'other_names', 'phone_number', 'email', 'national_id',
+            'country', 'date_of_birth', 'position','employment_date', 'gross_salary',
             'marital_status', 'emergency_contact', 'emergency_contact_number',
-            'bank_payment_details'
-        )
+            'bank_name','bank_branch','account_number'
+        ]
 
         # create employee
 
-        def create(self, validated_data):
-            employee = Employee.objects.create(**validated_data)
+        def save(self,request):
+            try:
+                department = Department.objects.get(pk=self.validated_data['department'])
+                employment_type = EmploymentType.objects.get(pk=self.validated_data['employment_type'])
+            except:
+                raise serializers.ValidationError("Some of the specified fields from your request were not found")
+
+            employee = Employee(surname=self.validated_data['surname'],other_names=self.validated_data['other_names'],email = self.validated_data['email'],national_id = self.validated_data['national_id'],date_of_birth = self.validated_data['date_of_birth'],country = self.validated_data['country'])
+            employee.save()
+
+            employee_profile = EmployeeProfile.objects.get(employee=employee)
+            employee_profile.marital_status = self.validated_data['marital_status']
+            employee_profile.phone_number = self.validated_data['phone_number']
+            employee_profile.save()
+
+            PaymentInformation(employee = employee,bank_name = self.validated_data['bank_name'],branch = self.validated_data['branch'],account_number = self.validated_data['account_number'],gross_pay = self.validated_data['gross_pay']).save()
+            EmergencyInformation(employee = employee,name = self.validated_data['emergency_contact'],phone_number = self.validated_data['emergency_contact_number']).save()
+            EmploymentInformation(employee = employee,company = request.user.employment_information.company,position = self.validated_data['position'],department = department,employment_type = employment_type).save()
+
             return employee
 
 

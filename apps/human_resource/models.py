@@ -3,7 +3,7 @@ import datetime as dt
 
 # cloudinary
 from cloudinary.models import CloudinaryField
-from apps.superadmin.models import User
+from apps.superadmin.models import *
 
 
 
@@ -46,52 +46,70 @@ class BankDetails(models.Model):
         return self.bank_name
 
 
-# employee model
-class Employee(models.Model): 
+class EmploymentInformation(models.Model):
+    """The employee relation with the company
+
+    Args:
+        models ([type]): [description]
     """
-        Employee model
-    """
-    # user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='employee')
-    employee_id = models.CharField(primary_key=True, unique=True, null=False,max_length=50) 
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    employment_type = models.ForeignKey(EmploymentType, on_delete=models.CASCADE)
-    position = models.CharField(max_length=100)
-    surname = models.CharField(max_length=50, null=False)
-    other_names = models.CharField(max_length=50, null=False)
-    phone_number = models.CharField(max_length=15, null=False)
-    work_email = models.EmailField(max_length=50, null=True, unique=True) 
-    personal_email = models.EmailField(max_length=50, null=True, unique=True) 
-    id_number = models.CharField(max_length=50, null=True, unique=True) 
-    gross_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True) 
-    marital_status = models.CharField(max_length=50, null=True) 
-    emergency_contact = models.CharField(max_length=50, null=True) 
-    emergency_contact_number = models.CharField(max_length=15, null=True) 
-    bank_payment_details = models.ForeignKey(BankDetails, on_delete=models.CASCADE, null=True) 
-    insurance_number = models.CharField(max_length=50, null=True) 
-    tax_pin_number = models.CharField(max_length=200, null=True) 
-    country = models.CharField(max_length=200, null=True) 
-    date_of_birth = models.DateField(null=True, blank=True)
-    # document = CloudinaryField('document', null=True)
-    employment_date = models.DateField(auto_now_add=True)
-    status = models.CharField(max_length=50, null=True,default='active')
-    created_at = models.DateTimeField(auto_now_add=True)
-    # updated_at = models.DateTimeField(auto_now=True)
-    # created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    # soft_delete = models.BooleanField(default=False)
-    # get employee details by id
-    @classmethod
-    def get_employee_by_id(cls, employee_id):
-        employee = cls.objects.get(employee_id=employee_id)
-        return employee
-    
-    # get all employees where status is active
-    @classmethod
-    def get_all_active_employees(cls):
-        employees = cls.objects.filter(status='active')
-        return employees
+    employee = models.OneToOneField(Employee,on_delete=CASCADE,related_name="employment_information")
+    # company = models.ForeignKey(Company,on_delete=models.PROTECT)
+    employment_date = models.DateField(auto_now_add=True,editable=True)
+    position = models.CharField(max_length=30)
+    status = models.BooleanField(default=True)
+    department = models.ForeignKey(Department,on_delete=models.PROTECT)
+    employment_type = models.ForeignKey(EmploymentType,on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.surname + ' - ' + self.other_names + ' - ' + self.employee_id + ' - ' + self.work_email
+        return self.employee.surname + "'s employment info"
+
+
+# # employee model
+# class Employee(models.Model): 
+#     """
+#         Employee model
+#     """
+#     # user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='employee')
+#     employee_id = models.CharField(primary_key=True, unique=True, null=False,max_length=50) 
+#     department = models.ForeignKey(Department, on_delete=models.CASCADE)
+#     employment_type = models.ForeignKey(EmploymentType, on_delete=models.CASCADE)
+#     position = models.CharField(max_length=100)
+#     surname = models.CharField(max_length=50, null=False)
+#     other_names = models.CharField(max_length=50, null=False)
+#     phone_number = models.CharField(max_length=15, null=False)
+#     work_email = models.EmailField(max_length=50, null=True, unique=True) 
+#     personal_email = models.EmailField(max_length=50, null=True, unique=True) 
+#     id_number = models.CharField(max_length=50, null=True, unique=True) 
+#     gross_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True) 
+#     marital_status = models.CharField(max_length=50, null=True) 
+#     emergency_contact = models.CharField(max_length=50, null=True) 
+#     emergency_contact_number = models.CharField(max_length=15, null=True) 
+#     bank_payment_details = models.ForeignKey(BankDetails, on_delete=models.CASCADE, null=True) 
+#     insurance_number = models.CharField(max_length=50, null=True) 
+#     tax_pin_number = models.CharField(max_length=200, null=True) 
+#     country = models.CharField(max_length=200, null=True) 
+#     date_of_birth = models.DateField(null=True, blank=True)
+#     # document = CloudinaryField('document', null=True)
+#     employment_date = models.DateField(auto_now_add=True)
+#     status = models.CharField(max_length=50, null=True,default='active')
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     # updated_at = models.DateTimeField(auto_now=True)
+#     # created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+#     # soft_delete = models.BooleanField(default=False)
+#     # get employee details by id
+#     @classmethod
+#     def get_employee_by_id(cls, employee_id):
+#         employee = cls.objects.get(employee_id=employee_id)
+#         return employee
+    
+#     # get all employees where status is active
+#     @classmethod
+#     def get_all_active_employees(cls):
+#         employees = cls.objects.filter(status='active')
+#         return employees
+
+#     def __str__(self):
+#         return self.surname + ' - ' + self.other_names + ' - ' + self.employee_id + ' - ' + self.work_email
 
 # =================== Employee Management end tables ===================
 
@@ -118,7 +136,7 @@ class Leave(models.Model):
     """
         Leave model
     """
-    employee = models.ForeignKey(Employee,on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee,on_delete=models.CASCADE,related_name="employee_leave")
     positon = models.CharField(max_length=100, null=True, blank=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     employment_type = models.ForeignKey(EmploymentType, on_delete=models.CASCADE)
@@ -126,7 +144,7 @@ class Leave(models.Model):
     leave_date_from = models.DateField(null=True, blank=True)
     leave_date_to = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=50, default='pending')
-    approved_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    approved_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     # soft_delete = models.BooleanField(default=False)
     

@@ -3,25 +3,27 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from apps.superadmin.models import *
+from apps.human_resource.models import *
 
 @receiver(post_save,sender = Company)
 
 
 
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=Employee)
 def create_associate_tables(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(employee=instance)
-        # EmploymentInformation.objects.create(employee=instance)
-        # PaymentInformation.objects.create(employee=instance)
-        # EmergencyInformation.objects.create(employee=instance)
+        EmployeeProfile.objects.create(employee=instance)
+        EmploymentInformation.objects.create(employee=instance)
+        PaymentInformation.objects.create(employee=instance)
+        EmergencyInformation.objects.create(employee=instance)
 
 try:
-    if len(Role.objects.all()) < 3:
+    if len(Role.objects.all()) < 4:
         Role.objects.create(name="super_admin")
         Role.objects.create(name="human_resources")
         Role.objects.create(name="subordinate_staff")
+        Role.objects.create(name="finance")
 except:
     print("Roles does not exist yet")
 

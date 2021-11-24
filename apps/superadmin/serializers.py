@@ -14,23 +14,23 @@ class GroupSerializer(serializers.ModelSerializer):
         model = Group
         fields = '__all__'
 
-class UserCreationSerializer(serializers.ModelSerializer):
-    """This defines the fields used in creating an employee
+# class UserCreationSerializer(serializers.ModelSerializer):
+#     """This defines the fields used in creating an employee
 
-    Args:
-        serializers ([type]): [description]
-    """
-    class Meta:
-        model = User
-        fields = ['email','username','password','nationality','national_id']
+#     Args:
+#         serializers ([type]): [description]
+#     """
+#     class Meta:
+#         model = User
+#         fields = ['email','username','password','nationality','national_id']
 
-    def save(self):
-        """This handles saving a user from the request
-        """
-        account = User(email = self.validated_data['email'], username = self.validated_data['username'],role = Role.objects.get(name="subordinate_staff"))
-        account.set_password(self.validated_data['password'])
-        account.save()
-        return account
+#     def save(self):
+#         """This handles saving a user from the request
+#         """
+#         account = User(email = self.validated_data['email'], username = self.validated_data['username'],role = Role.objects.get(name="subordinate_staff"))
+#         account.set_password(self.validated_data['password'])
+#         account.save()
+#         return account
 
 class RoleSerializer(serializers.ModelSerializer):
     """This defines working with the user roles table
@@ -53,8 +53,8 @@ class GetUserSerializer(serializers.ModelSerializer):
     """
     role = RoleSerializer()
     class Meta:
-        model = User
-        fields = ['pk','email','username','first_name','last_name','nationality','national_id','date_joined','last_login','role']
+        model = Employee
+        fields = ['pk','email','surname','other_names','country','national_id','role','date_of_birth']
 
 class LoginSerializer(serializers.Serializer):
     """This defines the functions in the login function
@@ -95,7 +95,7 @@ class SetRoleSerializer(serializers.Serializer):
         user = (self.validated_data['user'])
         role = (self.validated_data['role'])
         try:
-            user = User.objects.get(pk = user)
+            user = Employee.objects.get(pk = user)
             role = Role.objects.get(pk = role)
 
             user.role = role

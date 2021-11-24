@@ -20,21 +20,21 @@ class UserView(APIView):
     schema = get_schema_view()
     permission_classes = [IsAuthenticated & CreateUserPermission]
 
-    @swagger_auto_schema(request_body=UserCreationSerializer)
-    def post(self,request,format=None):
-        data = {}
-        serializer = UserCreationSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            data['success'] = "The account was successfully created"
-            responseStatus = status.HTTP_201_CREATED
-            return Response(data,status = responseStatus)
+    # @swagger_auto_schema(request_body=UserCreationSerializer)
+    # def post(self,request,format=None):
+    #     data = {}
+    #     serializer = UserCreationSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         data['success'] = "The account was successfully created"
+    #         responseStatus = status.HTTP_201_CREATED
+    #         return Response(data,status = responseStatus)
 
-        else:
-            data = serializer.errors
-            print(data)
-            responseStatus = status.HTTP_400_BAD_REQUEST
-            return Response(data,status = responseStatus)
+    #     else:
+    #         data = serializer.errors
+    #         print(data)
+    #         responseStatus = status.HTTP_400_BAD_REQUEST
+    #         return Response(data,status = responseStatus)
 
 class LoginView(APIView):
     """This handles a user login request
