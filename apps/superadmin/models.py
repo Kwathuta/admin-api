@@ -42,7 +42,7 @@ class Company(models.Model):
     contact_email = models.EmailField(null=True)
     branches = models.IntegerField(null=True)
     type = models.ForeignKey(CompanyTypes,on_delete=models.PROTECT,null=True)
-    company_logo = models.ImageField(null=True,upload_to="/company_logo")
+    company_logo = models.ImageField(null=True,upload_to="company_logo/")
 
 class Role(models.Model):
     """This defines the new roles a user can have
