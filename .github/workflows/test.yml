@@ -26,38 +26,19 @@ jobs:
       - name: Install pipenv
         run: |
           pip install pipenv
-          pipenv shell
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
 
-      - name: Cache dependencies
-        id: cacheStep
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-dependencies
-        with:
-          path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/Pipfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
       - name: Download dependencies
-        env:
-          PIPENV_NOSPIN: 'true'
-          WORKON_HOME: ~/.local/share/virtualenvs
-          PIPENV_CACHE_DIR: ~/.local/share/pipcache
-
-        if: steps.cacheStep.outputs.cache-hit != 'true'
         run: |
-          pipenv install --dev
+          pipenv install --system
 
       - name: test secrets
         run: |
+          echo "hello ${{ env.SECRET_KEY }}"
           echo "hello ${{ env.SECRET_KEY }}"
 
       - name: Run Tests
