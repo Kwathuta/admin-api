@@ -71,8 +71,8 @@ def required(value):
         raise serializers.ValidationError('This field is required')
 # create employee
 class CreateEmployeeSerializer(serializers.Serializer):  # create employee
-    department = serializers.CharField(validators=[required])
-    employment_type = serializers.CharField(validators=[required])
+    department = serializers.IntegerField(validators=[required])
+    employment_type = serializers.IntegerField(validators=[required])
     position = serializers.CharField(validators=[required])
     employment_date = serializers.DateField(validators=[required])
     gross_salary = serializers.DecimalField(max_digits=10,decimal_places=2,validators=[required])
@@ -90,6 +90,7 @@ class CreateEmployeeSerializer(serializers.Serializer):  # create employee
     email = serializers.EmailField(validators=[required])
     other_names = serializers.CharField(validators=[required])
     national_id = serializers.CharField(validators=[required])
+    password = serializers.CharField(validators=[required])
     
     # class Meta:
     # fields = (
@@ -102,7 +103,7 @@ class CreateEmployeeSerializer(serializers.Serializer):  # create employee
 
     # create employee
 
-    def save(self,request):
+    def save(self):
         try:
             department = Department.objects.get(pk=self.validated_data['department'])
             employment_type = EmploymentType.objects.get(pk=self.validated_data['employment_type'])
@@ -110,6 +111,7 @@ class CreateEmployeeSerializer(serializers.Serializer):  # create employee
             raise serializers.ValidationError("Some of the specified fields from your request were not found")
 
         employee = Employee(surname=self.validated_data['surname'],other_names=self.validated_data['other_names'],email = self.validated_data['email'],national_id = self.validated_data['national_id'],date_of_birth = self.validated_data['date_of_birth'],country = self.validated_data['country'],role = Role.objects.get(name="subordinate_staff"))
+        employee.set_password(self.validated_data['password'])
         employee.save()
 
         employee_profile = EmployeeProfile.objects.get(employee=employee)

@@ -167,7 +167,7 @@ class MyAccountManager(BaseUserManager):
         [type]: [description]
     """
 
-    def create_user(self, email, password=None,role=None,surname=None):
+    def create_user(self, email, password=None,surname=None):
         if not email:
             raise ValueError("Users must have and email address")
 
@@ -204,7 +204,7 @@ class Employee(AbstractBaseUser):
     Returns:
         [type]: [description]
     """
-    employee_id = models.CharField(primary_key=True,unique=True,null=False,max_length=50)
+    employee_id = models.CharField(null=False,max_length=50)
     surname = models.CharField(max_length=30)
     other_names = models.CharField(max_length=30)
     email = models.EmailField(verbose_name='work email',unique=True)

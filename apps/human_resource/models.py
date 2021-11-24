@@ -58,7 +58,7 @@ class EmploymentInformation(models.Model):
     position = models.CharField(max_length=30)
     status = models.BooleanField(default=True)
     department = models.ForeignKey(Department,on_delete=models.PROTECT,null=True)
-    employment_type = models.ForeignKey(EmploymentType,on_delete=models.CASCADE)
+    employment_type = models.ForeignKey(EmploymentType,on_delete=models.CASCADE,null=True)
 
     def __str__(self):
         return self.employee.surname + "'s employment info"
