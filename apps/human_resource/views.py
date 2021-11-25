@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 
 from django.shortcuts import render
 
-from .serializers import ApplicationSerializer, JobListingSerializer, ApproveLeaveSerializer, EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer, DepartmentSerializer, EmploymentTypeSerializer, BankDetailsSerializer, CreateJobListingSerializer, CreateApplicationSerializer
+from .serializers import ApplicationSerializer, EmployeeDetailsSerializer, JobListingSerializer, ApproveLeaveSerializer, EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer, DepartmentSerializer, EmploymentTypeSerializer, BankDetailsSerializer, CreateJobListingSerializer, CreateApplicationSerializer
 
 # api
 from django.http import JsonResponse
@@ -56,7 +56,7 @@ class EmployeeDetail(APIView):  # get employee details
 # list leave
 class LeaveView(APIView):
     def get(self, request, format=None):  # get all leave
-        all_leave = Leave.objects.all()
+        all_leave = Leave.get_all_pending_leaves()
         serializers = LeaveSerializer(all_leave, many=True)
         return Response(serializers.data)
 
@@ -96,11 +96,11 @@ class OnLeaveEmployees(APIView):
 
 
 # active employee list
-class ActiveEmployees(APIView):
-    def get(self, request, format=None):  # get all active employees
-        all_employees = Employee.get_all_active_employees()
+class ActiveEmployees(APIView):    
+    def get(self, request, format=None):  # get all employees
+        all_employees = EmploymentInformation.get_all_active_employees()
         serializers = EmployeeSerializer(all_employees, many=True)
-        return Response(serializers.data)
+        return Response(serializers.data)    
 
 
 # list departments
