@@ -39,7 +39,7 @@ class EmploymentInformation(models.Model):
         models ([type]): [description]
     """
     employee = models.OneToOneField(
-        Employee, on_delete=CASCADE, related_name="employmentinformation")
+        Employee, on_delete=models.CASCADE, related_name="employmentinformation")
     company = models.ForeignKey(
         Company, on_delete=models.PROTECT, null=True, related_name="employees")
     employment_date = models.DateField(auto_now_add=True, editable=True)
