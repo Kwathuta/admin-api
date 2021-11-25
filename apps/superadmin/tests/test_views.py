@@ -87,3 +87,22 @@ class TestViews(TestSetUp):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         user_now = Employee.objects.get(email = self.normal_user_data['email'])
         self.assertEqual(user_now.role,role)
+
+    def test_change_role_for_self(self):
+        """This will test if a user's role can be changed by the same user
+        """
+        self.client.post(self.create_company_url,self.company_details)
+        self.client.get(mail.outbox[0].body)
+        self.authenticate(self.first_super_admin)
+
+        user = Employee.objects.get(email = self.first_super_admin['email'])
+        role = Role.objects.get(name="human_resources")
+
+        role_changer = {
+            'user':user.pk,
+            'role':role.pk
+        }
+
+        response = self.client.post(self.change_role_url,role_changer)
+
+        self.assertTrue(response.status_code == status.HTTP_403_FORBIDDEN)
