@@ -14,11 +14,12 @@ class SupportSerializer(serializers.ModelSerializer):
 class StaffSerializer(serializers.ModelSerializer):
     class Meta:
         model=Staff
-        fields=["id","name","created_at","updated_at","amount" ] 
+        fields=["id","name","created_at","updated_at","amount","postion","full_name","department","company","work_email","personal_email","employee_id",
+        "location","date_processed","employment_date","insurance_number","tax_pin_number","paye","gross_pay","net_pay","tax_deducted","pension","sacco","medical_cover" ] 
 class PayrollSerializer(serializers.ModelSerializer):
     class Meta:
         model=Payroll
-        fields=["id","date","full_name","payment_type"]          
+        fields=["id","pay_id","month","debit_amount","gross_pay","net_pay","deduction","staff_paid","payroll_status"]          
 
 class ExpensesSerializer(serializers.ModelSerializer):
     class Meta:
