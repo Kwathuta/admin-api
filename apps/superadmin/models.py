@@ -148,11 +148,6 @@ class Employee(AbstractBaseUser):
         employee = cls.objects.get(employee_id=employee_id)
         return employee
     
-    # get all employees where status is active
-    @classmethod
-    def get_all_active_employees(cls):
-        employees = cls.objects.filter(status='active')
-        return employees
 
     def __str__(self):
         return self.surname

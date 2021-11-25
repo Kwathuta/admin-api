@@ -51,13 +51,19 @@ class EmploymentInformation(models.Model):
     Args:
         models ([type]): [description]
     """
-    employee = models.OneToOneField(Employee,on_delete=CASCADE,related_name="employment_information")
+    employee = models.OneToOneField(Employee,on_delete=CASCADE,related_name="employmentinformation")
     company = models.ForeignKey(Company,on_delete=models.PROTECT,null=True,related_name="employees")
     employment_date = models.DateField(auto_now_add=True,editable=True)
     position = models.CharField(max_length=30)
     status = models.BooleanField(default=True)
     department = models.ForeignKey(Department,on_delete=models.PROTECT,null=True)
     employment_type = models.ForeignKey(EmploymentType,on_delete=models.CASCADE,null=True)
+    
+     # get all employees where status is true
+    @classmethod
+    def get_all_active_employees(cls):
+        employees = cls.objects.filter(status=True)
+        return employees
 
     def __str__(self):
         return self.employee.surname + "'s employment info"

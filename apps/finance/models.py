@@ -7,6 +7,7 @@ class Approve(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     amount=models.DecimalField(decimal_places=2, max_digits=40)
 
+    
     def __str__(self):
         return self.name
 
@@ -17,16 +18,48 @@ class Support(models.Model):
         return self.message    
 
 class Payroll(models.Model):
-    MPESA= 'MOBILE'
-    DIRECT_DEPOSIT='BANK'
-    
-    PAYMENT_TYPES = (
-        (MPESA, 'mobile'),
-        (DIRECT_DEPOSIT, 'bank account'),
+    JANUARY='January'
+    FEBRUARY='February'
+    MARCH='March'
+    APRIL='April'
+    MAY='May'
+    JUNE='June'
+    JULY='July'
+    AUGUST='August'
+    SEPTEMBER='September'
+    OCTOBER='October'
+    NOVEMBER='November'
+    DECEMBER='December'
+    MONTHS = (
+        (JANUARY,'January'),
+        (FEBRUARY,'February'),
+        (MARCH,'March'),
+        (APRIL,'April'),
+        (MAY,'May'),
+        (JUNE,'June'),
+        (JULY,'July'),
+        (AUGUST,'August'),
+        (SEPTEMBER,'September'),
+        (OCTOBER,'October'),
+        (NOVEMBER,'November'),
+        (DECEMBER,'December'),
     )
-    date = models.DateTimeField(auto_now_add=True)
-    full_name = models.CharField(max_length =30)
-    payment_type = models.CharField(max_length=20, choices=PAYMENT_TYPES, default='')
+    SUCCESSFUL = 'Successful'
+    PENDING = 'Pending'
+    PAYROLL_STATUS = (
+        (SUCCESSFUL, 'Successful'),
+        (PENDING, 'Pending'),
+    )
+    pay_id = models.CharField(max_length=10,null=True)
+    month = models.CharField(
+        max_length=50, choices=MONTHS,null=True)
+    debit_amount = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    gross_pay = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    net_pay = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    deduction = models.DecimalField(max_digits=10, decimal_places=2,null=True)
+    staff_paid= models.IntegerField(null=True)
+    payroll_status = models.CharField(
+        max_length=20, choices=PAYROLL_STATUS, default=SUCCESSFUL)
     
    
      
@@ -35,10 +68,31 @@ class Staff(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     amount=models.DecimalField(decimal_places=2, max_digits=40)
-    
-    
 
+    position = models.CharField(max_length=100,null=True)
+    full_name=models.CharField(max_length=100,null=True)
+    department=models.CharField(max_length=100,null=True)
+    position = models.CharField(max_length=100,null=True)
+    company=models.CharField(max_length=100,null=True)
+    work_email=models.CharField(max_length=100,null=True)
+    personal_email=models.CharField(max_length=100,null=True)
+   
+    employee_id=models.CharField(max_length=100,null=True)
+    location=models.CharField(max_length=100,null=True)
+    date_processed=models.DateTimeField(auto_now_add=True,null=True)
+    employment_date=models.DateTimeField(auto_now_add=True,null=True)
+    insurance_number=models.CharField(max_length=100,null=True)
+    tax_pin_number=models.CharField(max_length=100,null=True)
+    paye=models.DecimalField(decimal_places=2,max_digits=40,null=True)
+    gross_pay=models.DecimalField(decimal_places=2,max_digits=40,null=True)
+    net_pay=models.DecimalField(decimal_places=2,max_digits=40,null=True)
+    tax_deducted=models.DecimalField(decimal_places=2,max_digits=40,null=True)
+   
+    pension=models.DecimalField(decimal_places=2,max_digits=40,null=True)
+    sacco=models.DecimalField(decimal_places=2,max_digits=40,null=True)
+    medical_cover=models.DecimalField(decimal_places=2,max_digits=40,null=True)
 
+    
     def __str__(self):
         return self.name    
 

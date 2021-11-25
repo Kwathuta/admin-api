@@ -5,6 +5,7 @@ from rest_framework import status
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from drf_yasg.utils import swagger_auto_schema
 from .serializer import ApproveSerializer,SupportSerializer,StaffSerializer,PayrollSerializer,ExpensesSerializer
 
 # Create your views here.
@@ -42,6 +43,7 @@ class ApproveList(APIView):  # get all employee
         serializers = ApproveSerializer(all_notes, many=True)
         return Response(serializers.data)
 
+    @swagger_auto_schema(request_body=ApproveSerializer)
     def post(self, request, format=None):  # create new employee
         serializers = ApproveSerializer(data=request.data)
         if serializers.is_valid():
@@ -57,6 +59,7 @@ class MessageList(APIView):  # get all message
         serializers = SupportSerializer(all_message, many=True)
         return Response(serializers.data)
 
+    @swagger_auto_schema(request_body=SupportSerializer)
     def post(self, request, format=None):  # create new message
         serializers = SupportSerializer(data=request.data)
         if serializers.is_valid():
@@ -98,6 +101,7 @@ class StaffList(APIView):  # get all staff
         serializers = StaffSerializer(all_staff, many=True)
         return Response(serializers.data)
 
+    @swagger_auto_schema(request_body=StaffSerializer)
     def post(self, request, format=None):  # create new staff
         serializers = StaffSerializer(data=request.data)
         if serializers.is_valid():
@@ -140,6 +144,7 @@ class PayList(APIView):  # get all payroll
         serializers = PayrollSerializer(all_pay, many=True)
         return Response(serializers.data)
 
+    @swagger_auto_schema(request_body=PayrollSerializer)
     def post(self, request, format=None):  # create new payroll
         serializers = PayrollSerializer(data=request.data)
         if serializers.is_valid():
@@ -155,6 +160,7 @@ class ExpensesList(APIView):
         serializers = ExpensesSerializer(all_expenses, many=True)
         return Response(serializers.data)
 
+    @swagger_auto_schema(request_body=ExpensesSerializer)
     def post(self, request, format=None):
         serializers = ExpensesSerializer(data=request.data)
         if serializers.is_valid():
@@ -187,3 +193,42 @@ class ExpenseDetail(APIView):  # get, update, delete single expense
         expay = self.get_object(pk)
         expay.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)        
+
+class PayrollView(APIView):
+    def get(self, request):
+        obj = Payroll.objects.all()
+        serializer = PayrollSerializer(obj, many=True)
+        return Response(serializer.data, status=200)
+
+    @swagger_auto_schema(request_body=PayrollSerializer)    
+    def post(self, request):
+        data = request.data
+        serializer = PayrollSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)     
+
+class Payrollbyid(APIView):
+    def get_object(self, id):
+        try:
+            return Payroll.objects.get(id=id)
+        except Payroll.DoesNotExist as e:
+            return Response({"error": "Not found."},status=404)
+    def get(self, request, id=None):
+        instance = self.get_object(id)
+        serializer = PayrollSerializer(instance)
+        return Response(serializer.data)
+    def put(self, request, id=None):
+        data = request.data
+        instance = self.get_object(id)
+        serializer = PayrollSerializer(instance, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
+    def delete(self, request, id=None):
+        instance = self.get_object(id)
+        serializer = PayrollSerializer(instance)
+        instance.delete()
+        return Response(serializer.data)           
