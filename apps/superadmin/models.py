@@ -53,7 +53,7 @@ class Company(models.Model):
     """
     name = models.CharField(max_length=100,unique=True)
     number_of_staff = models.CharField(max_length=50)
-    country = models.CharField(max_length=50)
+    country = models.CharField(max_length=50,choices=country_choices)
     headquarters = models.CharField(max_length=50,null=True)
     contact_email = models.EmailField(null=True)
     branches = models.IntegerField(null=True)
@@ -135,7 +135,7 @@ class Employee(AbstractBaseUser):
     national_id = models.CharField(max_length=8)
     role = models.ForeignKey(Role,on_delete=models.PROTECT)
     date_of_birth = models.DateField(null=True)
-    country = models.CharField(max_length=100)
+    country = models.CharField(max_length=100,choices=country_choices)
     # phone_number = models.CharField(max_length=100,null=True)
 
     last_login = models.DateTimeField(verbose_name="last login", auto_now=True)

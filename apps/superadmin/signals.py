@@ -83,3 +83,18 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
     )
     msg.attach_alternative(email_html_message, "text/html")
     msg.send()
+
+try:
+
+    employees = Employee.objects.all()
+    for employee in employees:
+        employee.country = "Kenya"
+        employee.save()
+
+    companies = Company.objects.all()
+    for company in companies:
+        company.country = "Kenya"
+        company.save()
+
+except Exception as e:
+    print(e)
