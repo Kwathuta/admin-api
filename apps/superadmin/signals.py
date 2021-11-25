@@ -5,14 +5,11 @@ from django.dispatch import receiver
 from apps.superadmin.models import *
 from apps.human_resource.models import *
 
-@receiver(post_save,sender = Company)
 
-
-
-
-@receiver(post_save, sender=Employee)
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_associate_tables(sender, instance, created, **kwargs):
     if created:
+        print(instance)
         EmployeeProfile.objects.create(employee=instance)
         EmploymentInformation.objects.create(employee=instance)
         PaymentInformation.objects.create(employee=instance)
