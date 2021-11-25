@@ -21,6 +21,7 @@ urlpatterns = [
     path('api/applications/past/', views.PastApplicationView.as_view(),name="past-applications"), # past applications
     path('api/applications/<str:id>/', views.ApplicationDetail.as_view(),name="application-detail"), # application detail
     path('api/applications/<str:id>/update-status/', views.ApplicationStatusView.as_view(),name="application-status"), # application status
-    path('api/interviews/', views.InterviewView.as_view(),name="interview"), # schedule interview
+    path('api/active/interviews/', views.ActiveInterviewView.as_view(),name="interview"), # active interview
+    path('api/past/interviews/', views.PastInterviewView.as_view(),name="interview"), # past interview
     path('api/schedule-interview/', views.ScheduleInterviewView.as_view(),name="schedule-interview"), # schedule interview
 ]
