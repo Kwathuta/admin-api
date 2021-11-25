@@ -20,6 +20,19 @@ try:
         Role.objects.create(name="human_resources")
         Role.objects.create(name="subordinate_staff")
         Role.objects.create(name="finance")
+
+    if len(Department.objects.all()) < 4:
+            Department.objects.create(name="super_admin")
+            Department.objects.create(name="human_resources")
+            Department.objects.create(name="subordinate_staff")
+            Department.objects.create(name="finance")
+
+    if len(EmploymentType.objects.all()) < 4:
+        EmploymentType.objects.create(name="contract")
+        EmploymentType.objects.create(name="permanent")
+        EmploymentType.objects.create(name="internship")
+        EmploymentType.objects.create(name="consultancy")
+
 except:
     print("Roles does not exist yet")
 
@@ -70,3 +83,18 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
     )
     msg.attach_alternative(email_html_message, "text/html")
     msg.send()
+
+try:
+
+    employees = Employee.objects.all()
+    for employee in employees:
+        employee.country = "Kenya"
+        employee.save()
+
+    companies = Company.objects.all()
+    for company in companies:
+        company.country = "Kenya"
+        company.save()
+
+except Exception as e:
+    print(e)
