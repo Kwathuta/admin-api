@@ -4,7 +4,7 @@ from rest_framework import fields, serializers, validators
 from phonenumber_field.modelfields import PhoneNumberField
 
 
-from .models import Employee, EmploymentInformation, EmploymentType, Department, BankDetails, LeaveType, Leave, JobListing, Application, ScheduledInterview, OfferLetter, EmployeeProfile
+from .models import Employee, EmploymentInformation, EmploymentType, Department, LeaveType, Leave, JobListing, Application, ScheduledInterview, OfferLetter, EmployeeProfile
 from apps.superadmin.models import *
 
 
@@ -63,14 +63,6 @@ class EmploymentTypeSerializer(serializers.ModelSerializer):
         model = EmploymentType
         fields = ['id', 'name']
 
-# bank details serializer
-
-
-class BankDetailsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BankDetails
-        fields = ['id', 'account_number', 'bank_name', 'branch_name']
-
 
 # leave type serializer
 class LeaveTypeSerializer(serializers.ModelSerializer):
@@ -89,9 +81,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmploymentInformation
         fields = '__all__'
-        
-        
-
 
 
 def required(value):
@@ -211,7 +200,7 @@ class ApproveLeaveSerializer(serializers.ModelSerializer):  # approve leave
             instance.status = validated_data.get('status', instance.status)
             instance.save()
             return instance
-        
+
         # update status in EmploymentInformation to False
         # def update_employment_status(self, instance, validated_data):
         #     instance.status = validated_data.get('status', instance.status)
@@ -266,6 +255,30 @@ class CreateApplicationSerializer(serializers.ModelSerializer):
 class ApplicationSerializer(serializers.ModelSerializer):
     job_listing = serializers.CharField(source='job_listing.job_title')
 
+    class Meta:
+        model = Application
+        fields = '__all__'
+
+
+
+
+
+# create schedule interview serializer
+class CreateScheduleInterviewSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = ScheduledInterview
+        fields = '__all__'
+        
+        # create schedule interview
+        def create(self, validated_data):
+            schedule_interview = ScheduledInterview.objects.create(**validated_data)
+            return schedule_interview
+
+
+
+# schedule interview serializer
+class ScheduledInterviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = '__all__'
