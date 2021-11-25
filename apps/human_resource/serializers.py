@@ -7,6 +7,25 @@ from phonenumber_field.modelfields import PhoneNumberField
 from .models import Employee, EmploymentInformation, EmploymentType, Department, BankDetails, LeaveType, Leave, JobListing, Application, ScheduledInterview, OfferLetter
 from apps.superadmin.models import *
 
+
+# department serializer
+class DepartmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = ['id', 'name']
+        
+        
+    
+
+# employeeDetails serializer
+class EmployeeDetailsSerializer(serializers.ModelSerializer):
+    department = DepartmentSerializer(read_only=True)
+    department_id = serializers.PrimaryKeyRelatedField(queryset=Department.objects.all(), write_only=True, required=True)
+    class Meta:
+        model = Employee
+        fields = '__all__'
+
+
 # department serializer
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,11 +58,15 @@ class LeaveTypeSerializer(serializers.ModelSerializer):
 
 # Employee Serializer
 class EmployeeSerializer(serializers.ModelSerializer):
-    department = serializers.CharField(source='department.name')
-    employment_type = serializers.CharField(source='employment_type.name')
+    # department = serializers.CharField(source='department.name')
+    # employment_type = serializers.CharField(source='employment_type.name')
+    
+    department = DepartmentSerializer()
+    employee = EmployeeDetailsSerializer()
+    employment_type = EmploymentTypeSerializer()
 
     class Meta:
-        model = Employee
+        model = EmploymentInformation
         fields = '__all__'
 
 def required(value):
