@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 
 from django.shortcuts import render
 
-from .serializers import ApplicationSerializer, CreateScheduleInterviewSerializer, EmployeeDetailsSerializer, JobListingSerializer, ApproveLeaveSerializer, EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer, DepartmentSerializer, EmploymentTypeSerializer, CreateJobListingSerializer, CreateApplicationSerializer, ScheduledInterviewSerializer
+from .serializers import ApplicationSerializer, ApplicationStatusSerializer, CreateScheduleInterviewSerializer, EmployeeDetailsSerializer, JobListingSerializer, ApproveLeaveSerializer, EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer, DepartmentSerializer, EmploymentTypeSerializer, CreateJobListingSerializer, CreateApplicationSerializer, ScheduledInterviewSerializer
 
 # api
 from django.http import JsonResponse
@@ -17,6 +17,8 @@ from drf_yasg.utils import swagger_auto_schema
 from .models import Application, Employee, EmploymentInformation, JobListing, Leave, EmploymentType, Department, ScheduledInterview
 from apps.human_resource import serializers
 
+from django.core.mail import send_mail
+
 
 # list employees
 class EmployeeView(APIView):
@@ -28,27 +30,28 @@ class EmployeeView(APIView):
 
 # employee details
 class EmployeeDetail(APIView):  # get employee details
-    def get_object(self, employee_id):
+    def get_object(self, id):
         try:
-            return EmploymentInformation.objects.get(employee_id=employee_id)
+            return EmploymentInformation.objects.get(id=id)
         except EmploymentInformation.DoesNotExist:
             raise Http404
 
-    def get(self, request, employee_id, format=None):  # get employee details
-        employee = self.get_object(employee_id)
+    def get(self, request, id, format=None):  # get employee details
+        employee = self.get_object(id)
         serializer = EmployeeSerializer(employee)
         return Response(serializer.data)
-
-    def put(self, request, employee_id, format=None):  # update employee details
-        employee = self.get_object(employee_id)
+    
+    # @swagger_auto_schema(request_body=EmployeeSerializer)
+    def put(self, request, id, format=None):  # update employee details
+        employee = self.get_object(id)
         serializer = EmployeeSerializer(employee, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, employee_id, format=None):
-        employee = self.get_object(employee_id)
+    def delete(self, request, id, format=None):
+        employee = self.get_object(id)
         employee.delete()
         return Response({"Employee deleted successfully!"}, status=status.HTTP_204_NO_CONTENT)
 
@@ -201,19 +204,19 @@ class PastApplicationView(APIView):
 
 #  get a spacific particular application
 class ApplicationDetail(APIView):
-    def get_object(self, application_id):
+    def get_object(self, id):
         try:
-            return Application.objects.get(id=application_id)
+            return Application.objects.get(id=id)
         except Application.DoesNotExist:
             return Http404
 
-    def get(self, request, application_id, format=None):
-        application = self.get_object(application_id)
+    def get(self, request, id, format=None):
+        application = self.get_object(id)
         serializer = ApplicationSerializer(application)
         return Response(serializer.data)
 
-    def put(self, request, application_id, format=None):
-        application = self.get_object(application_id)
+    def put(self, request, id, format=None):
+        application = self.get_object(id)
         serializer = ApplicationSerializer(application, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -221,18 +224,53 @@ class ApplicationDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# update application status
+class ApplicationStatusView(APIView):
+    def get_object(self, id):
+        try:
+            return Application.objects.get(id=id)
+        except Application.DoesNotExist:
+            return Http404
+    @swagger_auto_schema(request_body=ApplicationStatusSerializer)
+    def put(self, request, id, format=None):
+        application = self.get_object(id)
+        serializers = ApplicationStatusSerializer(
+            application, data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response({"Application status updated successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 # create schedule interview
-class ScheduleInterviewView(APIView):
+class InterviewView(APIView):
     def get(self, request, format=None):  # get all schedule interviews
-        all_schedule_interviews = ScheduledInterview.objects.all()
+        all_schedule_interviews = ScheduledInterview.get_all_scheduled_interviews()
         serializers = ScheduledInterviewSerializer(
             all_schedule_interviews, many=True)
         return Response(serializers.data)
 
+
+# create interview
+class ScheduleInterviewView(APIView):
     @swagger_auto_schema(request_body=CreateScheduleInterviewSerializer)
     def post(self, request, format=None):  # create schedule interview
         serializers = CreateScheduleInterviewSerializer(data=request.data)
         if serializers.is_valid():
             serializers.save()
-            return Response({"Scheduled interview created successfully"}, status=status.HTTP_201_CREATED)
+
+            # get the email of the applicant and send an email to the applicant to notify them of the interview
+            applicant_email = request.data['email']
+            interview_time_from = serializers.data['interview_time_from']
+            interview_time_to = serializers.data['interview_time_to']
+            interview_date = serializers.data['interview_date']
+            content = 'Hello,\n\nYou have an interview scheduled for ' + interview_date + ' from ' + interview_time_from + \
+                ' to ' + interview_time_to + '.\n\n' + \
+                serializers.data['content'] + \
+                '.\n\nRegards,\n\nFuzuPay Hiring Team'
+            subject = 'Interview Scheduled - FuzuPay'
+
+            send_mail(subject, content, 'hiring@fuzupay.com',
+                      [applicant_email], fail_silently=False)
+            return Response({"Scheduled interview sent successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)

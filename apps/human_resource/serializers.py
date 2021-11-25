@@ -248,6 +248,17 @@ class ApplicationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+# ApplicationStatusSerializer
+class ApplicationStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        fields = ('pk', 'status')
+
+        def update(self, instance, validated_data):
+            instance.status = validated_data.get('status', instance.status)
+            instance.save()
+            return instance
+
 
 
 
@@ -257,6 +268,7 @@ class CreateScheduleInterviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScheduledInterview
         fields = '__all__'
+        
         
         # create schedule interview
         def create(self, validated_data):
@@ -268,5 +280,5 @@ class CreateScheduleInterviewSerializer(serializers.ModelSerializer):
 # schedule interview serializer
 class ScheduledInterviewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Application
+        model = ScheduledInterview
         fields = '__all__'

@@ -6,7 +6,7 @@ from . import views
 
 urlpatterns = [
     path('api/employees/', views.EmployeeView.as_view(),name="employees"),  # list of employees
-    path('api/employees/<str:employee_id>/', views.EmployeeDetail.as_view(),name="employee-detail"), # single employee
+    path('api/employees/<str:id>/', views.EmployeeDetail.as_view(),name="employee-detail"), # single employee
     path('api/leaves/', views.LeaveView.as_view(),name="leaves"), # list of leaves
     path('api/leaves/on_leave/', views.OnLeaveEmployees.as_view(),name="on-leave"), # on leave employees
     path('api/leaves/active-staffs/', views.ActiveEmployees.as_view(),name="on-leave"), # active employees
@@ -19,6 +19,8 @@ urlpatterns = [
     path('api/applications/', views.ApplicationView.as_view(),name="applications"), # list applications
     path('api/applications/new/', views.NewApplicationView.as_view(),name="new-application"), # new application
     path('api/applications/past/', views.PastApplicationView.as_view(),name="past-applications"), # past applications
-    path('api/applications/<str:application_id>/', views.ApplicationDetail.as_view(),name="application-detail"), # application detail
-    path('api/interviews/', views.ScheduleInterviewView.as_view(),name="schedule-interview"), # schedule interview
+    path('api/applications/<str:id>/', views.ApplicationDetail.as_view(),name="application-detail"), # application detail
+    path('api/applications/<str:id>/update-status/', views.ApplicationStatusView.as_view(),name="application-status"), # application status
+    path('api/interviews/', views.InterviewView.as_view(),name="interview"), # schedule interview
+    path('api/schedule-interview/', views.ScheduleInterviewView.as_view(),name="schedule-interview"), # schedule interview
 ]
