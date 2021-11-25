@@ -265,7 +265,7 @@ class PastInterviewView(APIView):
 # class InterviewDetail(APIView):
 #     def get(self, request, id, format=None):
 #         interview = ScheduledInterview.get_scheduled_interview_by_id(id)
-        # if 
+#         # if 
 
 # create interview
 
