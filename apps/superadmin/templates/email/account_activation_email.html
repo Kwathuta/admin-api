@@ -1,5 +1,24 @@
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap"
+  rel="stylesheet"
+/>
+
+<style>
+    a {
+        padding: 10px 20px;
+        border-radius: 5px;
+        background-color: #dd3f70;
+        color: #004763;
+        text-decoration: none;
+        font-family: 'Open Sans', sans-serif;
+        font-weight: 600;
+    }
+</style>
+
 <h1>Hi {{ user.surname }},</h1>
 
-<p>Please click on the link below to confirm your registration:</p>
+<p>Please click on the button below to confirm your registration on FuzuPay:</p>
 
-<p>http://{{ domain }}{% url 'activate' uidb64=uid token=token %}</p>
+<a href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}">Activate Fuzupay</a>
