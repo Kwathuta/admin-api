@@ -46,26 +46,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employee
         fields = '__all__'
 
-
-# # create employee
-# class CreateEmployeeSerializer(serializers.ModelSerializer):  # create employee
-#     class Meta:
-#         model = Employee
-#         fields = (
-#             'employee_id', 'department', 'employment_type', 'surname',
-#             'other_names', 'phone_number', 'work_email', 'id_number',
-#             'country', 'date_of_birth', 'position', 'department',
-#             'employment_type', 'employment_date', 'gross_salary',
-#             'marital_status', 'emergency_contact', 'emergency_contact_number',
-#             'bank_payment_details'
-#         )
-
-#         # create employee
-
-#         def create(self, validated_data):
-#             employee = Employee.objects.create(**validated_data)
-#             return employee
-
 def required(value):
     if value is None:
         raise serializers.ValidationError('This field is required')
@@ -91,17 +71,6 @@ class CreateEmployeeSerializer(serializers.Serializer):  # create employee
     other_names = serializers.CharField(validators=[required])
     national_id = serializers.CharField(validators=[required])
     password = serializers.CharField(validators=[required])
-    
-    # class Meta:
-    # fields = (
-    #     'employee_id', 'department', 'employment_type', 'surname',
-    #     'other_names', 'phone_number', 'email', 'national_id',
-    #     'country', 'date_of_birth', 'position','employment_date', 'gross_salary',
-    #     'marital_status', 'emergency_contact', 'emergency_contact_number',
-    #     'bank_name','bank_branch','account_number'
-    # )
-
-    # create employee
 
     def save(self):
         try:
