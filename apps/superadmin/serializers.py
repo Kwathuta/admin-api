@@ -112,7 +112,6 @@ class CreateEmployeeSerializer(serializers.Serializer):  # create employee
     email = serializers.EmailField(validators=[required])
     other_names = serializers.CharField(validators=[required])
     national_id = serializers.CharField(validators=[required])
-    password = serializers.CharField(validators=[required])
 
     def save(self,request):
         try:
@@ -121,8 +120,8 @@ class CreateEmployeeSerializer(serializers.Serializer):  # create employee
         except:
             raise serializers.ValidationError("Some of the specified fields from your request were not found")
 
-        employee = Employee(surname=self.validated_data['surname'],other_names=self.validated_data['other_names'],email = self.validated_data['email'],national_id = self.validated_data['national_id'],date_of_birth = self.validated_data['date_of_birth'],country = self.validated_data['country'],role = Role.objects.get(name="subordinate_staff"))
-        employee.set_password(self.validated_data['password'])
+        employee = Employee(surname=self.validated_data['surname'],employee_id = self.validated_data['employee_id'],other_names=self.validated_data['other_names'],email = self.validated_data['email'],national_id = self.validated_data['national_id'],date_of_birth = self.validated_data['date_of_birth'],country = self.validated_data['country'],role = Role.objects.get(name="subordinate_staff"))
+        employee.set_password(self.validated_data['national_id'])
         employee.save()
 
         employee_profile = EmployeeProfile.objects.get(employee=employee)
