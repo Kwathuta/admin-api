@@ -1,36 +1,159 @@
-from rest_framework import fields, serializers
+from rest_framework import fields, serializers, validators
 from django.contrib.auth.models import Group
 from django.contrib.auth import authenticate
 
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.template.loader import render_to_string
+from apps.superadmin.tokens import account_activation_token
+from django.core.mail import EmailMultiAlternatives
+
+
 from apps.superadmin.models import *
+from apps.human_resource.models import *
 
-class GroupSerializer(serializers.ModelSerializer):
-    """A serializer for the user groups
+def required(value):
+    if value is None:
+        raise serializers.ValidationError('This field is required')
 
-    Args:
-        serializers ([type]): [description]
-    """
-    class Meta:
-        model = Group
-        fields = '__all__'
-
-class UserCreationSerializer(serializers.ModelSerializer):
-    """This defines the fields used in creating an employee
+class CompanyCreationSerializer(serializers.Serializer):
+    """This is the serializers handling creation of a new company
 
     Args:
         serializers ([type]): [description]
-    """
-    class Meta:
-        model = User
-        fields = ['email','username','password','nationality','national_id']
 
-    def save(self):
-        """This handles saving a user from the request
+    Raises:
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+
+    Returns:
+        [type]: [description]
+    """
+    first_name = serializers.CharField(validators=[required])
+    last_name = serializers.CharField(validators=[required])
+    company_name = serializers.CharField(validators=[required])
+    work_email = serializers.EmailField(validators=[required])
+    number_of_staff = serializers.CharField(validators=[required])
+    country = serializers.CharField(validators=[required])
+    password = serializers.CharField(validators=[required])
+
+    def save(self,request):
+        """This creates the appropriate models
+
+        Raises:
+            serializers.ValidationError: [description]
+            serializers.ValidationError: [description]
+            serializers.ValidationError: [description]
+
+        Returns:
+            [type]: [description]
         """
-        account = User(email = self.validated_data['email'], username = self.validated_data['username'],role = Role.objects.get(name="subordinate_staff"))
-        account.set_password(self.validated_data['password'])
-        account.save()
-        return account
+        company = Company(name = self.validated_data['company_name'],number_of_staff = self.validated_data['number_of_staff'],country = self.validated_data['country'])
+        company.save()
+        print(company)
+
+        first_super_user = Employee(email = self.validated_data['work_email'],surname = self.validated_data['last_name'],role = Role.objects.get(name="super_admin"))
+        first_super_user.set_password(self.validated_data['password'])
+        first_super_user.save()
+        first_super_user.is_active = False
+        first_super_user.other_names = self.validated_data['first_name']
+        employment_info = EmploymentInformation.objects.get(employee = first_super_user)
+        employment_info.company = company
+        employment_info.save()
+        first_super_user.save()
+
+        current_site = get_current_site(request)
+
+        context = {
+            'user': first_super_user,
+                'domain': current_site.domain,
+                'uid': first_super_user.pk,
+                'token': account_activation_token.make_token(first_super_user)
+        }
+
+        # render email text
+        email_html_message = render_to_string('email/account_activation_email.html', context)
+        email_plaintext_message = render_to_string('email/account_activation_email.txt', context)
+
+        msg = EmailMultiAlternatives(
+            # title:
+            f"Account activation for {first_super_user.surname}",
+            # message:
+            email_plaintext_message,
+            # from:
+            "ken.mbira@student.moringaschool.com",
+            # to:
+            [first_super_user.email]
+        )
+
+        msg.attach_alternative(email_html_message, "text/html")
+        msg.send()
+
+class CreateEmployeeSerializer(serializers.Serializer):  # create employee
+    department = serializers.IntegerField(validators=[required])
+    employment_type = serializers.IntegerField(validators=[required])
+    position = serializers.CharField(validators=[required])
+    employment_date = serializers.DateField(validators=[required])
+    gross_salary = serializers.DecimalField(max_digits=10,decimal_places=2,validators=[required])
+    marital_status = serializers.ChoiceField(choices=marital_choices,validators=[required])
+    emergency_contact = serializers.CharField(validators=[required])
+    emergency_contact_number = serializers.CharField(validators=[required])
+    bank_name = serializers.CharField(validators=[required])
+    bank_branch = serializers.CharField(validators=[required])
+    account_number = serializers.CharField(validators=[required])
+    phone_number = serializers.CharField(validators=[required],max_length=10)
+    surname = serializers.CharField(validators=[required])
+    employee_id =  serializers.CharField(validators=[required])
+    date_of_birth = serializers.DateField(validators=[required])
+    country = serializers.CharField(validators=[required])
+    email = serializers.EmailField(validators=[required])
+    other_names = serializers.CharField(validators=[required])
+    national_id = serializers.CharField(validators=[required])
+
+    def save(self,request):
+        try:
+            department = Department.objects.get(pk=self.validated_data['department'])
+            employment_type = EmploymentType.objects.get(pk=self.validated_data['employment_type'])
+        except:
+            raise serializers.ValidationError("Some of the specified fields from your request were not found")
+
+        employee = Employee(surname=self.validated_data['surname'],employee_id = self.validated_data['employee_id'],other_names=self.validated_data['other_names'],email = self.validated_data['email'],national_id = self.validated_data['national_id'],date_of_birth = self.validated_data['date_of_birth'],country = self.validated_data['country'],role = Role.objects.get(name="subordinate_staff"))
+        employee.set_password(self.validated_data['national_id'])
+        employee.save()
+
+        employee_profile = EmployeeProfile.objects.get(employee=employee)
+        employee_profile.marital_status = self.validated_data['marital_status']
+        employee_profile.phone_number = self.validated_data['phone_number']
+        employee_profile.save()
+
+        # PaymentInformation(employee = employee,bank_name = self.validated_data['bank_name'],branch = self.validated_data['bank_branch'],account_number = self.validated_data['account_number'],gross_pay = self.validated_data['gross_salary']).save()
+        employee_payment = PaymentInformation.objects.get(employee = employee)
+        employee_payment.bank_name = self.validated_data['bank_name']
+        employee_payment.branch = self.validated_data['bank_branch']
+        employee_payment.account_number = self.validated_data['account_number']
+        employee_payment.gross_pay = self.validated_data['gross_salary']
+        employee_payment.save()
+
+        # EmergencyInformation(employee = employee,name = self.validated_data['emergency_contact'],phone_number = self.validated_data['emergency_contact_number']).save()
+        employee_emergency = EmergencyInformation.objects.get(employee = employee)
+        employee_emergency.name = self.validated_data['emergency_contact']
+        employee_emergency.phone_number = self.validated_data['emergency_contact_number']
+        employee_emergency.save()
+
+        # EmploymentInformation(employee = employee,position = self.validated_data['position'],department = department,employment_type = employment_type).save()
+        employee_employment = EmploymentInformation.objects.get(employee = employee)
+        company = EmploymentInformation.objects.get(employee = request.user).company
+        print(company)
+        employee_employment.company = company
+        employee_employment.position = self.validated_data['position']
+        employee_employment.department = department
+        employee_employment.employment_type = employment_type
+        employee_employment.save()
+
+        return employee
 
 class RoleSerializer(serializers.ModelSerializer):
     """This defines working with the user roles table
@@ -53,8 +176,8 @@ class GetUserSerializer(serializers.ModelSerializer):
     """
     role = RoleSerializer()
     class Meta:
-        model = User
-        fields = ['pk','email','username','first_name','last_name','nationality','national_id','date_joined','last_login','role']
+        model = Employee
+        fields = ['pk','email','surname','other_names','country','national_id','role','date_of_birth']
 
 class LoginSerializer(serializers.Serializer):
     """This defines the functions in the login function
@@ -95,7 +218,7 @@ class SetRoleSerializer(serializers.Serializer):
         user = (self.validated_data['user'])
         role = (self.validated_data['role'])
         try:
-            user = User.objects.get(pk = user)
+            user = Employee.objects.get(pk = user)
             role = Role.objects.get(pk = role)
 
             user.role = role

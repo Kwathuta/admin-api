@@ -84,11 +84,11 @@ DJANGO_REST_PASSWORDRESET_TOKEN_CONFIG = {
     }
 }
 
-# EMAIL_USE_TLS = os.environ['EMAIL_USE_TLS']
-# EMAIL_HOST = os.environ['EMAIL_HOST']
-# EMAIL_PORT = os.environ['EMAIL_PORT']
-# EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
-# EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+EMAIL_USE_TLS = os.environ['EMAIL_USE_TLS']
+EMAIL_HOST = os.environ['EMAIL_HOST']
+EMAIL_PORT = os.environ['EMAIL_PORT']
+EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
 
 ROOT_URLCONF = 'FUZU_PAY.urls'
 
@@ -122,7 +122,7 @@ DATABASES = {
 }
 
 # user model
-AUTH_USER_MODEL = 'superadmin.User'
+AUTH_USER_MODEL = 'superadmin.Employee'
 
 # CORS Headers configuration
 CORS_ALLOW_ALL_ORIGINS = True

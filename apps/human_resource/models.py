@@ -3,7 +3,7 @@ import datetime as dt
 
 # cloudinary
 from cloudinary.models import CloudinaryField
-from apps.superadmin.models import User
+from apps.superadmin.models import *
 
 
 
@@ -46,53 +46,21 @@ class BankDetails(models.Model):
         return self.bank_name
 
 
-# employee model
-class Employee(models.Model): 
+class EmploymentInformation(models.Model):
+    """The employee relation with the company
+    Args:
+        models ([type]): [description]
     """
-        Employee model
-    """
-    # user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='employee')
-    employee_id = models.CharField(primary_key=True, unique=True, null=False,max_length=50) 
-    department = models.ForeignKey(Department, on_delete=models.CASCADE)
-    employment_type = models.ForeignKey(EmploymentType, on_delete=models.CASCADE)
-    position = models.CharField(max_length=100)
-    surname = models.CharField(max_length=50, null=False)
-    other_names = models.CharField(max_length=50, null=False)
-    phone_number = models.CharField(max_length=15, null=False)
-    work_email = models.EmailField(max_length=50, null=True, unique=True) 
-    personal_email = models.EmailField(max_length=50, null=True, unique=True) 
-    id_number = models.CharField(max_length=50, null=True, unique=True) 
-    gross_salary = models.DecimalField(max_digits=10, decimal_places=2, null=True) 
-    marital_status = models.CharField(max_length=50, null=True) 
-    emergency_contact = models.CharField(max_length=50, null=True) 
-    emergency_contact_number = models.CharField(max_length=15, null=True) 
-    bank_payment_details = models.ForeignKey(BankDetails, on_delete=models.CASCADE, null=True) 
-    insurance_number = models.CharField(max_length=50, null=True) 
-    tax_pin_number = models.CharField(max_length=200, null=True) 
-    country = models.CharField(max_length=200, null=True) 
-    date_of_birth = models.DateField(null=True, blank=True)
-    # document = CloudinaryField('document', null=True)
-    employment_date = models.DateField(auto_now_add=True)
-    status = models.CharField(max_length=50, null=True,default='active')
-    created_at = models.DateTimeField(auto_now_add=True)
-    # updated_at = models.DateTimeField(auto_now=True)
-    # created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    # soft_delete = models.BooleanField(default=False)
-    # get employee details by id
-    @classmethod
-    def get_employee_by_id(cls, employee_id):
-        employee = cls.objects.get(employee_id=employee_id)
-        return employee
+    employee = models.OneToOneField(Employee,on_delete=CASCADE,related_name="employmentinformation")
+    company = models.ForeignKey(Company,on_delete=models.PROTECT,null=True,related_name="employees")
+    employment_date = models.DateField(auto_now_add=True,editable=True)
+    position = models.CharField(max_length=30)
+    status = models.BooleanField(default=True)
+    department = models.ForeignKey(Department,on_delete=models.PROTECT,null=True)
+    employment_type = models.ForeignKey(EmploymentType,on_delete=models.CASCADE,null=True)
 
     def __str__(self):
-        return self.surname + ' - ' + self.other_names + ' - ' + self.employee_id + ' - ' + self.work_email
-
-# =================== Employee Management end tables ===================
-
-
-
-# =================== Leave Manager start ===============================
-
+        return self.employee.surname + "'s employment info"
 
 # leave Category model
 class LeaveType(models.Model):
@@ -112,17 +80,33 @@ class Leave(models.Model):
     """
         Leave model
     """
-    employee = models.ForeignKey(Employee,on_delete=models.CASCADE)
+    employee = models.ForeignKey(Employee,on_delete=models.CASCADE,related_name="employee_leave")
     positon = models.CharField(max_length=100, null=True, blank=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     employment_type = models.ForeignKey(EmploymentType, on_delete=models.CASCADE)
-    leave_type = models.ManyToManyField(LeaveType,related_name='leave_type')
-    leave_date_from = models.DateField(auto_now=True)
-    leave_date_to = models.DateField(auto_now=True)
+    leave_type = models.ForeignKey(LeaveType, on_delete=models.CASCADE,null=True)
+    leave_date_from = models.DateField(null=True, blank=True)
+    leave_date_to = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=50, default='pending')
-    approved_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    approved_by = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     # soft_delete = models.BooleanField(default=False)
+    
+    # get all employees where status is approve and date to is greater than today
+    @classmethod
+    def get_all_approved_leaves_and_active(cls):
+        leaves = cls.objects.filter(status='approved', leave_date_to__gte=dt.date.today())
+        return leaves
+    # get all employees where status is approve and date to is not greater than today
+    # def get_all_approved_leaves_and_inactive(self):
+    #     return self.objects.filter(status='approved', leave_date_to__lt=dt.date.today())
+    
+    # get all leaves where status is pending and not other status
+    @classmethod
+    def get_all_pending_leaves(cls):
+        leaves = cls.objects.filter(status='pending')
+        return leaves
+   
     
     def __str__(self):
         return self.employee.surname + ' - ' + self.leave_type.name + ' - ' + self.leave_date_from.strftime('%d-%m-%Y') + ' - ' + self.leave_date_to.strftime('%d-%m-%Y')
@@ -162,13 +146,13 @@ class JobListing(models.Model):
     # get active job listing where deadline is greater than current date
     @classmethod
     def get_active_job_listing(cls):
-        active_job_listing = cls.objects.filter(deadline__gte=dt.date.today(),soft_delete=False)
+        active_job_listing = cls.objects.filter(deadline__gte=dt.date.today())
         return active_job_listing
 
     # get past job listing where deadline is less than current date
     @classmethod
     def get_past_job_listing(cls):
-        past_job_listing = cls.objects.filter(deadline__lt=dt.date.today(),soft_delete=False)
+        past_job_listing = cls.objects.filter(deadline__lt=dt.date.today())
         return past_job_listing
     
     def __str__(self):
@@ -221,11 +205,17 @@ class Application(models.Model):
         application = cls.objects.filter(status=status)
         return application
 
-    # get past applications where created_at is less than current date
+    # get past applications where created_at is more than one week ago 
     @classmethod
-    def get_past_application(cls):
-        past_application = cls.objects.filter(created_at__lt=dt.date.today(),soft_delete=False)
+    def get_past_applications(cls):
+        past_application = cls.objects.filter(created_at__lt=dt.date.today()-dt.timedelta(days=7))
         return past_application
+    
+    # get new applications where created_at is not less than one week ago
+    @classmethod
+    def get_new_application(cls):
+        new_application = cls.objects.filter(created_at__gte=dt.date.today() - dt.timedelta(days=7))
+        return new_application
 
     def __str__(self):
         return self.job_listing.job_title
