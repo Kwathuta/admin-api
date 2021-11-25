@@ -5,4 +5,3 @@ from apps.human_resource.models import EmploymentInformation
 from apps.superadmin.models import *
 admin.site.register(Company)
 admin.site.register(Role)
-admin.site.register(EmploymentInformation)
