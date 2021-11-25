@@ -1,6 +1,10 @@
+from django.http import response
 from apps.superadmin.tests.test_setup import TestSetUp
 from apps.superadmin.models import *
 from rest_framework import status
+from django.core import mail
+
+from apps.superadmin.tokens import *
 
 class TestViews(TestSetUp):
     """Tests for superadmin module
@@ -35,3 +39,29 @@ class TestViews(TestSetUp):
         user = Employee.objects.get(is_active=False)
         self.assertTrue(user is not None)
 
+    def test_activate_account(self):
+        """This will test the activate account functionality
+        """
+        self.client.post(self.create_company_url,self.company_details)
+        self.assertEqual(len(mail.outbox), 1)
+        response = self.client.get(mail.outbox[0].body)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+
+    def test_create_user_while_unauthorised(self):
+        """This tests if a user can create an employee without credentials
+        """
+        res = self.client.post(self.login_url,self.normal_user_data)
+        self.assertEqual(res.status_code, 400)
+
+    def authenticate(self,user_data):
+        response = self.client.post(self.login_url,user_data)
+        self.client.credentials(HTTP_AUTHORIZATION = f"Token {response.data['token']}")
+
+    def test_create_user_while_authorised(self):
+        """This will tes if a user can be created
+        """
+        self.client.post(self.create_company_url,self.company_details)
+        self.client.get(mail.outbox[0].body)
+        self.authenticate(self.first_super_admin)
+        res = self.client.post(self.create_user_url,self.normal_user_data)
+        self.assertEqual(res.status_code,status.HTTP_201_CREATED)
