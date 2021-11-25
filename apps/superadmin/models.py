@@ -36,7 +36,7 @@ class Company(models.Model):
     Returns:
         [type]: [description]
     """
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,unique=True)
     number_of_staff = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
     headquarters = models.CharField(max_length=50,null=True)
