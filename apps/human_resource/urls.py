@@ -19,5 +19,6 @@ urlpatterns = [
     path('api/applications/', views.ApplicationView.as_view(),name="applications"), # list applications
     path('api/applications/new/', views.NewApplicationView.as_view(),name="new-application"), # new application
     path('api/applications/past/', views.PastApplicationView.as_view(),name="past-applications"), # past applications
-    path('api/applications/<str:application_id>/', views.ApplicationDetail.as_view(),name="application-detail"),
+    path('api/applications/<str:application_id>/', views.ApplicationDetail.as_view(),name="application-detail"), # application detail
+    path('api/interviews/', views.ScheduleInterviewView.as_view(),name="schedule-interview"), # schedule interview
 ]
