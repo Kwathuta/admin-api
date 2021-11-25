@@ -35,7 +35,7 @@ class CompanyCreationSerializer(serializers.Serializer):
     company_name = serializers.CharField(validators=[required])
     work_email = serializers.EmailField(validators=[required])
     number_of_staff = serializers.CharField(validators=[required])
-    country = serializers.ChoiceField(validators=[required],choices=country_choices)
+    country = serializers.CharField(validators=[required])
     password = serializers.CharField(validators=[required])
 
     def save(self,request):
@@ -107,7 +107,7 @@ class CreateEmployeeSerializer(serializers.Serializer):  # create employee
     surname = serializers.CharField(validators=[required])
     employee_id =  serializers.CharField(validators=[required])
     date_of_birth = serializers.DateField(validators=[required])
-    country = serializers.ChoiceField(validators=[required],choices=country_choices)
+    country = serializers.CharField(validators=[required])
     email = serializers.EmailField(validators=[required])
     other_names = serializers.CharField(validators=[required])
     national_id = serializers.CharField(validators=[required])

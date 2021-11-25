@@ -20,6 +20,19 @@ try:
         Role.objects.create(name="human_resources")
         Role.objects.create(name="subordinate_staff")
         Role.objects.create(name="finance")
+
+    if len(Department.objects.all()) < 4:
+            Department.objects.create(name="super_admin")
+            Department.objects.create(name="human_resources")
+            Department.objects.create(name="subordinate_staff")
+            Department.objects.create(name="finance")
+
+    if len(EmploymentType.objects.all()) < 4:
+        EmploymentType.objects.create(name="contract")
+        EmploymentType.objects.create(name="permanent")
+        EmploymentType.objects.create(name="internship")
+        EmploymentType.objects.create(name="consultancy")
+
 except:
     print("Roles does not exist yet")
 
