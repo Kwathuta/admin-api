@@ -51,7 +51,7 @@ class EmploymentInformation(models.Model):
     Args:
         models ([type]): [description]
     """
-    employee = models.OneToOneField(Employee,on_delete=CASCADE,related_name="employment_information")
+    employee = models.OneToOneField(Employee,on_delete=CASCADE,related_name="employmentinformation")
     company = models.ForeignKey(Company,on_delete=models.PROTECT,null=True,related_name="employees")
     employment_date = models.DateField(auto_now_add=True,editable=True)
     position = models.CharField(max_length=30)
