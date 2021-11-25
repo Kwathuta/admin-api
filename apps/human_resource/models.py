@@ -276,6 +276,20 @@ class ScheduledInterview(models.Model):
     def get_all_scheduled_interviews(cls):
         scheduled_interview = cls.objects.filter(soft_delete=False)
         return scheduled_interview
+    
+    
+    # get active scheduled interviews
+    @classmethod
+    def get_all_active_interviews(cls):
+        active_interviews = cls.objects.filter(interview_date__gte=dt.date.today(), soft_delete=False)
+        return active_interviews
+    
+    
+    # get past interviews 
+    @classmethod
+    def get_all_past_interviews(cls):
+        past_interviews = cls.objects.filter(interview_date__lt=dt.date.today(), soft_delete=False)
+        return past_interviews
 
     def __str__(self):
         return self.applicant.applicant_name
