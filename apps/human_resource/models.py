@@ -222,6 +222,13 @@ class Application(models.Model):
         new_application = cls.objects.filter(
             created_at__gte=dt.date.today() - dt.timedelta(days=7), soft_delete=False)
         return new_application
+    
+    # update application status
+    @classmethod
+    def update_application_status(cls, application_id, status):
+        application = cls.objects.get(id=application_id)
+        application.status = status
+        application.save()
 
     def __str__(self):
         return self.job_listing.job_title
@@ -262,6 +269,12 @@ class ScheduledInterview(models.Model):
     @classmethod
     def get_scheduled_interview_by_interview_time(cls, interview_time):
         scheduled_interview = cls.objects.filter(interview_time=interview_time, soft_delete=False)
+        return scheduled_interview
+    
+    # get all scheduled interviews
+    @classmethod
+    def get_all_scheduled_interviews(cls):
+        scheduled_interview = cls.objects.filter(soft_delete=False)
         return scheduled_interview
 
     def __str__(self):
