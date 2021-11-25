@@ -52,7 +52,7 @@ class EmploymentInformation(models.Model):
         models ([type]): [description]
     """
     employee = models.OneToOneField(Employee,on_delete=CASCADE,related_name="employment_information")
-    # company = models.ForeignKey(Company,on_delete=models.PROTECT)
+    company = models.ForeignKey(Company,on_delete=models.PROTECT,null=True,related_name="employees")
     employment_date = models.DateField(auto_now_add=True,editable=True)
     position = models.CharField(max_length=30)
     status = models.BooleanField(default=True)

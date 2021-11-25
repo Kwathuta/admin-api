@@ -25,7 +25,7 @@ class UserView(APIView):
         data = {}
         serializer = CreateEmployeeSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(request)
             data['success'] = "The account was successfully created"
             responseStatus = status.HTTP_201_CREATED
             return Response(data,status = responseStatus)
@@ -98,3 +98,52 @@ class RoleView(APIView):
         data['roles'] = RoleSerializer(Role.objects.all(),many=True).data
         return Response(data,status = status.HTTP_200_OK)
 
+class CompanyCreation(APIView):
+    """A company creation endpoint
+
+    Args:
+        APIView ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    @swagger_auto_schema(request_body=CompanyCreationSerializer)
+    def post(self,request,format=None):
+        data = {}
+        serializer = CompanyCreationSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save(request)
+            data['success'] = "The company has been registered successfully"
+            responseStatus = status.HTTP_201_CREATED
+
+        else:
+            data = serializer.errors
+            responseStatus = status.HTTP_400_BAD_REQUEST
+
+        return Response(data,status = responseStatus)
+
+
+from django.contrib.auth import login
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
+from apps.superadmin.tokens import account_activation_token
+
+class ActivateAccount(APIView):
+    def get(self, request, uidb64, token, *args, **kwargs):
+        data = {}
+        try:
+            uid = uidb64
+            user = Employee.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, Employee.DoesNotExist):
+            user = None
+
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            data['success'] = "Your account was successfully activated"
+
+            return Response(data,status = status.HTTP_200_OK)
+        else:
+            data = 'The confirmation link was invalid, possibly because it has already been used.'
+            return Response(data,status.HTTP_400_BAD_REQUEST)
