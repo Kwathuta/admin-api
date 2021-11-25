@@ -242,10 +242,19 @@ class ApplicationStatusView(APIView):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# create schedule interview
-class InterviewView(APIView):
-    def get(self, request, format=None):  # get all schedule interviews
-        all_schedule_interviews = ScheduledInterview.get_all_scheduled_interviews()
+# get active schedule interview
+class ActiveInterviewView(APIView):
+    def get(self, request, format=None):  # get all active schedule interviews
+        all_schedule_interviews = ScheduledInterview.get_all_active_interviews()
+        serializers = ScheduledInterviewSerializer(
+            all_schedule_interviews, many=True)
+        return Response(serializers.data)
+
+
+# get past schedule interview
+class PastInterviewView(APIView):
+    def get(self, request, format=None):  # get all active schedule interviews
+        all_schedule_interviews = ScheduledInterview.get_all_past_interviews()
         serializers = ScheduledInterviewSerializer(
             all_schedule_interviews, many=True)
         return Response(serializers.data)
