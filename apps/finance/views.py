@@ -187,3 +187,40 @@ class ExpenseDetail(APIView):  # get, update, delete single expense
         expay = self.get_object(pk)
         expay.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)        
+
+class PayrollView(APIView):
+    def get(self, request):
+        obj = Payroll.objects.all()
+        serializer = PayrollSerializer(obj, many=True)
+        return Response(serializer.data, status=200)
+    def post(self, request):
+        data = request.data
+        serializer = PayrollSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)     
+
+class Payrollbyid(APIView):
+    def get_object(self, id):
+        try:
+            return Payroll.objects.get(id=id)
+        except Payroll.DoesNotExist as e:
+            return Response({"error": "Not found."},status=404)
+    def get(self, request, id=None):
+        instance = self.get_object(id)
+        serializer = PayrollSerializer(instance)
+        return Response(serializer.data)
+    def put(self, request, id=None):
+        data = request.data
+        instance = self.get_object(id)
+        serializer = PayrollSerializer(instance, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
+    def delete(self, request, id=None):
+        instance = self.get_object(id)
+        serializer = PayrollSerializer(instance)
+        instance.delete()
+        return Response(serializer.data)           
