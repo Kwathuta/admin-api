@@ -25,14 +25,6 @@ class EmployeeView(APIView):
         serializers = EmployeeSerializer(all_employees, many=True)
         return Response(serializers.data)
 
-    # @swagger_auto_schema(request_body=CreateEmployeeSerializer)
-    # def post(self, request, format=None):  # create employee
-    #     serializers = CreateEmployeeSerializer(data=request.data)
-    #     if serializers.is_valid():
-    #         serializers.save()
-    #         return Response({"Employee created successfully"}, status=status.HTTP_201_CREATED)
-    #     return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 # employee details
 class EmployeeDetail(APIView):  # get employee details
@@ -68,6 +60,7 @@ class LeaveView(APIView):
         serializers = LeaveSerializer(all_leave, many=True)
         return Response(serializers.data)
 
+    @swagger_auto_schema(request_body=CreateLeaveSerializer)
     def post(self, request, format=None):  # create leave
         serializers = CreateLeaveSerializer(data=request.data)
         if serializers.is_valid():
@@ -94,7 +87,6 @@ class ApproveLeave(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 # onleave employee list
 class OnLeaveEmployees(APIView):
     def get(self, request, format=None):  # get all onleave employees
@@ -118,6 +110,7 @@ class DepartmentView(APIView):
         serializers = DepartmentSerializer(all_departments, many=True)
         return Response(serializers.data)
 
+    @swagger_auto_schema(request_body=DepartmentSerializer)
     def post(self, request, format=None):  # create department
         serializers = DepartmentSerializer(data=request.data)
         if serializers.is_valid():
@@ -133,26 +126,12 @@ class EmploymentTypeView(APIView):
         serializers = EmploymentTypeSerializer(all_employment_types, many=True)
         return Response(serializers.data)
 
+    @swagger_auto_schema(request_body=EmploymentTypeSerializer)
     def post(self, request, format=None):  # create employment type
         serializers = EmploymentTypeSerializer(data=request.data)
         if serializers.is_valid():
             serializers.save()
             return Response({"Employment type created successfully"}, status=status.HTTP_201_CREATED)
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# bank details
-class BankDetailsView(APIView):
-    def get(self, request, format=None):  # get all bank details
-        all_bank_details = BankDetails.objects.all()
-        serializers = BankDetailsSerializer(all_bank_details, many=True)
-        return Response(serializers.data)
-
-    def post(self, request, format=None):  # create bank details
-        serializers = BankDetailsSerializer(data=request.data)
-        if serializers.is_valid():
-            serializers.save()
-            return Response({"Bank details created successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -162,6 +141,7 @@ class JobListingView(APIView):
         all_job_listings = JobListing.objects.all()
         serializers = JobListingSerializer(all_job_listings, many=True)
         return Response(serializers.data)
+
     @swagger_auto_schema(request_body=CreateJobListingSerializer)
     def post(self, request, format=None):
         serializers = CreateJobListingSerializer(data=request.data)
@@ -171,17 +151,13 @@ class JobListingView(APIView):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
-
 # get active job listings
-class ActiveJobListingView(APIView): 
+class ActiveJobListingView(APIView):
     def get(self, request, format=None):  # get all active job listings
         all_job_listings = JobListing.get_active_job_listing()
         serializers = JobListingSerializer(all_job_listings, many=True)
         return Response(serializers.data)
-    
-    
+
 
 # get past job listings
 class PastJobListingView(APIView):
@@ -197,6 +173,7 @@ class ApplicationView(APIView):
         all_applications = Application.objects.all()
         serializers = ApplicationSerializer(all_applications, many=True)
         return Response(serializers.data)
+
     @swagger_auto_schema(request_body=CreateApplicationSerializer)
     def post(self, request, format=None):
         serializers = CreateApplicationSerializer(data=request.data)
@@ -206,15 +183,14 @@ class ApplicationView(APIView):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 # get new applications
 class NewApplicationView(APIView):
     def get(self, request, format=None):  # get all new applications
         all_applications = Application.get_new_application()
         serializers = ApplicationSerializer(all_applications, many=True)
         return Response(serializers.data)
-    
-    
+
+
 # get past applications
 class PastApplicationView(APIView):
     def get(self, request, format=None):  # get all past applications

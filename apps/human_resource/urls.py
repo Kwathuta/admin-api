@@ -12,7 +12,6 @@ urlpatterns = [
     path('api/leaves/active-staffs/', views.ActiveEmployees.as_view(),name="on-leave"), # active employees
     path('api/departments/', views.DepartmentView.as_view(),name="departments"), # list departments
     path('api/employment_types/', views.EmploymentTypeView.as_view(),name="employment_types"), # list employment types
-    path('api/bank_details/', views.BankDetailsView.as_view(),name="bank_details"), # list bank details
     path('api/leaves/<str:id>/update-status/', views.ApproveLeave.as_view(),name="leave-approve"), # approve leave
     path('api/jobs/', views.JobListingView.as_view(),name="jobs"), # list jobs
     path('api/jobs/active/', views.ActiveJobListingView.as_view(),name="active-jobs"), # active job listings
