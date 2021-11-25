@@ -40,7 +40,7 @@ class EmployeeDetail(APIView):  # get employee details
         employee = self.get_object(id)
         serializer = EmployeeSerializer(employee)
         return Response(serializer.data)
-    
+
     # @swagger_auto_schema(request_body=EmployeeSerializer)
     def put(self, request, id, format=None):  # update employee details
         employee = self.get_object(id)
@@ -231,6 +231,7 @@ class ApplicationStatusView(APIView):
             return Application.objects.get(id=id)
         except Application.DoesNotExist:
             return Http404
+
     @swagger_auto_schema(request_body=ApplicationStatusSerializer)
     def put(self, request, id, format=None):
         application = self.get_object(id)
@@ -260,7 +261,15 @@ class PastInterviewView(APIView):
         return Response(serializers.data)
 
 
+# interview details
+# class InterviewDetail(APIView):
+#     def get(self, request, id, format=None):
+#         interview = ScheduledInterview.get_scheduled_interview_by_id(id)
+        # if 
+
 # create interview
+
+
 class ScheduleInterviewView(APIView):
     @swagger_auto_schema(request_body=CreateScheduleInterviewSerializer)
     def post(self, request, format=None):  # create schedule interview
