@@ -26,6 +26,11 @@ class TestSetUp(APITestCase):
             "password": "1234"
         }
 
+        self.first_super_admin = {
+            "email": "user@company.com",
+            "password": "1234",
+        }
+
         return super().setUp()
 
     def tearDown(self):
