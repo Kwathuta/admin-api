@@ -5,15 +5,32 @@ from django.contrib.auth import authenticate
 from apps.superadmin.models import *
 from apps.human_resource.models import *
 
-class GroupSerializer(serializers.ModelSerializer):
-    """A serializer for the user groups
+# class GroupSerializer(serializers.ModelSerializer):
+#     """A serializer for the user groups
 
-    Args:
-        serializers ([type]): [description]
-    """
-    class Meta:
-        model = Group
-        fields = '__all__'
+#     Args:
+#         serializers ([type]): [description]
+#     """
+#     class Meta:
+#         model = Group
+#         fields = '__all__'
+
+# class CompanyCreationSerializer(serializers.Serializer):
+#     """This is the serializers handling creation of a new company
+
+#     Args:
+#         serializers ([type]): [description]
+
+#     Raises:
+#         serializers.ValidationError: [description]
+#         serializers.ValidationError: [description]
+#         serializers.ValidationError: [description]
+#         serializers.ValidationError: [description]
+
+#     Returns:
+#         [type]: [description]
+#     """
+
 
 # class UserCreationSerializer(serializers.ModelSerializer):
 #     """This defines the fields used in creating an employee
