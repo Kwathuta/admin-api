@@ -49,7 +49,7 @@ class EmploymentInformation(models.Model):
         Department, on_delete=models.PROTECT, null=True)
     employment_type = models.ForeignKey(
         EmploymentType, on_delete=models.CASCADE, null=True)
-    soft_delete = models.BooleanField(default=False)
+    soft_delete = models.BooleanField(default=False,null=True)
 
     # get all employees where status is true and soft delete is false
     @classmethod
@@ -94,7 +94,7 @@ class Leave(models.Model):
     approved_by = models.ForeignKey(
         Employee, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    soft_delete = models.BooleanField(default=False)
+    soft_delete = models.BooleanField(default=False,null=True)
 
     # get all employees where status is approve and date to is greater than today
     @classmethod
@@ -135,7 +135,7 @@ class JobListing(models.Model):
     salary = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     deadline = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
-    soft_delete = models.BooleanField(default=False)
+    soft_delete = models.BooleanField(default=False,null=True)
 
     # get job listing details by id
     @classmethod
@@ -183,7 +183,7 @@ class Application(models.Model):
     cover_letter = models.TextField(null=True, blank=True)
     status = models.CharField(max_length=50, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
-    soft_delete = models.BooleanField(default=False)
+    soft_delete = models.BooleanField(default=False,null=True)
 
     # get application details by id
     @classmethod
@@ -245,12 +245,12 @@ class ScheduledInterview(models.Model):
     interview_time_to = models.TimeField()
     content = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    soft_delete = models.BooleanField(default=False)
+    soft_delete = models.BooleanField(default=False,null=True)
 
     # get scheduled interview details by id
     @classmethod
-    def get_scheduled_interview_by_id(cls, scheduled_interview_id):
-        scheduled_interview = cls.objects.get(id=scheduled_interview_id, soft_delete=False)
+    def get_scheduled_interview_by_id(cls, id):
+        scheduled_interview = cls.objects.get(id=id, soft_delete=False)
         return scheduled_interview
 
     # get scheduled interview details by application id
@@ -307,7 +307,7 @@ class OfferLetter(models.Model):
     offer_start_date = models.DateField(auto_now=True)
     offer_letter_content = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    soft_delete = models.BooleanField(default=False)
+    soft_delete = models.BooleanField(default=False,null=True)
 
     # get offer letter details by id
     @classmethod
