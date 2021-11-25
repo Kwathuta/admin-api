@@ -25,13 +25,13 @@ class EmployeeView(APIView):
         serializers = EmployeeSerializer(all_employees, many=True)
         return Response(serializers.data)
 
-    @swagger_auto_schema(request_body=CreateEmployeeSerializer)
-    def post(self, request, format=None):  # create employee
-        serializers = CreateEmployeeSerializer(data=request.data)
-        if serializers.is_valid():
-            serializers.save()
-            return Response({"Employee created successfully"}, status=status.HTTP_201_CREATED)
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    # @swagger_auto_schema(request_body=CreateEmployeeSerializer)
+    # def post(self, request, format=None):  # create employee
+    #     serializers = CreateEmployeeSerializer(data=request.data)
+    #     if serializers.is_valid():
+    #         serializers.save()
+    #         return Response({"Employee created successfully"}, status=status.HTTP_201_CREATED)
+    #     return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # employee details
