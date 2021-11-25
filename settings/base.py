@@ -122,7 +122,7 @@ DATABASES = {
 }
 
 # user model
-AUTH_USER_MODEL = 'superadmin.User'
+AUTH_USER_MODEL = 'superadmin.Employee'
 
 # CORS Headers configuration
 CORS_ALLOW_ALL_ORIGINS = True
