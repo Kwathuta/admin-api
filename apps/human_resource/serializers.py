@@ -4,11 +4,19 @@ from rest_framework import fields, serializers, validators
 from phonenumber_field.modelfields import PhoneNumberField
 
 
-from .models import Employee, EmploymentInformation, EmploymentType, Department, BankDetails, LeaveType, Leave, JobListing, Application, ScheduledInterview, OfferLetter
+from .models import Employee, EmploymentInformation, EmploymentType, Department, BankDetails, LeaveType, Leave, JobListing, Application, ScheduledInterview, OfferLetter, EmployeeProfile
 from apps.superadmin.models import *
 
 
+# employee profile serializer
+class EmployeeProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeProfile
+        fields = '__all__'
+
 # department serializer
+
+
 class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
@@ -18,12 +26,27 @@ class DepartmentSerializer(serializers.ModelSerializer):
 # employeeDetails serializer
 class EmployeeDetailsSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)
-    department_id = serializers.PrimaryKeyRelatedField(
-        queryset=Department.objects.all(), write_only=True, required=True)
+    # department_id = serializers.PrimaryKeyRelatedField(
+    #     queryset=Department.objects.all())
+
+    profile = EmployeeProfileSerializer(read_only=True)
 
     class Meta:
         model = Employee
-        fields = '__all__'
+        fields = [
+            "pk",
+            "employee_id",
+            "country",
+            "date_of_birth",
+            "email",
+            "other_names",
+            "national_id",
+            "surname",
+            "is_active",
+            "department",
+            "profile",
+        ]
+        # exclude = ['password']
 
 
 # department serializer
@@ -66,7 +89,9 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmploymentInformation
         fields = '__all__'
-        # exclude = ('password', 'is_active', 'is_staff', 'is_superuser', 'last_login', 'date_joined', 'user_permissions', 'groups')
+        
+        
+
 
 
 def required(value):
@@ -186,6 +211,12 @@ class ApproveLeaveSerializer(serializers.ModelSerializer):  # approve leave
             instance.status = validated_data.get('status', instance.status)
             instance.save()
             return instance
+        
+        # update status in EmploymentInformation to False
+        # def update_employment_status(self, instance, validated_data):
+        #     instance.status = validated_data.get('status', instance.status)
+        #     instance.save()
+        #     return instance
 
 
 # job listing serializer
