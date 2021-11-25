@@ -5,6 +5,7 @@ from rest_framework import status
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from drf_yasg.utils import swagger_auto_schema
 from .serializer import ApproveSerializer,SupportSerializer,StaffSerializer,PayrollSerializer,ExpensesSerializer
 
 # Create your views here.
@@ -42,6 +43,7 @@ class ApproveList(APIView):  # get all employee
         serializers = ApproveSerializer(all_notes, many=True)
         return Response(serializers.data)
 
+    @swagger_auto_schema(request_body=ApproveSerializer)
     def post(self, request, format=None):  # create new employee
         serializers = ApproveSerializer(data=request.data)
         if serializers.is_valid():
@@ -57,6 +59,7 @@ class MessageList(APIView):  # get all message
         serializers = SupportSerializer(all_message, many=True)
         return Response(serializers.data)
 
+    @swagger_auto_schema(request_body=SupportSerializer)
     def post(self, request, format=None):  # create new message
         serializers = SupportSerializer(data=request.data)
         if serializers.is_valid():
@@ -98,6 +101,7 @@ class StaffList(APIView):  # get all staff
         serializers = StaffSerializer(all_staff, many=True)
         return Response(serializers.data)
 
+    @swagger_auto_schema(request_body=StaffSerializer)
     def post(self, request, format=None):  # create new staff
         serializers = StaffSerializer(data=request.data)
         if serializers.is_valid():
@@ -140,6 +144,7 @@ class PayList(APIView):  # get all payroll
         serializers = PayrollSerializer(all_pay, many=True)
         return Response(serializers.data)
 
+    @swagger_auto_schema(request_body=PayrollSerializer)
     def post(self, request, format=None):  # create new payroll
         serializers = PayrollSerializer(data=request.data)
         if serializers.is_valid():
@@ -155,6 +160,7 @@ class ExpensesList(APIView):
         serializers = ExpensesSerializer(all_expenses, many=True)
         return Response(serializers.data)
 
+    @swagger_auto_schema(request_body=ExpensesSerializer)
     def post(self, request, format=None):
         serializers = ExpensesSerializer(data=request.data)
         if serializers.is_valid():
@@ -193,6 +199,8 @@ class PayrollView(APIView):
         obj = Payroll.objects.all()
         serializer = PayrollSerializer(obj, many=True)
         return Response(serializer.data, status=200)
+
+    @swagger_auto_schema(request_body=PayrollSerializer)    
     def post(self, request):
         data = request.data
         serializer = PayrollSerializer(data=data)
