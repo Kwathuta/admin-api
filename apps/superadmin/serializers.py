@@ -3,8 +3,6 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import authenticate
 
 from django.contrib.sites.shortcuts import get_current_site
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
 from django.template.loader import render_to_string
 from apps.superadmin.tokens import account_activation_token
 from django.core.mail import EmailMultiAlternatives
@@ -53,7 +51,6 @@ class CompanyCreationSerializer(serializers.Serializer):
         """
         company = Company(name = self.validated_data['company_name'],number_of_staff = self.validated_data['number_of_staff'],country = self.validated_data['country'])
         company.save()
-        print(company)
 
         first_super_user = Employee(email = self.validated_data['work_email'],surname = self.validated_data['last_name'],role = Role.objects.get(name="super_admin"))
         first_super_user.set_password(self.validated_data['password'])
@@ -91,6 +88,8 @@ class CompanyCreationSerializer(serializers.Serializer):
 
         msg.attach_alternative(email_html_message, "text/html")
         msg.send()
+
+        return company
 
 class CreateEmployeeSerializer(serializers.Serializer):  # create employee
     department = serializers.IntegerField(validators=[required])
