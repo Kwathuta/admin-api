@@ -48,7 +48,6 @@ class BankDetails(models.Model):
 
 class EmploymentInformation(models.Model):
     """The employee relation with the company
-
     Args:
         models ([type]): [description]
     """
