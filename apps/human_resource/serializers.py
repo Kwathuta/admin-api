@@ -172,7 +172,7 @@ class LeaveSerializer(serializers.ModelSerializer):
 
 # create leave
 class CreateLeaveSerializer(serializers.ModelSerializer):  # create leave
-   
+
     class Meta:
         model = Leave
 
@@ -237,8 +237,9 @@ class CreateApplicationSerializer(serializers.ModelSerializer):
             application = Application.objects.create(**validated_data)
             return application
 
-# view application
 
+
+# view application
 
 class ApplicationSerializer(serializers.ModelSerializer):
     job_listing = serializers.CharField(source='job_listing.job_title')
@@ -260,25 +261,24 @@ class ApplicationStatusSerializer(serializers.ModelSerializer):
             return instance
 
 
-
-
 # create schedule interview serializer
 class CreateScheduleInterviewSerializer(serializers.ModelSerializer):
-    
+
     class Meta:
         model = ScheduledInterview
         fields = '__all__'
-        
-        
-        # create schedule interview
-        def create(self, validated_data):
-            schedule_interview = ScheduledInterview.objects.create(**validated_data)
-            return schedule_interview
 
+        # create schedule interview
+
+        def create(self, validated_data):
+            schedule_interview = ScheduledInterview.objects.create(
+                **validated_data)
+            return schedule_interview
 
 
 # schedule interview serializer
 class ScheduledInterviewSerializer(serializers.ModelSerializer):
+    applicant = ApplicationSerializer()
     class Meta:
         model = ScheduledInterview
         fields = '__all__'
