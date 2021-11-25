@@ -65,3 +65,25 @@ class TestViews(TestSetUp):
         self.authenticate(self.first_super_admin)
         res = self.client.post(self.create_user_url,self.normal_user_data)
         self.assertEqual(res.status_code,status.HTTP_201_CREATED)
+
+    def test_change_role(self):
+        """This will test if a user's role can be changed
+        """
+        self.client.post(self.create_company_url,self.company_details)
+        self.client.get(mail.outbox[0].body)
+        self.authenticate(self.first_super_admin)
+        self.client.post(self.create_user_url,self.normal_user_data)
+
+        user = Employee.objects.get(email = self.normal_user_data['email'])
+        role = Role.objects.get(name="human_resources")
+
+        role_changer = {
+            'user':user.pk,
+            'role':role.pk
+        }
+
+        response = self.client.post(self.change_role_url,role_changer)
+
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        user_now = Employee.objects.get(email = self.normal_user_data['email'])
+        self.assertEqual(user_now.role,role)
