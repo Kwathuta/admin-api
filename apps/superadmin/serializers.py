@@ -55,8 +55,8 @@ class CompanyCreationSerializer(serializers.Serializer):
         company.save()
         print(company)
 
-        first_super_user = Employee(email = self.validated_data['work_email'],password = self.validated_data['password'],surname = self.validated_data['last_name'],role = Role.objects.get(name="super_admin"))
-        print(first_super_user)
+        first_super_user = Employee(email = self.validated_data['work_email'],surname = self.validated_data['last_name'],role = Role.objects.get(name="super_admin"))
+        first_super_user.set_password(self.validated_data['password'])
         first_super_user.save()
         first_super_user.is_active = False
         first_super_user.other_names = self.validated_data['first_name']
@@ -92,27 +92,6 @@ class CompanyCreationSerializer(serializers.Serializer):
         msg.attach_alternative(email_html_message, "text/html")
         msg.send()
 
-
-
-
-# class UserCreationSerializer(serializers.ModelSerializer):
-#     """This defines the fields used in creating an employee
-
-#     Args:
-#         serializers ([type]): [description]
-#     """
-#     class Meta:
-#         model = User
-#         fields = ['email','username','password','nationality','national_id']
-
-#     def save(self):
-#         """This handles saving a user from the request
-#         """
-#         account = User(email = self.validated_data['email'], username = self.validated_data['username'],role = Role.objects.get(name="subordinate_staff"))
-#         account.set_password(self.validated_data['password'])
-#         account.save()
-#         return account
-# create employee
 class CreateEmployeeSerializer(serializers.Serializer):  # create employee
     department = serializers.IntegerField(validators=[required])
     employment_type = serializers.IntegerField(validators=[required])
@@ -135,7 +114,7 @@ class CreateEmployeeSerializer(serializers.Serializer):  # create employee
     national_id = serializers.CharField(validators=[required])
     password = serializers.CharField(validators=[required])
 
-    def save(self):
+    def save(self,request):
         try:
             department = Department.objects.get(pk=self.validated_data['department'])
             employment_type = EmploymentType.objects.get(pk=self.validated_data['employment_type'])
@@ -167,6 +146,9 @@ class CreateEmployeeSerializer(serializers.Serializer):  # create employee
 
         # EmploymentInformation(employee = employee,position = self.validated_data['position'],department = department,employment_type = employment_type).save()
         employee_employment = EmploymentInformation.objects.get(employee = employee)
+        company = EmploymentInformation.objects.get(employee = request.user).company
+        print(company)
+        employee_employment.company = company
         employee_employment.position = self.validated_data['position']
         employee_employment.department = department
         employee_employment.employment_type = employment_type

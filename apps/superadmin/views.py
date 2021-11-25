@@ -25,7 +25,7 @@ class UserView(APIView):
         data = {}
         serializer = CreateEmployeeSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(request)
             data['success'] = "The account was successfully created"
             responseStatus = status.HTTP_201_CREATED
             return Response(data,status = responseStatus)
