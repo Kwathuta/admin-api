@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 
 from django.shortcuts import render
 
-from .serializers import ApplicationSerializer, EmployeeDetailsSerializer, JobListingSerializer, ApproveLeaveSerializer, EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer, DepartmentSerializer, EmploymentTypeSerializer, BankDetailsSerializer, CreateJobListingSerializer, CreateApplicationSerializer
+from .serializers import ApplicationSerializer, CreateScheduleInterviewSerializer, EmployeeDetailsSerializer, JobListingSerializer, ApproveLeaveSerializer, EmployeeSerializer, CreateEmployeeSerializer, LeaveSerializer, CreateLeaveSerializer, DepartmentSerializer, EmploymentTypeSerializer, CreateJobListingSerializer, CreateApplicationSerializer, ScheduledInterviewSerializer
 
 # api
 from django.http import JsonResponse
@@ -14,7 +14,7 @@ from rest_framework.views import APIView
 from drf_yasg.utils import swagger_auto_schema
 
 
-from .models import Application, BankDetails, Employee, EmploymentInformation, JobListing, Leave, EmploymentType, Department
+from .models import Application, Employee, EmploymentInformation, JobListing, Leave, EmploymentType, Department, ScheduledInterview
 from apps.human_resource import serializers
 
 
@@ -96,11 +96,11 @@ class OnLeaveEmployees(APIView):
 
 
 # active employee list
-class ActiveEmployees(APIView):    
+class ActiveEmployees(APIView):
     def get(self, request, format=None):  # get all employees
         all_employees = EmploymentInformation.get_all_active_employees()
         serializers = EmployeeSerializer(all_employees, many=True)
-        return Response(serializers.data)    
+        return Response(serializers.data)
 
 
 # list departments
@@ -219,3 +219,20 @@ class ApplicationDetail(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# create schedule interview
+class ScheduleInterviewView(APIView):
+    def get(self, request, format=None):  # get all schedule interviews
+        all_schedule_interviews = ScheduledInterview.objects.all()
+        serializers = ScheduledInterviewSerializer(
+            all_schedule_interviews, many=True)
+        return Response(serializers.data)
+
+    @swagger_auto_schema(request_body=CreateScheduleInterviewSerializer)
+    def post(self, request, format=None):  # create schedule interview
+        serializers = CreateScheduleInterviewSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response({"Scheduled interview created successfully"}, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
