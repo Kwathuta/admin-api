@@ -26,8 +26,6 @@ class DepartmentSerializer(serializers.ModelSerializer):
 # employeeDetails serializer
 class EmployeeDetailsSerializer(serializers.ModelSerializer):
     department = DepartmentSerializer(read_only=True)
-    # department_id = serializers.PrimaryKeyRelatedField(
-    #     queryset=Department.objects.all())
 
     profile = EmployeeProfileSerializer(read_only=True)
 
@@ -174,11 +172,7 @@ class LeaveSerializer(serializers.ModelSerializer):
 
 # create leave
 class CreateLeaveSerializer(serializers.ModelSerializer):  # create leave
-    # employee = serializers.CharField(source='employee.other_names')
-    # leave_type = serializers.CharField(source='leave_type.name')
-    # department = serializers.CharField(source='department.name')
-    # employment_type = serializers.CharField(source='employment_type.name')
-
+   
     class Meta:
         model = Leave
 
@@ -200,12 +194,6 @@ class ApproveLeaveSerializer(serializers.ModelSerializer):  # approve leave
             instance.status = validated_data.get('status', instance.status)
             instance.save()
             return instance
-
-        # update status in EmploymentInformation to False
-        # def update_employment_status(self, instance, validated_data):
-        #     instance.status = validated_data.get('status', instance.status)
-        #     instance.save()
-        #     return instance
 
 
 # job listing serializer
