@@ -168,6 +168,7 @@ class TestViews(TestSetUp):
         employee_employment = EmploymentInformation.objects.get(employee = other_normal_user)
         employee_employment.company = company
         employee_employment.save()
+        other_normal_user = Employee.objects.get(email = other_normal_user_data['email'])
         
         role = Role.objects.get(name="human_resources")
 
@@ -178,5 +179,5 @@ class TestViews(TestSetUp):
 
         response = self.client.post(self.change_role_url,role_changer)
 
-        self.assertTrue(response.status_code == status.HTTP_401_UNAUTHORIZED)
+        self.assertTrue(response.status_code == status.HTTP_403_FORBIDDEN)
 
