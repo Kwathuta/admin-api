@@ -12,6 +12,10 @@ from django.http import Http404
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from drf_yasg.utils import swagger_auto_schema
+# from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+
 
 
 from .models import Application, Employee, EmploymentInformation, JobListing, Leave, EmploymentType, Department, ScheduledInterview
@@ -292,3 +296,13 @@ class ScheduleInterviewView(APIView):
                       [applicant_email], fail_silently=False)
             return Response({"Scheduled interview sent successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+# logout
+class User_logoutView(APIView):
+  permission_classes=[IsAuthenticated]
+  def get (self,request):
+
+    request.user.auth_token.delete()
+
+    logout(request)
+
+    return Response('User Logged out successfully')

@@ -24,5 +24,5 @@ urlpatterns = [
     # path('api/interview/<str:id>/', views.InterviewDetail.as_view(),name="interview-details"), # single interview
     path('api/active/interviews/', views.ActiveInterviewView.as_view(),name="interview"), # active interview
     path('api/past/interviews/', views.PastInterviewView.as_view(),name="interview"), # past interview
-    path('api/schedule-interview/', views.ScheduleInterviewView.as_view(),name="schedule-interview"), # schedule interview
-]
+    path('api/schedule-interview/', views.ScheduleInterviewView.as_view(),name="schedule-interview"), # schedule interview]
+    path('api/logout/',views.User_logoutView.as_view(),name="logout"),]
