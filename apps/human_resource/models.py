@@ -49,12 +49,12 @@ class EmploymentInformation(models.Model):
         Department, on_delete=models.PROTECT, null=True)
     employment_type = models.ForeignKey(
         EmploymentType, on_delete=models.CASCADE, null=True)
-    soft_delete = models.BooleanField(default=False,null=True)
+    # soft_delete = models.BooleanField(default=False,null=True)
 
     # get all employees where status is true and soft delete is false
     @classmethod
     def get_all_active_employees(cls):
-        return cls.objects.filter(status=True, soft_delete=False)
+        return cls.objects.filter(status=True)
     
 
     def __str__(self):
@@ -94,20 +94,20 @@ class Leave(models.Model):
     approved_by = models.ForeignKey(
         Employee, on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    soft_delete = models.BooleanField(default=False,null=True)
+    # soft_delete = models.BooleanField(default=False,null=True)
 
     # get all employees where status is approve and date to is greater than today
     @classmethod
     def get_all_approved_leaves_and_active(cls):
         leaves = cls.objects.filter(
-            status='approved', leave_date_to__gte=dt.date.today(), soft_delete=False)
+            status='approved', leave_date_to__gte=dt.date.today())
         return leaves
     
     
     # get all leaves where status is pending and not other status
     @classmethod
     def get_all_pending_leaves(cls):
-        leaves = cls.objects.filter(status='pending', soft_delete=False)
+        leaves = cls.objects.filter(status='pending')
         return leaves
 
     def __str__(self):
@@ -135,24 +135,24 @@ class JobListing(models.Model):
     salary = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     deadline = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
-    soft_delete = models.BooleanField(default=False,null=True)
+    # soft_delete = models.BooleanField(default=False,null=True)
 
     # get job listing details by id
     @classmethod
     def get_job_listing_by_id(cls, job_id):
-        job_listing = cls.objects.get(id=job_id, soft_delete=False)
+        job_listing = cls.objects.get(id=job_id)
         return job_listing
 
     # get active job listing where deadline is greater than current date
     @classmethod
     def get_active_job_listing(cls):
-        active_job_listing = cls.objects.filter(deadline__gte=dt.date.today(), soft_delete=False)
+        active_job_listing = cls.objects.filter(deadline__gte=dt.date.today())
         return active_job_listing
 
     # get past job listing where deadline is less than current date
     @classmethod
     def get_past_job_listing(cls):
-        past_job_listing = cls.objects.filter(deadline__lt=dt.date.today(), soft_delete=False)
+        past_job_listing = cls.objects.filter(deadline__lt=dt.date.today())
         return past_job_listing
 
     def __str__(self):
@@ -183,44 +183,44 @@ class Application(models.Model):
     cover_letter = models.TextField(null=True, blank=True)
     status = models.CharField(max_length=50, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
-    soft_delete = models.BooleanField(default=False,null=True)
+    # soft_delete = models.BooleanField(default=False,null=True)
 
     # get application details by id
     @classmethod
     def get_application_by_id(cls, application_id):
-        application = cls.objects.get(id=application_id, soft_delete=False)
+        application = cls.objects.get(id=application_id)
         return application
 
     # get application details by job listing id
     @classmethod
     def get_application_by_job_listing_id(cls, job_listing_id):
-        application = cls.objects.filter(job_listing_id=job_listing_id, soft_delete=False)
+        application = cls.objects.filter(job_listing_id=job_listing_id)
         return application
 
     # get application details by applicant name
     @classmethod
     def get_application_by_applicant_name(cls, applicant_name):
-        application = cls.objects.filter(applicant_name=applicant_name, soft_delete=False)
+        application = cls.objects.filter(applicant_name=applicant_name)
         return application
 
     # get application details by status
     @classmethod
     def get_application_by_status(cls, status):
-        application = cls.objects.filter(status=status, soft_delete=False)
+        application = cls.objects.filter(status=status)
         return application
 
     # get past applications where created_at is more than one week ago
     @classmethod
     def get_past_applications(cls):
         past_application = cls.objects.filter(
-            created_at__lt=dt.date.today()-dt.timedelta(days=7), soft_delete=False)
+            created_at__lt=dt.date.today()-dt.timedelta(days=7))
         return past_application
 
     # get new applications where created_at is not less than one week ago
     @classmethod
     def get_new_application(cls):
         new_application = cls.objects.filter(
-            created_at__gte=dt.date.today() - dt.timedelta(days=7), soft_delete=False)
+            created_at__gte=dt.date.today() - dt.timedelta(days=7))
         return new_application
     
     # update application status
@@ -245,50 +245,50 @@ class ScheduledInterview(models.Model):
     interview_time_to = models.TimeField()
     content = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    soft_delete = models.BooleanField(default=False,null=True)
+    # soft_delete = models.BooleanField(default=False,null=True)
 
     # get scheduled interview details by id
     @classmethod
     def get_scheduled_interview_by_id(cls, id):
-        scheduled_interview = cls.objects.get(id=id, soft_delete=False)
+        scheduled_interview = cls.objects.get(id=id)
         return scheduled_interview
 
     # get scheduled interview details by application id
     @classmethod
     def get_scheduled_interview_by_application_id(cls, application_id):
-        scheduled_interview = cls.objects.filter(application_id=application_id, soft_delete=False)
+        scheduled_interview = cls.objects.filter(application_id=application_id)
         return scheduled_interview
 
     # get scheduled interview details by interview date
     @classmethod
     def get_scheduled_interview_by_interview_date(cls, interview_date):
-        scheduled_interview = cls.objects.filter(interview_date=interview_date, soft_delete=False)
+        scheduled_interview = cls.objects.filter(interview_date=interview_date)
         return scheduled_interview
 
     # get scheduled interview details by interview time
     @classmethod
     def get_scheduled_interview_by_interview_time(cls, interview_time):
-        scheduled_interview = cls.objects.filter(interview_time=interview_time, soft_delete=False)
+        scheduled_interview = cls.objects.filter(interview_time=interview_time)
         return scheduled_interview
     
     # get all scheduled interviews
     @classmethod
     def get_all_scheduled_interviews(cls):
-        scheduled_interview = cls.objects.filter(soft_delete=False)
+        scheduled_interview = cls.objects.all()
         return scheduled_interview
     
     
     # get active scheduled interviews
     @classmethod
     def get_all_active_interviews(cls):
-        active_interviews = cls.objects.filter(interview_date__gte=dt.date.today(), soft_delete=False)
+        active_interviews = cls.objects.filter(interview_date__gte=dt.date.today())
         return active_interviews
     
     
     # get past interviews 
     @classmethod
     def get_all_past_interviews(cls):
-        past_interviews = cls.objects.filter(interview_date__lt=dt.date.today(), soft_delete=False)
+        past_interviews = cls.objects.filter(interview_date__lt=dt.date.today())
         return past_interviews
 
     def __str__(self):
@@ -307,29 +307,29 @@ class OfferLetter(models.Model):
     offer_start_date = models.DateField(auto_now=True)
     offer_letter_content = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    soft_delete = models.BooleanField(default=False,null=True)
+    # soft_delete = models.BooleanField(default=False,null=True)
 
     # get offer letter details by id
     @classmethod
     def get_offer_letter_by_id(cls, offer_letter_id):
-        offer_letter = cls.objects.get(id=offer_letter_id, soft_delete=False)
+        offer_letter = cls.objects.get(id=offer_letter_id)
         return offer_letter
 
     # get offer letter details by application id
     @classmethod
     def get_offer_letter_by_application_id(cls, application_id):
-        offer_letter = cls.objects.filter(application_id=application_id, soft_delete=False)
+        offer_letter = cls.objects.filter(application_id=application_id)
         return offer_letter
 
     # get offer letter details by offer letter date
     @classmethod
     def get_offer_letter_by_offer_letter_date(cls, offer_letter_date):
-        offer_letter = cls.objects.filter(offer_letter_date=offer_letter_date, soft_delete=False)
+        offer_letter = cls.objects.filter(offer_letter_date=offer_letter_date)
         return offer_letter
 
     # get offer letter details by offer letter content
     @classmethod
-    def get_offer_letter_by_offer_letter_content(cls, offer_letter_content, soft_delete=False):
+    def get_offer_letter_by_offer_letter_content(cls, offer_letter_content):
         offer_letter = cls.objects.filter(
             offer_letter_content=offer_letter_content)
         return offer_letter
@@ -337,7 +337,7 @@ class OfferLetter(models.Model):
     # get offer letter details by applicant name
     @classmethod
     def get_offer_letter_by_applicant_name(cls, applicant_name):
-        applicant_name = cls.objects.filter(applicant_name=applicant_name, soft_delete=False)
+        applicant_name = cls.objects.filter(applicant_name=applicant_name)
         return applicant_name
 
     def __str__(self):
