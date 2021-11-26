@@ -5,6 +5,8 @@ from rest_framework import status
 from django.core import mail
 
 from apps.superadmin.tokens import *
+from apps.superadmin.models import *
+from apps.human_resource.models import *
 
 class TestViews(TestSetUp):
     """Tests for superadmin module
@@ -115,3 +117,66 @@ class TestViews(TestSetUp):
         self.authenticate(self.first_super_admin)
         user = Employee.objects.get(email = self.first_super_admin['email'])
         self.assertTrue(user.role.name == "super_admin")
+
+    def test_change_role_for_other_company(self):
+        """This will check if a user can change the role of an employee for another company
+        """
+
+        self.client.post(self.create_company_url,self.company_details)
+        self.client.get(mail.outbox[0].body)
+        self.authenticate(self.first_super_admin)
+        self.client.post(self.create_user_url,self.normal_user_data)
+
+        other_company_details = {
+            "first_name": "Roy",
+            "last_name": "Rasugu",
+            "company_name": "Rasugu Technologies",
+            "work_email": "rasugu@company.com",
+            "number_of_staff": "0-50",
+            "country": "Kenya",
+            "password": "1234"
+        }
+
+        other_normal_user_data = {
+            "department": 1,
+            "employment_type": 1,
+            "position": "manager",
+            "employment_date": "2021-11-25",
+            "gross_salary": "100",
+            "marital_status": "married",
+            "emergency_contact": "Ken",
+            "emergency_contact_number": "0755626990",
+            "bank_name": "Equity",
+            "bank_branch": "Nakuru",
+            "account_number": "1234567",
+            "phone_number": "0732443604",
+            "surname": "Aisha",
+            "employee_id": "14",
+            "date_of_birth": "2021-11-25",
+            "country": "Kenya",
+            "email": "aisha@gmail.com",
+            "other_names": "Ahmed",
+            "national_id": "12347674",
+            "password": "1234"
+        }
+
+        self.client.post(self.create_company_url,other_company_details)
+
+        Employee(surname=other_normal_user_data['surname'],employee_id = other_normal_user_data['employee_id'],other_names=other_normal_user_data['other_names'],email = other_normal_user_data['email'],national_id = other_normal_user_data['national_id'],date_of_birth = other_normal_user_data['date_of_birth'],country = other_normal_user_data['country'],role = Role.objects.get(name="subordinate_staff")).save()
+        company = Company.objects.get(name='Rasugu Technologies')
+        other_normal_user = Employee.objects.get(email = other_normal_user_data['email'])
+        employee_employment = EmploymentInformation.objects.get(employee = other_normal_user)
+        employee_employment.company = company
+        employee_employment.save()
+        
+        role = Role.objects.get(name="human_resources")
+
+        role_changer = {
+            'user':other_normal_user.pk,
+            'role':role.pk
+        }
+
+        response = self.client.post(self.change_role_url,role_changer)
+
+        self.assertTrue(response.status_code == status.HTTP_401_UNAUTHORIZED)
+
