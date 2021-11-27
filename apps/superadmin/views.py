@@ -1,5 +1,3 @@
-from django.http import response
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.schemas import get_schema_view
 from rest_framework.views import APIView
@@ -60,6 +58,29 @@ class LoginView(APIView):
         else:
             data = serializer.errors
             return Response(data,status = status.HTTP_400_BAD_REQUEST)
+
+class UserDetailsView(APIView):
+    """This returns a user instance depending on the token given
+
+    Args:
+        APIView ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    @swagger_auto_schema(responses={200: UserDetailsSerializer()})
+    def get(self,request,token):
+        data = {}
+        try:
+            validated_token = Token.objects.get(key=token)
+            data['user'] = UserDetailsSerializer(validated_token.user).data
+            responseStatus = status.HTTP_200_OK
+        except Exception as e:
+            print(e)
+            data['error'] = e
+            responseStatus = status.HTTP_404_NOT_FOUND
+
+        return Response(data,status=responseStatus)
 
 
 class ChangeRole(APIView):
