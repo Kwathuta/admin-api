@@ -11,4 +11,5 @@ urlpatterns = [
    path('role/',views.RoleView.as_view(),name="roles"),
    path('password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
    path('activate/<uidb64>/<token>/', views.ActivateAccount.as_view(), name='activate'),
+   path('delete/',views.DeleteUser.as_view(),name='delete_user'),
 ]

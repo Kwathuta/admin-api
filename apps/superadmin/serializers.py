@@ -225,3 +225,21 @@ class SetRoleSerializer(serializers.Serializer):
 
         except Exception as e:
             raise serializers.ValidationError(e)
+
+class DeleteUserSerializer(serializers.Serializer):
+    """This defines the parameters to be used in assigning roles
+
+    Args:
+        serializers ([type]): [description]
+    """
+    user = serializers.CharField(max_length=50)
+
+    def save(self):
+        user = (self.validated_data['user'])
+        try:
+            user = Employee.objects.get(pk = user)
+            user.is_active = False
+            user.save()
+
+        except Exception as e:
+            raise serializers.ValidationError(e)
