@@ -238,6 +238,10 @@ class EmployeeInfo(serializers.ModelSerializer):
         model = EmploymentInformation
         fields = '__all__'
 
+class Profile_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeProfile
+        fields = ['personal_email','profile_pic','marital_status','insurance_number','phone_number']
 
 class UserDetailsSerializer(serializers.ModelSerializer):
     """This gets everything about a user
@@ -257,9 +261,10 @@ class UserDetailsSerializer(serializers.ModelSerializer):
     emergency_information = EmergencyInfoSerializer(read_only=True)
     payment_information = PaymentInfoSerializer(read_only=True)
     employmentinformation = EmployeeInfo(read_only=True)
+    employee_profile = Profile_Serializer(read_only=True)
     class Meta:
         model = Employee
-        fields = ['pk','email','surname','other_names','country','national_id','role','date_of_birth','emergency_information','payment_information','employmentinformation']
+        fields = ['pk','email','surname','other_names','country','national_id','role','date_of_birth','emergency_information','payment_information','employmentinformation','employee_profile']
 
 class LoginSerializer(serializers.Serializer):
     """This defines the functions in the login function
