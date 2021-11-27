@@ -201,6 +201,26 @@ class TestViews(TestSetUp):
         user_now = Employee.objects.get(email = self.normal_user_data['email'])
         self.assertEqual(user_now.is_active,False)
 
+    def test_reinstate_user(self):
+        """This tests if a user can be deleted
+        """
+        self.client.post(self.create_company_url,self.company_details)
+        self.client.get(mail.outbox[0].body)
+        self.authenticate(self.first_super_admin)
+        self.client.post(self.create_user_url,self.normal_user_data)
+
+        user = Employee.objects.get(email = self.normal_user_data['email'])
+
+        user_data = {
+            "user":str(user.pk)
+        }
+
+        self.client.put(self.delete_user_url,user_data)
+        self.client.put(self.delete_user_url,user_data)
+
+        user_now = Employee.objects.get(email = self.normal_user_data['email'])
+        self.assertEqual(user_now.is_active,True)
+
     def test_other_user_delete_superuser(self):
         """This will check if another user who is not a superuser can delete a superuser
         """
