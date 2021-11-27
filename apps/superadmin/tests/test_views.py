@@ -200,3 +200,28 @@ class TestViews(TestSetUp):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         user_now = Employee.objects.get(email = self.normal_user_data['email'])
         self.assertEqual(user_now.is_active,False)
+
+    def test_other_user_delete_superuser(self):
+        """This will check if another user who is not a superuser can delete a superuser
+        """
+        self.client.post(self.create_company_url,self.company_details)
+        self.client.get(mail.outbox[0].body)
+        self.authenticate(self.first_super_admin)
+        self.client.post(self.create_user_url,self.normal_user_data)
+
+        change_to_hr = Employee.objects.get(email=self.first_super_admin['email'])
+        change_to_hr.role = Role.objects.get(name="human_resources")
+        change_to_hr.save()
+
+
+        user = Employee.objects.get(email = self.normal_user_data['email'])
+        user.role = Role.objects.get(name="super_admin")
+        user.save()
+
+        user_data = {
+            "user":str(user.pk)
+        }
+
+        response = self.client.put(self.delete_user_url,user_data)
+
+        self.assertEqual(response.status_code,status.HTTP_403_FORBIDDEN)
