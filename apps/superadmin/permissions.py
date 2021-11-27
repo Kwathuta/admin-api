@@ -17,6 +17,18 @@ class CreateUserPermission(permissions.BasePermission):
         else:
             return False
 
+class DeleteUserPermission(permissions.BasePermission):
+    """This determines whether a user is authorized to create users depending on their group
+
+    Args:
+        permissions ([type]): [description]
+    """
+    def has_permission(self, request, view):
+        if request.user.role.name=="super_admin":
+            return True
+        else:
+            return False
+
 class ChangeRolePermission(permissions.BasePermission):
     """This defines the user with the permission to change another user's role
 
