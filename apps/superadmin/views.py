@@ -92,7 +92,7 @@ class DeleteUser(APIView):
     Args:
         APIView ([type]): [description]
     """
-    permission_classes = [IsAuthenticated & ChangeRolePermission & DeleteUserPermission]
+    permission_classes = [IsAuthenticated & DeleteUserPermission]
 
     @swagger_auto_schema(request_body=DeleteUserSerializer)
     def put(self,request,format=None):

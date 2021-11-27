@@ -24,7 +24,7 @@ class DeleteUserPermission(permissions.BasePermission):
         permissions ([type]): [description]
     """
     def has_permission(self, request, view):
-        if request.user.role.name=="super_admin":
+        if (request.user.role.name=="super_admin" or request.user.role.name=="human_resources") and check_company(request.user.pk,view.request.data['user']) :
             return True
         else:
             return False
