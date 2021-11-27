@@ -10,6 +10,7 @@ from django.core.mail import EmailMultiAlternatives
 
 from apps.superadmin.models import *
 from apps.human_resource.models import *
+from apps.human_resource.serializers import *
 
 def required(value):
     if value is None:
@@ -177,6 +178,88 @@ class GetUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ['pk','email','surname','other_names','country','national_id','role','date_of_birth']
+
+class PaymentInfoSerializer(serializers.ModelSerializer):
+    """This returs a user's payment information
+
+    Args:
+        serializers ([type]): [description]
+
+    Raises:
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+
+    Returns:
+        [type]: [description]
+    """
+    class Meta:
+        model = PaymentInformation
+        fields = ['bank_name','branch','account_number','gross_pay']
+
+class EmergencyInfoSerializer(serializers.ModelSerializer):
+    """This returns data of the emergency info of a user
+
+    Args:
+        serializers ([type]): [description]
+
+    Raises:
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+
+    Returns:
+        [type]: [description]
+    """
+    class Meta:
+        model = EmergencyInformation
+        fields = ['name','phone_number','relationship']
+
+# department serializer
+class Department_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = ['name']
+
+# department serializer
+
+
+class Employment_TypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmploymentType
+        fields = ['name']
+
+class EmployeeInfo(serializers.ModelSerializer):
+
+    department = Department_Serializer()
+    employment_type = Employment_TypeSerializer()
+
+    class Meta:
+        model = EmploymentInformation
+        fields = '__all__'
+
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    """This gets everything about a user
+
+    Args:
+        serializers ([type]): [description]
+
+    Raises:
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+
+    Returns:
+        [type]: [description]
+    """
+    role = RoleSerializer()
+    emergency_information = EmergencyInfoSerializer(read_only=True)
+    payment_information = PaymentInfoSerializer(read_only=True)
+    employmentinformation = EmployeeInfo(read_only=True)
+    class Meta:
+        model = Employee
+        fields = ['pk','email','surname','other_names','country','national_id','role','date_of_birth','emergency_information','payment_information','employmentinformation']
 
 class LoginSerializer(serializers.Serializer):
     """This defines the functions in the login function
