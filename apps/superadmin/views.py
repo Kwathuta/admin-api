@@ -86,6 +86,31 @@ class ChangeRole(APIView):
 
         return Response(data,status = responseStatus)
 
+class DeleteUser(APIView):
+    """[summary]
+
+    Args:
+        APIView ([type]): [description]
+    """
+    permission_classes = [IsAuthenticated & ChangeRolePermission]
+
+    @swagger_auto_schema(request_body=DeleteUserSerializer)
+    def put(self,request,format=None):
+        data = {}
+        serializer = DeleteUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            data['success'] = "The user's was successfully deleted"
+            responseStatus = status.HTTP_200_OK
+
+
+        else:
+            data = serializer.errors
+            responseStatus = status.HTTP_400_BAD_REQUEST
+
+        return Response(data,status = responseStatus)
+
+
 class RoleView(APIView):
     """This retrieves a list of roles
 
