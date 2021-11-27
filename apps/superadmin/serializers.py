@@ -238,8 +238,12 @@ class DeleteUserSerializer(serializers.Serializer):
         user = (self.validated_data['user'])
         try:
             user = Employee.objects.get(pk = user)
-            user.is_active = False
-            user.save()
+            if user.is_active:
+                user.is_active = False
+                user.save()
+            else:
+                user.is_active = True
+                user.save()
 
         except Exception as e:
             raise serializers.ValidationError(e)
