@@ -264,7 +264,7 @@ class UserDetailsSerializer(serializers.ModelSerializer):
     employee_profile = Profile_Serializer(read_only=True)
     class Meta:
         model = Employee
-        fields = ['pk','email','surname','other_names','country','national_id','role','date_of_birth','emergency_information','payment_information','employmentinformation','employee_profile']
+        fields = ['pk','email','employee_id','surname','other_names','country','national_id','role','date_of_birth','emergency_information','payment_information','employmentinformation','employee_profile']
 
 class LoginSerializer(serializers.Serializer):
     """This defines the functions in the login function
