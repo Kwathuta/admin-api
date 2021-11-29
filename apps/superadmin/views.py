@@ -82,6 +82,30 @@ class UserDetailsView(APIView):
 
         return Response(data,status=responseStatus)
 
+class EmployeeDetailsView(APIView):
+    """This gets the details of one employee according to the id given
+
+    Args:
+        APIView ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    @swagger_auto_schema(responses={200: UserDetailsSerializer()})
+    def get(self,request,id):
+        data = {}
+        try:
+            user = Employee.objects.get(pk=id)
+            data['user'] = UserDetailsSerializer(user).data
+            responseStatus = status.HTTP_200_OK
+        except Exception as e:
+            print(e)
+            data['error'] = e
+            responseStatus = status.HTTP_404_NOT_FOUND
+
+        return Response(data,status=responseStatus)
+
+
 
 class ChangeRole(APIView):
     """[summary]
