@@ -15,5 +15,7 @@ urlpatterns = [
    path("user/<token>",views.UserDetailsView.as_view(),name="get_details"),
    path("employee/<int:id>",views.EmployeeDetailsView.as_view(),name="get_employee_details"),
    path('employee',views.AllEmployeeView.as_view(),name="employees"),
-   path('role/<int:role_id>',views.RoleView.as_view(),name="role_employees"),
+   path('role/<int:role_id>',views.RoleEmployeeView.as_view(),name="role_employees"),
+   path('department/<int:department_id>',views.DepartmentEmployeeView.as_view(),name="department_employees"),
+   path('employment_type/<int:employment_type_id>',views.EmploymentTypeEmployeeView.as_view(),name="employment_type_employees"),
 ]
