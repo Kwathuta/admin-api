@@ -123,7 +123,7 @@ class AllEmployeeView(APIView):
         data = {}
         try:
             company = Company.objects.get(pk = request.user.employmentinformation.company.pk)
-            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company)
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company).exclude(pk = request.user.pk)
             data['employees'] = UserDetailsSerializer(employees,many=True).data
             responseStatus = status.HTTP_200_OK
         except Exception as e:
@@ -194,6 +194,35 @@ class RoleView(APIView):
         data = {}
         data['roles'] = RoleSerializer(Role.objects.all(),many=True).data
         return Response(data,status = status.HTTP_200_OK)
+
+class RoleView(APIView):
+    """This retrieves a list of employees in a company that are in a given role
+
+    Args:
+        APIView ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(responses={200: UserDetailsSerializer()})
+    def get(self,request,role_id):
+        data = {}
+
+        try:
+            role = Role.objects.get(pk = role_id)
+
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,role = role).exclude(pk = request.user.pk)
+            data['employees'] = UserDetailsSerializer(employees,many=True).data
+            responseStatus = status.HTTP_200_OK
+        except:
+            data["error"] = "There was an error parsing your request"
+            responseStatus = status.HTTP_404_NOT_FOUND
+
+        return Response(data,responseStatus)
+
+
 
 class CompanyCreation(APIView):
     """A company creation endpoint
