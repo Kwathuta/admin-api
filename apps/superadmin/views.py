@@ -116,7 +116,9 @@ class AllEmployeeView(APIView):
     Returns:
         [type]: [description]
     """
-    # @swagger_auto_schema(responses={200: UserDetailsSerializer()})
+    permission_classes = [IsAuthenticated & CreateUserPermission]
+    
+    @swagger_auto_schema(responses={200: UserDetailsSerializer()})
     def get(self,request):
         data = {}
         try:
