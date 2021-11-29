@@ -195,7 +195,7 @@ class RoleView(APIView):
         data['roles'] = RoleSerializer(Role.objects.all(),many=True).data
         return Response(data,status = status.HTTP_200_OK)
 
-class RoleView(APIView):
+class RoleEmployeeView(APIView):
     """This retrieves a list of employees in a company that are in a given role
 
     Args:
@@ -213,7 +213,62 @@ class RoleView(APIView):
         try:
             role = Role.objects.get(pk = role_id)
 
-            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,role = role).exclude(pk = request.user.pk)
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,role = role)
+            data['employees'] = UserDetailsSerializer(employees,many=True).data
+            responseStatus = status.HTTP_200_OK
+        except:
+            data["error"] = "There was an error parsing your request"
+            responseStatus = status.HTTP_404_NOT_FOUND
+
+        return Response(data,responseStatus)
+
+
+class DepartmentEmployeeView(APIView):
+    """This retrieves a list of employees in a company that are in a given role
+
+    Args:
+        APIView ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(responses={200: UserDetailsSerializer()})
+    def get(self,request,department_id):
+        data = {}
+
+        try:
+            department = Department.objects.get(pk = department_id)
+
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__department = department)
+            data['employees'] = UserDetailsSerializer(employees,many=True).data
+            responseStatus = status.HTTP_200_OK
+        except:
+            data["error"] = "There was an error parsing your request"
+            responseStatus = status.HTTP_404_NOT_FOUND
+
+        return Response(data,responseStatus)
+
+class EmploymentTypeEmployeeView(APIView):
+    """This retrieves a list of employees in a company that are in a given role
+
+    Args:
+        APIView ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(responses={200: UserDetailsSerializer()})
+    def get(self,request,employment_type_id):
+        data = {}
+
+        try:
+            employment_type = EmploymentType.objects.get(pk = employment_type_id)
+
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__employment_type = employment_type)
             data['employees'] = UserDetailsSerializer(employees,many=True).data
             responseStatus = status.HTTP_200_OK
         except:
