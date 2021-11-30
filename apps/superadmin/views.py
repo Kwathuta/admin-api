@@ -105,35 +105,6 @@ class EmployeeDetailsView(APIView):
 
         return Response(data,status=responseStatus)
 
-
-
-class AllEmployeeView(APIView):
-    """This gets the details of one employee according to the id given
-
-    Args:
-        APIView ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """
-    permission_classes = [IsAuthenticated]
-
-    @swagger_auto_schema(responses={200: UserDetailsSerializer()})
-    def get(self,request):
-        data = {}
-        try:
-            company = Company.objects.get(pk = request.user.employmentinformation.company.pk)
-            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company).exclude(pk = request.user.pk)
-            data['employees'] = UserDetailsSerializer(employees,many=True).data
-            responseStatus = status.HTTP_200_OK
-        except Exception as e:
-            data['error'] = "The company was not found"
-            responseStatus = status.HTTP_404_NOT_FOUND
-
-        return Response(data,responseStatus)
-
-
-
 class ChangeRole(APIView):
     """[summary]
 
@@ -222,63 +193,6 @@ class RoleEmployeeView(APIView):
 
         return Response(data,responseStatus)
 
-
-class DepartmentEmployeeView(APIView):
-    """This retrieves a list of employees in a company that are in a given role
-
-    Args:
-        APIView ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """
-    permission_classes = [IsAuthenticated]
-
-    @swagger_auto_schema(responses={200: UserDetailsSerializer()})
-    def get(self,request,department_id):
-        data = {}
-
-        try:
-            department = Department.objects.get(pk = department_id)
-
-            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__department = department)
-            data['employees'] = UserDetailsSerializer(employees,many=True).data
-            responseStatus = status.HTTP_200_OK
-        except:
-            data["error"] = "There was an error parsing your request"
-            responseStatus = status.HTTP_404_NOT_FOUND
-
-        return Response(data,responseStatus)
-
-class EmploymentTypeEmployeeView(APIView):
-    """This retrieves a list of employees in a company that are in a given role
-
-    Args:
-        APIView ([type]): [description]
-
-    Returns:
-        [type]: [description]
-    """
-    permission_classes = [IsAuthenticated]
-
-    @swagger_auto_schema(responses={200: UserDetailsSerializer()})
-    def get(self,request,employment_type_id):
-        data = {}
-
-        try:
-            employment_type = EmploymentType.objects.get(pk = employment_type_id)
-
-            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__employment_type = employment_type)
-            data['employees'] = UserDetailsSerializer(employees,many=True).data
-            responseStatus = status.HTTP_200_OK
-        except:
-            data["error"] = "There was an error parsing your request"
-            responseStatus = status.HTTP_404_NOT_FOUND
-
-        return Response(data,responseStatus)
-
-
-
 class CompanyCreation(APIView):
     """A company creation endpoint
 
@@ -328,3 +242,42 @@ class ActivateAccount(APIView):
         else:
             data = 'The confirmation link was invalid, possibly because it has already been used.'
             return Response(data,status.HTTP_400_BAD_REQUEST)
+
+class EmployeeFiltersView(APIView):
+    """This returns a list of employees in a company that fit within a set filter
+
+    Args:
+        APIView ([type]): [description]
+    """
+
+    def get(self,request,employment_type_id,department_id):
+        data = {}
+        try:
+            company = Company.objects.get(pk = request.user.employmentinformation.company.pk)
+
+        except:
+            data['error'] = "Your company was not found!"
+            return Response(data,status.HTTP_404_NOT_FOUND)
+
+        if employment_type_id > 0 and department_id > 0:
+            employment_type = EmploymentType.objects.get(pk = employment_type_id)
+            department = Department.objects.get(pk = department_id)
+
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__employment_type = employment_type,employmentinformation__department = department)
+
+        elif employment_type_id > 0:
+            employment_type = EmploymentType.objects.get(pk = employment_type_id)
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__employment_type = employment_type)
+
+        elif department_id > 0:
+            department = Department.objects.get(pk = department_id)
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__department = department)
+
+        else:
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company)
+
+
+        data['employees'] = UserDetailsSerializer(employees,many=True).data
+        responseStatus = status.HTTP_200_OK
+
+        return Response(data,responseStatus)
