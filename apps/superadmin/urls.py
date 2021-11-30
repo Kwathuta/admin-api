@@ -14,8 +14,6 @@ urlpatterns = [
    path('delete/',views.DeleteUser.as_view(),name='delete_user'),
    path("user/<token>",views.UserDetailsView.as_view(),name="get_details"),
    path("employee/<int:id>",views.EmployeeDetailsView.as_view(),name="get_employee_details"),
-   path('employee',views.AllEmployeeView.as_view(),name="employees"),
    path('role/<int:role_id>',views.RoleEmployeeView.as_view(),name="role_employees"),
-   path('department/<int:department_id>',views.DepartmentEmployeeView.as_view(),name="department_employees"),
-   path('employment_type/<int:employment_type_id>',views.EmploymentTypeEmployeeView.as_view(),name="employment_type_employees"),
+   path('filters/<int:employment_type_id>/<int:department_id>',views.EmployeeFiltersView.as_view(),name="filters"),
 ]
