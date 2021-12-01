@@ -263,18 +263,18 @@ class EmployeeFiltersView(APIView):
             employment_type = EmploymentType.objects.get(pk = employment_type_id)
             department = Department.objects.get(pk = department_id)
 
-            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__employment_type = employment_type,employmentinformation__department = department)
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__employment_type = employment_type,employmentinformation__department = department).exclude(national_id__isnull = True)
 
         elif employment_type_id > 0:
             employment_type = EmploymentType.objects.get(pk = employment_type_id)
-            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__employment_type = employment_type)
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__employment_type = employment_type).exclude(national_id__isnull = True)
 
         elif department_id > 0:
             department = Department.objects.get(pk = department_id)
-            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__department = department)
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__department = department).exclude(national_id__isnull = True)
 
         else:
-            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company)
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company).exclude(national_id__isnull = True)
 
 
         data['employees'] = UserDetailsSerializer(employees,many=True).data
