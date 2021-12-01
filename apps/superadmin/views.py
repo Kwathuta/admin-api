@@ -143,7 +143,7 @@ class DeleteUser(APIView):
         serializer = DeleteUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            data['success'] = "The user's was successfully deleted"
+            data['success'] = "The user's status was successfully updated"
             responseStatus = status.HTTP_200_OK
 
 
