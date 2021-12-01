@@ -200,6 +200,7 @@ class TestViews(TestSetUp):
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         user_now = Employee.objects.get(email = self.normal_user_data['email'])
         self.assertEqual(user_now.is_active,False)
+        self.assertEqual(user_now.employmentinformation.status,False)
 
     def test_reinstate_user(self):
         """This tests if a user can be deleted
@@ -220,6 +221,7 @@ class TestViews(TestSetUp):
 
         user_now = Employee.objects.get(email = self.normal_user_data['email'])
         self.assertEqual(user_now.is_active,True)
+        self.assertEqual(user_now.employmentinformation.status,True)
 
     def test_other_user_delete_superuser(self):
         """This will check if another user who is not a superuser can delete a superuser

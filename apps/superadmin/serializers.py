@@ -334,9 +334,13 @@ class DeleteUserSerializer(serializers.Serializer):
             user = Employee.objects.get(pk = user)
             if user.is_active:
                 user.is_active = False
+                user.employmentinformation.status = False
+                user.employmentinformation.save()
                 user.save()
             else:
                 user.is_active = True
+                user.employmentinformation.status = True
+                user.employmentinformation.save()
                 user.save()
 
         except Exception as e:
