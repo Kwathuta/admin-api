@@ -277,12 +277,17 @@ class EmployeeFiltersView(APIView):
             employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company).exclude(national_id__exact="")
 
         if employment_status == "active":
-            employees.exclude(is_active = False)
+            employees = employees.exclude(is_active=False)
+            data['employees'] = UserDetailsSerializer(employees,many=True).data
 
         elif employment_status == "terminated":
-            employees.exclude(is_active = True)
+            employees = employees.exclude(is_active=True)
+            data['employees'] = UserDetailsSerializer(employees,many=True).data
 
-        data['employees'] = UserDetailsSerializer(employees,many=True).data
+        else:
+            data['employees'] = UserDetailsSerializer(employees,many=True).data
+
+        
         responseStatus = status.HTTP_200_OK
 
         return Response(data,responseStatus)
