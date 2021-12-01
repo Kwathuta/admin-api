@@ -288,3 +288,36 @@ class EmployeeFiltersView(APIView):
         responseStatus = status.HTTP_200_OK
 
         return Response(data,responseStatus)
+
+class GetCompanyView(APIView):
+    """This gets info on a company
+
+    Args:
+        APIView ([type]): [description]
+    """
+    def get(self,request,format=None):
+        data = {}
+        try:
+            company = request.user.employmentinformation.company
+            data = CompanySerializer(company).data
+            responseStatus = status.HTTP_200_OK
+        except:
+            data['error'] = "Your company was not found"
+            responseStatus = status.HTTP_404_NOT_FOUND
+        
+        return Response(data,responseStatus)
+
+    @swagger_auto_schema(request_body=CompanySerializer,responses={200: CompanySerializer()})
+    def put(self,request,format=None):
+        data = {}
+
+        serializer = CompanySerializer(data = request.data)
+        if serializer.is_valid():
+            data = serializer.save(request)
+            responseStatus = status.HTTP_200_OK
+        else:
+            data = serializer.errors
+            responseStatus = status.HTTP_400_BAD_REQUEST
+
+        return Response(data,responseStatus)    
+

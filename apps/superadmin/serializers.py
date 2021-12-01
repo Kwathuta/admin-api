@@ -345,3 +345,33 @@ class DeleteUserSerializer(serializers.Serializer):
 
         except Exception as e:
             raise serializers.ValidationError(e)
+
+class CompanySerializer(serializers.ModelSerializer):
+    """This formats data about a company
+
+    Args:
+        serializers ([type]): [description]
+    """
+    class Meta:
+        model = Company
+        fields = '__all__'
+        read_only_fields = ['type']
+
+    def save(self,request):
+        try:
+
+            company = request.user.employmentinformation.company_id
+
+            company.name = self.validated_data['name']
+            company.number_of_staff = self.validated_data['number_of_staff']
+            company.country = self.validated_data['country']
+            company.headquarters = self.validated_data['headquarters']
+            company.company_email = self.validated_data['company_email']
+            company.branches = self.validated_data['branches']
+            company.company_logo = self.validated_data['company_logo']
+
+            company.save()
+            return company
+
+        except:
+            serializers.ValidationError("There was a problem updating the company")
