@@ -143,7 +143,7 @@ class DeleteUser(APIView):
         serializer = DeleteUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            data['success'] = "The user's was successfully deleted"
+            data['success'] = "The user's status was successfully updated"
             responseStatus = status.HTTP_200_OK
 
 
@@ -250,7 +250,7 @@ class EmployeeFiltersView(APIView):
         APIView ([type]): [description]
     """
 
-    def get(self,request,employment_type_id,department_id):
+    def get(self,request,employment_type_id,department_id,employment_status):
         data = {}
         try:
             company = Company.objects.get(pk = request.user.employmentinformation.company.pk)
@@ -274,7 +274,14 @@ class EmployeeFiltersView(APIView):
             employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__department = department).exclude(national_id__exact="")
 
         else:
-            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company).exclude(national_id__exact="")
+            if employment_status == "active":
+                employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company).exclude(national_id__exact="").exclude(is_active = False)
+
+            elif employment_status == "terminated":
+                employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company).exclude(national_id__exact="").exclude(is_active = True)
+
+            else:
+                employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company).exclude(national_id__exact="")
 
 
         data['employees'] = UserDetailsSerializer(employees,many=True).data
