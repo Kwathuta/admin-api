@@ -166,6 +166,11 @@ class RoleSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['name']
 
+class GetCompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ['name']
+
 class GetUserSerializer(serializers.ModelSerializer):
     """This defines getting the user instances
 
@@ -233,6 +238,7 @@ class EmployeeInfo(serializers.ModelSerializer):
 
     department = Department_Serializer()
     employment_type = Employment_TypeSerializer()
+    company = GetCompanySerializer()
 
     class Meta:
         model = EmploymentInformation
