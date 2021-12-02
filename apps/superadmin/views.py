@@ -314,10 +314,12 @@ class GetCompanyView(APIView):
     @swagger_auto_schema(request_body=CompanySerializer,responses={200: CompanySerializer()})
     def put(self,request,format=None):
         data = {}
-
-        serializer = CompanySerializer(data = request.data)
+        company = request.user.employmentinformation.company
+        serializer = CompanySerializer(instance=company,data=request.data)
         if serializer.is_valid():
-            data = serializer.save(request)
+            company = request.user.employmentinformation.company
+            serializer.update(company,request.data)
+            data['success'] = "The company data was updated successfully"
             responseStatus = status.HTTP_200_OK
         else:
             data = serializer.errors
