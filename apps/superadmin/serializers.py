@@ -357,21 +357,12 @@ class CompanySerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['type']
 
-    def save(self,request):
-        try:
-
-            company = request.user.employmentinformation.company
-
-            company.name = self.validated_data['name']
-            company.number_of_staff = self.validated_data['number_of_staff']
-            company.country = self.validated_data['country']
-            company.headquarters = self.validated_data['headquarters']
-            company.company_email = self.validated_data['company_email']
-            company.branches = self.validated_data['branches']
-            company.company_logo = self.validated_data['company_logo']
-
-            company.save()
-            return company
-
-        except:
-            serializers.ValidationError("There was a problem updating the company")
+    def update(self,instance,validated_data):
+        instance.name = validated_data['name']
+        instance.number_of_staff = validated_data['number_of_staff']
+        instance.country = validated_data['country']
+        instance.headquarters = validated_data['headquarters']
+        instance.contact_email = validated_data['contact_email']
+        instance.branches = validated_data['branches']
+        instance.save()
+        return instance
