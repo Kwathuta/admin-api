@@ -168,7 +168,7 @@ class ActivateAccount(APIView):
             user.save()
             data['success'] = "Your account was successfully activated"
 
-            return Response(data,status = status.HTTP_200_OK)
+            return render(request,'email/account_successful')
         else:
             data = 'The confirmation link was invalid, possibly because it has already been used.'
             return Response(data,status.HTTP_400_BAD_REQUEST)
