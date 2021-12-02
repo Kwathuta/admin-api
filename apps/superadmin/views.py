@@ -1,5 +1,3 @@
-from django.http import response
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.schemas import get_schema_view
 from rest_framework.views import APIView
@@ -61,6 +59,51 @@ class LoginView(APIView):
             data = serializer.errors
             return Response(data,status = status.HTTP_400_BAD_REQUEST)
 
+class UserDetailsView(APIView):
+    """This returns a user instance depending on the token given
+
+    Args:
+        APIView ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    @swagger_auto_schema(responses={200: UserDetailsSerializer()})
+    def get(self,request,token):
+        data = {}
+        try:
+            validated_token = Token.objects.get(key=token)
+            data['user'] = UserDetailsSerializer(validated_token.user).data
+            responseStatus = status.HTTP_200_OK
+        except Exception as e:
+            print(e)
+            data['error'] = e
+            responseStatus = status.HTTP_404_NOT_FOUND
+
+        return Response(data,status=responseStatus)
+
+class EmployeeDetailsView(APIView):
+    """This gets the details of one employee according to the id given
+
+    Args:
+        APIView ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    @swagger_auto_schema(responses={200: UserDetailsSerializer()})
+    def get(self,request,id):
+        data = {}
+        try:
+            user = Employee.objects.get(pk=id)
+            data['user'] = UserDetailsSerializer(user).data
+            responseStatus = status.HTTP_200_OK
+        except Exception as e:
+            print(e)
+            data['error'] = e
+            responseStatus = status.HTTP_404_NOT_FOUND
+
+        return Response(data,status=responseStatus)
 
 class ChangeRole(APIView):
     """[summary]
@@ -92,7 +135,7 @@ class DeleteUser(APIView):
     Args:
         APIView ([type]): [description]
     """
-    permission_classes = [IsAuthenticated & ChangeRolePermission & DeleteUserPermission]
+    permission_classes = [IsAuthenticated & DeleteUserPermission]
 
     @swagger_auto_schema(request_body=DeleteUserSerializer)
     def put(self,request,format=None):
@@ -100,7 +143,7 @@ class DeleteUser(APIView):
         serializer = DeleteUserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            data['success'] = "The user's was successfully deleted"
+            data['success'] = "The user's status was successfully updated"
             responseStatus = status.HTTP_200_OK
 
 
@@ -122,6 +165,33 @@ class RoleView(APIView):
         data = {}
         data['roles'] = RoleSerializer(Role.objects.all(),many=True).data
         return Response(data,status = status.HTTP_200_OK)
+
+class RoleEmployeeView(APIView):
+    """This retrieves a list of employees in a company that are in a given role
+
+    Args:
+        APIView ([type]): [description]
+
+    Returns:
+        [type]: [description]
+    """
+    permission_classes = [IsAuthenticated]
+
+    @swagger_auto_schema(responses={200: UserDetailsSerializer()})
+    def get(self,request,role_id):
+        data = {}
+
+        try:
+            role = Role.objects.get(pk = role_id)
+
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,role = role)
+            data['employees'] = UserDetailsSerializer(employees,many=True).data
+            responseStatus = status.HTTP_200_OK
+        except:
+            data["error"] = "There was an error parsing your request"
+            responseStatus = status.HTTP_404_NOT_FOUND
+
+        return Response(data,responseStatus)
 
 class CompanyCreation(APIView):
     """A company creation endpoint
@@ -172,3 +242,86 @@ class ActivateAccount(APIView):
         else:
             data = 'The confirmation link was invalid, possibly because it has already been used.'
             return Response(data,status.HTTP_400_BAD_REQUEST)
+
+class EmployeeFiltersView(APIView):
+    """This returns a list of employees in a company that fit within a set filter
+
+    Args:
+        APIView ([type]): [description]
+    """
+
+    def get(self,request,employment_type_id,department_id,employment_status):
+        data = {}
+        try:
+            company = Company.objects.get(pk = request.user.employmentinformation.company.pk)
+
+        except:
+            data['error'] = "Your company was not found!"
+            return Response(data,status.HTTP_404_NOT_FOUND)
+
+        if employment_type_id > 0 and department_id > 0:
+            employment_type = EmploymentType.objects.get(pk = employment_type_id)
+            department = Department.objects.get(pk = department_id)
+
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__employment_type = employment_type,employmentinformation__department = department).exclude(national_id__exact="")
+
+        elif employment_type_id > 0:
+            employment_type = EmploymentType.objects.get(pk = employment_type_id)
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__employment_type = employment_type).exclude(national_id__exact="")
+
+        elif department_id > 0:
+            department = Department.objects.get(pk = department_id)
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company,employmentinformation__department = department).exclude(national_id__exact="")
+
+        else:
+            employees = Employee.objects.filter(employmentinformation__company = request.user.employmentinformation.company).exclude(national_id__exact="")
+
+        if employment_status == "active":
+            employees = employees.exclude(is_active=False)
+            data['employees'] = UserDetailsSerializer(employees,many=True).data
+
+        elif employment_status == "terminated":
+            employees = employees.exclude(is_active=True)
+            data['employees'] = UserDetailsSerializer(employees,many=True).data
+
+        else:
+            data['employees'] = UserDetailsSerializer(employees,many=True).data
+
+        
+        responseStatus = status.HTTP_200_OK
+
+        return Response(data,responseStatus)
+
+class GetCompanyView(APIView):
+    """This gets info on a company
+
+    Args:
+        APIView ([type]): [description]
+    """
+    permission_classes = [IsAuthenticated & CreateUserPermission]
+    def get(self,request,format=None):
+        data = {}
+        try:
+            company = request.user.employmentinformation.company
+            data = CompanySerializer(company).data
+            responseStatus = status.HTTP_200_OK
+        except:
+            data['error'] = "Your company was not found"
+            responseStatus = status.HTTP_404_NOT_FOUND
+        
+        return Response(data,responseStatus)
+
+    @swagger_auto_schema(request_body=CompanySerializer,responses={200: CompanySerializer()})
+    def put(self,request,format=None):
+        data = {}
+
+        serializer = CompanySerializer(data = request.data)
+        if serializer.is_valid():
+            data = serializer.save(request)
+            responseStatus = status.HTTP_200_OK
+        else:
+            data = serializer.errors
+            responseStatus = status.HTTP_400_BAD_REQUEST
+
+        return Response(data,responseStatus)    
+

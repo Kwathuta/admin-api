@@ -12,4 +12,9 @@ urlpatterns = [
    path('password_reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
    path('activate/<uidb64>/<token>/', views.ActivateAccount.as_view(), name='activate'),
    path('delete/',views.DeleteUser.as_view(),name='delete_user'),
+   path("user/<token>",views.UserDetailsView.as_view(),name="get_details"),
+   path("employee/<int:id>",views.EmployeeDetailsView.as_view(),name="get_employee_details"),
+   path('role/<int:role_id>',views.RoleEmployeeView.as_view(),name="role_employees"),
+   path('filters/<int:employment_type_id>/<int:department_id>/<str:employment_status>',views.EmployeeFiltersView.as_view(),name="filters"),
+   path('company/',views.GetCompanyView.as_view(),name="company")
 ]

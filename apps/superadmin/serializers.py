@@ -10,6 +10,7 @@ from django.core.mail import EmailMultiAlternatives
 
 from apps.superadmin.models import *
 from apps.human_resource.models import *
+from apps.human_resource.serializers import *
 
 def required(value):
     if value is None:
@@ -165,6 +166,11 @@ class RoleSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['name']
 
+class GetCompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ['name']
+
 class GetUserSerializer(serializers.ModelSerializer):
     """This defines getting the user instances
 
@@ -177,6 +183,94 @@ class GetUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ['pk','email','surname','other_names','country','national_id','role','date_of_birth']
+
+class PaymentInfoSerializer(serializers.ModelSerializer):
+    """This returs a user's payment information
+
+    Args:
+        serializers ([type]): [description]
+
+    Raises:
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+
+    Returns:
+        [type]: [description]
+    """
+    class Meta:
+        model = PaymentInformation
+        fields = ['bank_name','branch','account_number','gross_pay']
+
+class EmergencyInfoSerializer(serializers.ModelSerializer):
+    """This returns data of the emergency info of a user
+
+    Args:
+        serializers ([type]): [description]
+
+    Raises:
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+
+    Returns:
+        [type]: [description]
+    """
+    class Meta:
+        model = EmergencyInformation
+        fields = ['name','phone_number','relationship']
+
+# department serializer
+class Department_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = Department
+        fields = ['name']
+
+# department serializer
+
+
+class Employment_TypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmploymentType
+        fields = ['name']
+
+class EmployeeInfo(serializers.ModelSerializer):
+
+    department = Department_Serializer()
+    employment_type = Employment_TypeSerializer()
+    company = GetCompanySerializer()
+
+    class Meta:
+        model = EmploymentInformation
+        fields = '__all__'
+
+class Profile_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmployeeProfile
+        fields = ['personal_email','profile_pic','marital_status','insurance_number','phone_number']
+
+class UserDetailsSerializer(serializers.ModelSerializer):
+    """This gets everything about a user
+
+    Args:
+        serializers ([type]): [description]
+
+    Raises:
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+        serializers.ValidationError: [description]
+
+    Returns:
+        [type]: [description]
+    """
+    role = RoleSerializer()
+    emergency_information = EmergencyInfoSerializer(read_only=True)
+    payment_information = PaymentInfoSerializer(read_only=True)
+    employmentinformation = EmployeeInfo(read_only=True)
+    employee_profile = Profile_Serializer(read_only=True)
+    class Meta:
+        model = Employee
+        fields = ['pk','email','employee_id','surname','other_names','country','national_id','role','date_of_birth','emergency_information','payment_information','employmentinformation','employee_profile']
 
 class LoginSerializer(serializers.Serializer):
     """This defines the functions in the login function
@@ -238,8 +332,46 @@ class DeleteUserSerializer(serializers.Serializer):
         user = (self.validated_data['user'])
         try:
             user = Employee.objects.get(pk = user)
-            user.is_active = False
-            user.save()
+            if user.is_active:
+                user.is_active = False
+                user.employmentinformation.status = False
+                user.employmentinformation.save()
+                user.save()
+            else:
+                user.is_active = True
+                user.employmentinformation.status = True
+                user.employmentinformation.save()
+                user.save()
 
         except Exception as e:
             raise serializers.ValidationError(e)
+
+class CompanySerializer(serializers.ModelSerializer):
+    """This formats data about a company
+
+    Args:
+        serializers ([type]): [description]
+    """
+    class Meta:
+        model = Company
+        fields = '__all__'
+        read_only_fields = ['type']
+
+    def save(self,request):
+        try:
+
+            company = request.user.employmentinformation.company
+
+            company.name = self.validated_data['name']
+            company.number_of_staff = self.validated_data['number_of_staff']
+            company.country = self.validated_data['country']
+            company.headquarters = self.validated_data['headquarters']
+            company.company_email = self.validated_data['company_email']
+            company.branches = self.validated_data['branches']
+            company.company_logo = self.validated_data['company_logo']
+
+            company.save()
+            return company
+
+        except:
+            serializers.ValidationError("There was a problem updating the company")

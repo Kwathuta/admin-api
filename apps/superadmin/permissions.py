@@ -24,8 +24,11 @@ class DeleteUserPermission(permissions.BasePermission):
         permissions ([type]): [description]
     """
     def has_permission(self, request, view):
-        if request.user.role.name=="super_admin":
-            return True
+        if (request.user.role.name=="super_admin" or request.user.role.name=="human_resources") and check_company(request.user.pk,view.request.data['user']):
+            if check_rank(request.user.pk,view.request.data['user']):
+                return True
+            else:
+                return False
         else:
             return False
 
@@ -55,3 +58,15 @@ def check_company(user1,user2):
     info2 = EmploymentInformation.objects.get(employee = Employee.objects.get(pk=user2))
 
     return info1.company == info2.company
+
+def check_rank(doer,receiver):
+    """This will set it such that a user who is not a superadmin cant delete a superadmin
+
+    Args:
+        doer ([type]): [description]
+        receiver ([type]): [description]
+    """
+    if Employee.objects.get(pk=receiver).role.name == "super_admin" and Employee.objects.get(pk=doer).role.name != "super_admin":
+        return False
+    else:
+        return True
