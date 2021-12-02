@@ -202,7 +202,6 @@ class CompanyCreation(APIView):
     Returns:
         [type]: [description]
     """
-    permission_classes = [IsAuthenticated & CreateUserPermission]
     @swagger_auto_schema(request_body=CompanyCreationSerializer)
     def post(self,request,format=None):
         data = {}
@@ -299,6 +298,7 @@ class GetCompanyView(APIView):
     Args:
         APIView ([type]): [description]
     """
+    permission_classes = [IsAuthenticated & CreateUserPermission]
     def get(self,request,format=None):
         data = {}
         try:
