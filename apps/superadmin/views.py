@@ -298,6 +298,7 @@ class GetCompanyView(APIView):
     Args:
         APIView ([type]): [description]
     """
+    permission_classes = [IsAuthenticated & CreateUserPermission]
     def get(self,request,format=None):
         data = {}
         try:

@@ -360,7 +360,7 @@ class CompanySerializer(serializers.ModelSerializer):
     def save(self,request):
         try:
 
-            company = request.user.employmentinformation.company_id
+            company = request.user.employmentinformation.company
 
             company.name = self.validated_data['name']
             company.number_of_staff = self.validated_data['number_of_staff']
